@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="col-md-3" id="oneItem">
+		<div class="card card-product-grid">
+            <img src="{{ book.image.url }}">
+            <div class="title">{{ object.isbn }}: {{ object.title }}</div>
+		</div>
+	</div>
+{% endblock %}
