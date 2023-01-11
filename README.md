@@ -1,2 +1,2 @@
 # rental
-Rental project for Univeristy lessons 
+Rental django-project for University subject

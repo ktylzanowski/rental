@@ -4,8 +4,18 @@
 
 <div class="col-md-3" id="oneItem">
 		<div class="card card-product-grid">
-            <img src="{{ book.image.url }}">
-            <div class="title">{{ object.isbn }}: {{ object.title }}</div>
+            <img src="{{ object.image.url }}">
+			{% if object.model_name == 'book' %}
+            	<div class="title">{{ object.author }}: {{ object.title }}</div>
+				<div class="title">ISBN: {{ object.isbn }}</div>
+			{% elif object.model_name == 'film' %}
+				<div class="title">{{ object.director }}: {{ object.title }}</div>
+				<div class="title">Duration: {{ object.duration }}</div>
+			{% else %}
+				<div class="title">{{ object.band }}: {{ object.title }}</div>
+				<div class="title">Track list: {{ object.tracklist }}</div>
+			{% endif %}
+
 		</div>
 	</div>
 {% endblock %}

@@ -16,7 +16,7 @@ class Product(PolymorphicModel):
 
 
 class CD(Product):
-    author = models.CharField(max_length=100)
+    band = models.CharField(max_length=100)
     tracklist = models.TextField(max_length=500)
 
 
