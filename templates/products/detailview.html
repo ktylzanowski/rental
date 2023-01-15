@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="col-md-3 mx-auto">
+		<div class="card card-product-grid">
+            <img src="{{ object.image.url }}">
+			{% if object.model_name == 'book' %}
+            	<div class="text-center">{{ object.author }}: {{ object.title }}</div>
+				<div class="text-center">ISBN: {{ object.isbn }}</div>
+			{% elif object.model_name == 'film' %}
+				<div class="text-center">{{ object.director }}: {{ object.title }}</div>
+				<div class="text-center">Duration: {{ object.duration }}</div>
+			{% else %}
+				<div class="text-center">{{ object.band }}: {{ object.title }}</div>
+				<div class="text-center">Track list: {{ object.tracklist }}</div>
+			{% endif %}
+
+		</div>
+	</div>
+{% endblock %}
