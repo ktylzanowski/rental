@@ -1,5 +1,6 @@
 from polymorphic.models import PolymorphicModel
 from django.db import models
+from django.conf import settings
 
 
 class Product(PolymorphicModel):
@@ -28,3 +29,13 @@ class Book(Product):
 class Film(Product):
     director = models.CharField(max_length=100)
     duration = models.IntegerField()
+
+
+class Order(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    order_date = models.DateTimeField()
+
+
+class OrderItem(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    order = models.OneToOneField(Order, on_delete=models.CASCADE)
