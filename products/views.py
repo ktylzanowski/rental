@@ -5,11 +5,9 @@ from cart.models import Cart, CartItem
 
 
 class Home(ListView):
+    model = Product
     template_name = 'products/home.html'
-
-    def get_queryset(self):
-        queryset = Product.objects.all().order_by('title')
-        return queryset
+    ordering = ['-pk']
 
 
 class ProductDetailView(View):
@@ -21,7 +19,7 @@ class ProductDetailView(View):
 
     def post(self, request, pk):
         obj, created = Cart.objects.get_or_create(
-            user=request.user.id,
+            user=request.user,
         )
         obj.save()
 
@@ -33,3 +31,10 @@ class ProductDetailView(View):
         item.save()
 
         return redirect('home')
+
+
+class ProductsByCategoryView(View):
+    def get(self, request, cats):
+        cat = Product.objects.filter(category__name=cats)
+        context = {'object_list': cat}
+        return render(request, "products/home.html", context)

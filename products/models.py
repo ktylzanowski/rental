@@ -1,15 +1,28 @@
 from polymorphic.models import PolymorphicModel
 from django.db import models
 from django.conf import settings
+from django.urls import reverse
+
+
+class Category(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return str(self.name)
 
 
 class Product(PolymorphicModel):
+
     title = models.CharField(max_length=100)
     slug = models.SlugField(unique=True)
     image = models.ImageField(upload_to='product', default=None)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, default=None)
 
     def __str__(self):
         return str(self.title)
+
+    def get_absolute_url(self):
+        return reverse("ProductDetail", args=[str(self.pk)])
 
     @property
     def model_name(self):
