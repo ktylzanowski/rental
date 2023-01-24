@@ -5,7 +5,10 @@
       </a>
 
       <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
-        <li><a href="{% url 'home' %}" class="nav-link px-2 link-dark">Home</a></li>
+          <li><a href="{% url 'home' %}" class="nav-link px-2 link-dark">All</a></li>
+          <li><a href="{% url 'ByCategory' 'Book'%}" class="nav-link px-2 link-dark">Books</a></li>
+          <li><a href="{% url 'ByCategory' 'CD'%}" class="nav-link px-2 link-dark">CD's</a></li>
+          <li><a href="{% url 'ByCategory' 'Film'%}" class="nav-link px-2 link-dark">Films</a></li>
       </ul>
         {% if user.is_authenticated %}
          <div class="col-md-3 text-end">
