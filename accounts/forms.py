@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.core.exceptions import ValidationError
 
+
 MyUser = get_user_model()
 
 
@@ -40,3 +41,15 @@ class UserChangeForm(forms.ModelForm):
     class Meta:
         model = MyUser
         fields = ('email', 'password', 'is_active', 'is_admin', 'is_staff')
+
+
+class AddressForm(forms.ModelForm):
+    class Meta:
+        model = MyUser
+        fields = [
+            'city',
+            'zip_code',
+            'street',
+            'building_number',
+            'apartment_number',
+        ]

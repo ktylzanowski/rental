@@ -26,6 +26,7 @@ class CheckoutView(View):
             orderitem = OrderItem.objects.create(
                 product=item.product,
                 order=order,
+                user=request.user,
             )
             orderitem.save()
         CartItem.objects.filter(cart=request.user.id).delete()

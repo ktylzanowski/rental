@@ -12,12 +12,14 @@
       </ul>
         {% if user.is_authenticated %}
          <div class="col-md-3 text-end">
-          <a href="{% url 'Logout' %}"><button type="button" class="btn btn-outline-primary me-2">Logout</button></a>
+             <a href="{% url 'Account' user.pk %}"><button type="button" class="btn btn-primary">Account</button></a>
+             <a href="{% url 'Orders' %}"><button type="button" class="btn btn-primary">Orders</button></a>
+             <a href="{% url 'Logout' %}"><button type="button" class="btn btn-outline-primary me-2">Logout</button></a>
          </div>
         {% else %}
       <div class="col-md-3 text-end">
-          <a href="{% url 'Login' %}"><button type="button" class="btn btn-outline-primary me-2">Login</button></a>
-          <a href="{% url 'Register' %}"><button type="button" class="btn btn-primary">Sign-up</button></a>
+            <a href="{% url 'Login' %}"><button type="button" class="btn btn-outline-primary me-2">Login</button></a>
+            <a href="{% url 'Register' %}"><button type="button" class="btn btn-primary">Sign-up</button></a>
       </div>
         {% endif %}
     </header>

@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="container">
+	{% for object in object_list %}
+	<div class="row">
+		<a >{{ object.product.title }}</a>
+	</div>
+	{% endfor %}
+</div>
+{% endblock %}
