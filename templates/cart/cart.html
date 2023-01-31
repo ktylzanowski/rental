@@ -1,21 +1,22 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
+<div class="container">
+	<div class="row">
 
-<div class="row">
-
-{% for item in item_list %}
-	<div class="col-md-2">
-		<div class="card card-product-grid">
-			<img src="{{ item.product.image.url }}" >
-			<div class="text-center">{{ item.product.title }} - Price: 10$ per day.</div>
+	{% for item in item_list %}
+		<div class="col-md-2">
+			<div class="card card-product-grid">
+				<img src="{{ item.product.image.url }}" >
+				<div class="text-center">{{ item.product.title }} - Price: 10$ per day.</div>
+			</div>
 		</div>
+	{% endfor %}
 	</div>
-{% endfor %}
-</div>
 
-<form method="POST" action="/checkout/">
-	{% csrf_token %}
-	<button class="btn btn-primary">Checkout</button>
-</form>
+	<form method="POST" action="/checkout/">
+		{% csrf_token %}
+		<button class="btn btn-primary">Checkout</button>
+	</form>
+</div>
 {% endblock %}

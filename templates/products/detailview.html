@@ -15,7 +15,7 @@
 				<div class="text-center">{{ object.band }}: {{ object.title }}</div>
 				<div class="text-center">Track list: {{ object.tracklist }}</div>
 			{% endif %}
-			<form method="POST">
+			<form method="POST" align='center'>
 				{% csrf_token %}
 				<button class="btn btn-primary">Add to Cart</button>
 			</form>

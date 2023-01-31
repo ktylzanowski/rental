@@ -2,6 +2,7 @@ from django.views.generic import ListView, View
 from products.models import Product
 from django.shortcuts import redirect, render
 from cart.models import Cart, CartItem
+from django.contrib import messages
 
 
 class Home(ListView):
@@ -29,7 +30,7 @@ class ProductDetailView(View):
             cart=obj,
         )
         item.save()
-
+        messages.success(request, "Add to cart")
         return redirect('home')
 
 
