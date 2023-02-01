@@ -1,14 +1,5 @@
-.row{
-    padding-left: 15%;
-    padding-right: 15%;
-}
-
-.title{
-    text-align: center;
+a{
     text-decoration: none;
-    font-size: 20px;
-}
-#oneItem{
-    margin-left: 38%;
-    margin-right: 38%;
+    color: black;
+
 }

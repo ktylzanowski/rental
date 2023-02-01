@@ -3,9 +3,10 @@ from .models import CartItem
 from products.models import Order, OrderItem
 from django.shortcuts import redirect, render
 from django.utils import timezone
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
-class CartListView(View):
+class CartListView(LoginRequiredMixin, View):
 
     def get(self, request):
         items = CartItem.objects.filter(cart=request.user.id)
@@ -13,7 +14,7 @@ class CartListView(View):
         return render(request, "cart/cart.html", context)
 
 
-class CheckoutView(View):
+class CheckoutView(LoginRequiredMixin, View):
 
     def post(self, request):
         items = CartItem.objects.filter(cart=request.user.id)
