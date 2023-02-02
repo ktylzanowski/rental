@@ -4,6 +4,7 @@ from products.models import Order, OrderItem
 from django.shortcuts import redirect, render
 from django.utils import timezone
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.messages import success
 
 
 class CartListView(LoginRequiredMixin, View):
@@ -31,4 +32,5 @@ class CheckoutView(LoginRequiredMixin, View):
             )
             orderitem.save()
         CartItem.objects.filter(cart=request.user.id).delete()
+        success(self.request, "Order placed")
         return redirect("home")
