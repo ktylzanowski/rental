@@ -25,6 +25,10 @@ class ProductDetailView(View):
         obj.save()
 
         item_product = Product.objects.get(id=pk)
+        item_product.quantity -= 1
+        if item_product.quantity == 0:
+            item_product.is_available = False
+        item_product.save()
         item = CartItem.objects.create(
             product=item_product,
             cart=obj,

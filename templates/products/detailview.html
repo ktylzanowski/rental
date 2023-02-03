@@ -15,13 +15,21 @@
 				<div class="text-center">{{ object.band }}: {{ object.title }}</div>
 				<div class="text-center">Track list: {{ object.tracklist }}</div>
 			{% endif %}
-			{% if user.is_authenticated %}
+
+			{% if object.is_available == False %}
+				<div class="text-center">The product is unavailable</div>
+			{% endif %}
+
+			{% if user.is_authenticated == False %}
+				<div class="text-center">You must be logged in</div>
+			{% endif %}
+
+			{% if user.is_authenticated and object.is_available %}
 			<form method="POST" align='center'>
 				{% csrf_token %}
 				<button class="btn btn-primary">Add to Cart</button>
 			</form>
 			{% endif %}
-
 		</div>
 	</div>
 {% endblock %}

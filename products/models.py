@@ -17,6 +17,8 @@ class Product(PolymorphicModel):
     slug = models.SlugField(unique=True)
     image = models.ImageField(upload_to='product', default=None)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, default=None)
+    quantity = models.IntegerField(null=False)
+    is_available = models.BooleanField(default=True, null=False)
 
     def __str__(self):
         return str(self.title)

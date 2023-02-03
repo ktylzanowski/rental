@@ -1,5 +1,5 @@
 from django.views.generic import View
-from .models import CartItem
+from .models import CartItem, Cart
 from products.models import Order, OrderItem
 from django.shortcuts import redirect, render
 from django.utils import timezone
@@ -10,7 +10,8 @@ from django.contrib.messages import success
 class CartListView(LoginRequiredMixin, View):
 
     def get(self, request):
-        items = CartItem.objects.filter(cart=request.user.id)
+        user_cart = Cart.objects.get(user=request.user)
+        items = CartItem.objects.filter(cart=user_cart)
         context = {"item_list": items}
         return render(request, "cart/cart.html", context)
 
@@ -18,7 +19,8 @@ class CartListView(LoginRequiredMixin, View):
 class CheckoutView(LoginRequiredMixin, View):
 
     def post(self, request):
-        items = CartItem.objects.filter(cart=request.user.id)
+        user_cart = Cart.objects.get(user=request.user)
+        items = CartItem.objects.filter(cart=user_cart)
         order = Order.objects.create(
             user=request.user,
             order_date=timezone.now(),
@@ -31,6 +33,6 @@ class CheckoutView(LoginRequiredMixin, View):
                 user=request.user,
             )
             orderitem.save()
-        CartItem.objects.filter(cart=request.user.id).delete()
+        CartItem.objects.filter(cart=user_cart).delete()
         success(self.request, "Order placed")
         return redirect("home")
