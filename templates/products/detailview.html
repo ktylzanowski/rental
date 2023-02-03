@@ -2,7 +2,14 @@
 {% load static %}
 {% block content %}
 
+<div class="container">
+	{% if messages %}
+		{% for message in messages %}
+			<div class="alert alert-success text-center" role="alert">{{ message }}</div>
+		{% endfor %}
+	{% endif %}
 <div class="col-md-3 mx-auto">
+
 		<div class="card card-product-grid">
             <img src="{{ object.image.url }}">
 			{% if object.model_name == 'book' %}
@@ -18,13 +25,7 @@
 
 			{% if object.is_available == False %}
 				<div class="text-center">The product is unavailable</div>
-			{% endif %}
-
-			{% if user.is_authenticated == False %}
-				<div class="text-center">You must be logged in</div>
-			{% endif %}
-
-			{% if user.is_authenticated and object.is_available %}
+			{% else %}
 			<form method="POST" align='center'>
 				{% csrf_token %}
 				<button class="btn btn-primary">Add to Cart</button>
@@ -32,4 +33,5 @@
 			{% endif %}
 		</div>
 	</div>
+</div>
 {% endblock %}

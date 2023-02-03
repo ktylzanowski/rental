@@ -4,6 +4,11 @@
 
 <section class="section-content padding-y bg">
 <div class="container">
+		{% if messages %}
+		{% for message in messages %}
+			<div class="alert alert-success text-center" role="alert">{{ message }}</div>
+		{% endfor %}
+	{% endif %}
 <div class="row">
 	<aside class="col-lg-9">
 <div class="card">
@@ -25,12 +30,15 @@
 	</td>
 	<td>
 		<div class="price-wrap">
-			<div class="price">$15</div>
+			<div class="price">{{ item.product.price }}$</div>
 			<p><small class="text-muted">per two weeks</small></p>
 		</div>
 	</td>
 	<td class="text-right">
-		<a href="" class="btn btn-danger"> Remove</a>
+		<form method="POST" action="{% url 'DeleteItemFromCart' pk=item.pk %}">
+			{% csrf_token %}
+			<button class="btn btn-danger"> Remove</button>
+		</form>
 	</td>
 </tr>
 
@@ -44,7 +52,7 @@
 		<div class="card-body">
 			<dl class="dlist-align">
 			  <dt>Total price:</dt>
-			  <dd class="text-right">$30</dd>
+			  <dd class="text-right">{{ price }}$</dd>
 			</dl>
 			<form method="POST" action="{% url 'Checkout' %}">
 				{% csrf_token %}

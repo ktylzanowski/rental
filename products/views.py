@@ -19,21 +19,35 @@ class ProductDetailView(View):
         return render(request, "products/detailview.html", context)
 
     def post(self, request, pk):
-        obj, created = Cart.objects.get_or_create(
+
+        if not request.user.is_authenticated:
+            messages.success(request, "You must be logged in")
+            return redirect('Login')
+
+        cart, created = Cart.objects.get_or_create(
             user=request.user,
         )
-        obj.save()
+        cart.save()
 
-        item_product = Product.objects.get(id=pk)
-        item_product.quantity -= 1
-        if item_product.quantity == 0:
-            item_product.is_available = False
-        item_product.save()
-        item = CartItem.objects.create(
-            product=item_product,
-            cart=obj,
+        added_item = Product.objects.get(id=pk)
+
+        item_in_cart = CartItem.objects.filter(cart=cart)
+        for item in item_in_cart:
+            if item.product.title == added_item.title:
+                messages.success(request, "It's already in the basket")
+                return redirect('ProductDetail', pk=pk)
+
+        new_item_in_cart = CartItem.objects.create(
+            product=added_item,
+            cart=cart,
         )
-        item.save()
+        new_item_in_cart.save()
+
+        added_item.quantity -= 1
+        if added_item.quantity == 0:
+            added_item.is_available = False
+        added_item.save()
+
         messages.success(request, "Add to cart")
         return redirect('home')
 

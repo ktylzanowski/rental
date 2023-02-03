@@ -19,6 +19,7 @@ class Product(PolymorphicModel):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, default=None)
     quantity = models.IntegerField(null=False)
     is_available = models.BooleanField(default=True, null=False)
+    price = models.IntegerField(null=False, default=15)
 
     def __str__(self):
         return str(self.title)
