@@ -48,8 +48,25 @@ class Film(Product):
 
 
 class Order(models.Model):
+    status_types = [
+        ("Ordered", "Ordered"),
+        ("Sent", "Sent"),
+        ("Delivered", "Delivered"),
+        ("Returned", "Returned"),
+    ]
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     order_date = models.DateTimeField()
+    status = models.CharField(choices=status_types, default="Ordered", max_length=100)
+    total = models.IntegerField(null=False)
+
+    first_name = models.CharField(max_length=255, null=False, blank=False)
+    last_name = models.CharField(max_length=255, null=False, blank=False)
+    phone = models.CharField(max_length=12, null=False, blank=False)
+    city = models.CharField(max_length=255, null=False, blank=False, default=None)
+    zip_code = models.CharField(max_length=10, null=False, blank=False, default=None)
+    street = models.CharField(max_length=255, null=False, blank=False, default=None)
+    building_number = models.CharField(max_length=10, null=False, blank=False, default=None)
+    apartment_number = models.CharField(max_length=10, null=False, blank=False, default=None)
 
 
 class OrderItem(models.Model):

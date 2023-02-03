@@ -40,6 +40,9 @@ class MyUser(AbstractBaseUser):
     is_admin = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
 
+    first_name = models.CharField(max_length=255, null=True, blank=True)
+    last_name = models.CharField(max_length=255, null=True, blank=True)
+    phone = models.CharField(max_length=12, null=True, blank=True)
     city = models.CharField(max_length=255, null=True, blank=True, default=None)
     zip_code = models.CharField(max_length=10, null=True, blank=True, default=None)
     street = models.CharField(max_length=255, null=True, blank=True, default=None)
