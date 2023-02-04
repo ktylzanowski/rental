@@ -57,6 +57,11 @@ class MyUser(AbstractBaseUser):
     def __str__(self):
         return self.email
 
+    def if_address(self):
+        if self.first_name and self.last_name and self.city and self.building_number and self.phone and self.street and self.zip_code:
+            return False
+        return True
+
     def has_perm(self, perm, obj=None):
         return True
 

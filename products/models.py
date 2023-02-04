@@ -66,11 +66,11 @@ class Order(models.Model):
     zip_code = models.CharField(max_length=10, null=False, blank=False, default=None)
     street = models.CharField(max_length=255, null=False, blank=False, default=None)
     building_number = models.CharField(max_length=10, null=False, blank=False, default=None)
-    apartment_number = models.CharField(max_length=10, null=False, blank=False, default=None)
+    apartment_number = models.CharField(max_length=10, null=True, blank=True, default=None)
 
 
 class OrderItem(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     order = models.OneToOneField(Order, on_delete=models.CASCADE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
-
+    price = models.IntegerField(null=False, blank=False, default=15)

@@ -25,12 +25,29 @@ class CartListView(LoginRequiredMixin, View):
 class CheckoutView(LoginRequiredMixin, View):
 
     def post(self, request):
-
         user_cart = Cart.objects.get(user=request.user)
         items_in_cart = CartItem.objects.filter(cart=user_cart)
+        if len(items_in_cart) == 0:
+            success(self.request, "The cart is empty")
+            return redirect('home')
+
+        if request.user.if_address():
+            success(self.request, "You need to fill in the data")
+            return redirect("Account", pk=request.user.pk)
+
         order = Order.objects.create(
             user=request.user,
             order_date=timezone.now(),
+            status="Ordered",
+            total=user_cart.total(request),
+            first_name=request.user.first_name,
+            last_name=request.user.last_name,
+            phone=request.user.phone,
+            city=request.user.city,
+            zip_code=request.user.zip_code,
+            street=request.user.street,
+            building_number=request.user.building_number,
+            apartment_number=request.user.apartment_number,
         )
         order.save()
 

@@ -47,6 +47,9 @@ class AddressForm(forms.ModelForm):
     class Meta:
         model = MyUser
         fields = [
+            'first_name',
+            'last_name',
+            'phone',
             'city',
             'zip_code',
             'street',
