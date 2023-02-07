@@ -47,6 +47,18 @@ class Film(Product):
     duration = models.IntegerField()
 
 
+class Payment(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    payment_id = models.CharField(max_length=100)
+    payment_method = models.CharField(max_length=100)
+    amount_paid = models.CharField(max_length=100)
+    status = models.CharField(max_length=100)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.payment_id
+
+
 class Order(models.Model):
     status_types = [
         ("Ordered", "Ordered"),
@@ -58,6 +70,7 @@ class Order(models.Model):
     order_date = models.DateTimeField()
     status = models.CharField(choices=status_types, default="Ordered", max_length=100)
     total = models.IntegerField(null=False)
+    payment = models.OneToOneField(Payment, on_delete=models.CASCADE, null=True, blank=False)
 
     first_name = models.CharField(max_length=255, null=False, blank=False)
     last_name = models.CharField(max_length=255, null=False, blank=False)

@@ -1,11 +1,12 @@
 from django.views.generic import View
 from .models import CartItem, Cart
-from products.models import Order, OrderItem, Product
+from products.models import Order, OrderItem, Product, Payment
 from django.shortcuts import redirect, render
 from django.utils import timezone
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages import success
 from django.contrib.auth.decorators import login_required
+import json
 
 
 class CartListView(LoginRequiredMixin, View):
@@ -26,12 +27,13 @@ class CartListView(LoginRequiredMixin, View):
 @login_required()
 def order_complete(request):
     success(request, "Your order was successful!")
-    return redirect('Cart')
+    return redirect('home')
 
 
 class CheckoutView(LoginRequiredMixin, View):
 
     def post(self, request):
+
         user_cart = Cart.objects.get(user=request.user)
         items_in_cart = CartItem.objects.filter(cart=user_cart)
 
@@ -61,6 +63,7 @@ class CheckoutView(LoginRequiredMixin, View):
 
         CartItem.objects.filter(cart=user_cart).delete()
         Cart.objects.get(user=request.user).delete()
+        return redirect('Cart')
 
 
 class DeleteItemView(LoginRequiredMixin, View):
