@@ -5,6 +5,7 @@ from django.shortcuts import redirect, render
 from django.utils import timezone
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages import success
+from django.contrib.auth.decorators import login_required
 
 
 class CartListView(LoginRequiredMixin, View):
@@ -22,18 +23,17 @@ class CartListView(LoginRequiredMixin, View):
         return render(request, "cart/cart.html", context)
 
 
+@login_required()
+def order_complete(request):
+    success(request, "Your order was successful!")
+    return redirect('Cart')
+
+
 class CheckoutView(LoginRequiredMixin, View):
 
     def post(self, request):
         user_cart = Cart.objects.get(user=request.user)
         items_in_cart = CartItem.objects.filter(cart=user_cart)
-        if len(items_in_cart) == 0:
-            success(self.request, "The cart is empty")
-            return redirect('home')
-
-        if request.user.if_address():
-            success(self.request, "You need to fill in the data")
-            return redirect("Account", pk=request.user.pk)
 
         order = Order.objects.create(
             user=request.user,
@@ -61,8 +61,6 @@ class CheckoutView(LoginRequiredMixin, View):
 
         CartItem.objects.filter(cart=user_cart).delete()
         Cart.objects.get(user=request.user).delete()
-        success(self.request, "Order placed")
-        return redirect("home")
 
 
 class DeleteItemView(LoginRequiredMixin, View):
