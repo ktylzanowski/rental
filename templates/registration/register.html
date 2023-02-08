@@ -1,10 +1,11 @@
 {% extends 'base.html' %}
 {% load static %}
-
 {% block content %}
-  <div class="container">
+  
+<div class="container">
     <form method="POST">
-     {% csrf_token %}
+        {% csrf_token %}
+        
         {{ form.email.label }}:
         <br>
         {{ form.email }}
@@ -21,10 +22,11 @@
         {% if form.email.errors %}
             {{ form.email.errors }}
         {% endif %}
+
         {% if form.password2.errors %}
             {{ form.password2.errors }}
         {% endif %}
-      <button type="submit" class="btn btn-primary">Register</button>
+        <button type="submit" class="btn btn-primary">Register</button>
     </form>
   </div>
 {% endblock content %}
