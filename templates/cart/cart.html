@@ -85,46 +85,46 @@ function getCookie(name) {
     }
     return cookieValue;
 }
-    const csrftoken = getCookie('csrftoken');
-    var total = "{{ price }}"
+const csrftoken = getCookie('csrftoken');
 
+var total = "{{ price }}"
+var url = "{% url 'Checkout' %}"
 
+paypal.Buttons({
+    createOrder: function(data, actions) {
+        return actions.order.create({
+            purchase_units: [{
+                amount: {
+                    value: total
+                }
+            }]
+        });
+    },
 
-    function completeOrder(){
-        var url = "{% url 'Checkout' %}"
+onApprove: function(data, actions) {
+    return actions.order.capture().then(function(details) {
+            console.log(details);
+            sendData();
+            window.location.href = "{% url 'order_complete' %}";
+            function sendData(){
+                fetch(url, {
+                    method: "POST",
+                    headers: {
+                        "Content-type": "application/json",
+                        "X-CSRFToken": csrftoken,
+                    },
+                    body: JSON.stringify({
+                        transID: details.id,
+                        payment_method: "Paypal",
+                        status: details.status,
+                        total: total,
+                    }),
+                })
 
-        fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-type':'application/json',
-                'X-CSRFToken': csrftoken,
-            },
-            body:JSON.stringify({'totalprice': total})
-        })
-    }
-
-
-        paypal.Buttons({
-            createOrder: function(data, actions) {
-                return actions.order.create({
-                    purchase_units: [{
-                        amount: {
-                            value: total
-                        }
-                    }]
-                });
-            },
-            onApprove: function(data, actions) {
-                return actions.order.capture().then(function(orderData) {
-                    console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
-                    var transaction = orderData.purchase_units[0].payments.captures[0];
-                    completeOrder()
-
-                    window.location.href = "{% url 'order_complete' %}";
-
-                });
             }
+        });
+    }
+}).render('#paypal-button-container');
 
-        }).render('#paypal-button-container');
 </script>
 {% endblock %}

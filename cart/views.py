@@ -33,15 +33,27 @@ def order_complete(request):
 class CheckoutView(LoginRequiredMixin, View):
 
     def post(self, request):
-
         user_cart = Cart.objects.get(user=request.user)
         items_in_cart = CartItem.objects.filter(cart=user_cart)
+
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+
+        payment = Payment.objects.create(
+            user=request.user,
+            payment_id=body['transID'],
+            payment_method=body['payment_method'],
+            amount_paid=user_cart.total(request),
+            status=body['status'],
+        )
+        payment.save()
 
         order = Order.objects.create(
             user=request.user,
             order_date=timezone.now(),
             status="Ordered",
             total=user_cart.total(request),
+            payment=payment,
             first_name=request.user.first_name,
             last_name=request.user.last_name,
             phone=request.user.phone,
@@ -63,6 +75,8 @@ class CheckoutView(LoginRequiredMixin, View):
 
         CartItem.objects.filter(cart=user_cart).delete()
         Cart.objects.get(user=request.user).delete()
+
+
         return redirect('Cart')
 
 
