@@ -7,6 +7,10 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages import success
 from django.contrib.auth.decorators import login_required
 import json
+from django.core.mail import EmailMessage
+from django.conf import settings
+from django.template.loader import render_to_string
+from datetime import timedelta
 
 
 class CartListView(LoginRequiredMixin, View):
@@ -21,6 +25,7 @@ class CartListView(LoginRequiredMixin, View):
         for item in items:
             price += item.product.price
         context = {"item_list": items, "price": price}
+
         return render(request, "cart/cart.html", context)
 
 
@@ -51,6 +56,7 @@ class CheckoutView(LoginRequiredMixin, View):
         order = Order.objects.create(
             user=request.user,
             order_date=timezone.now(),
+            return_date=timezone.now()+timedelta(days=7),
             status="Ordered",
             total=user_cart.total(request),
             payment=payment,
@@ -76,6 +82,15 @@ class CheckoutView(LoginRequiredMixin, View):
         CartItem.objects.filter(cart=user_cart).delete()
         Cart.objects.get(user=request.user).delete()
 
+        email_template = render_to_string('cart/email_payment_success.html', {})
+        email = EmailMessage(
+            'TEST',
+            email_template,
+            settings.EMAIL_HOST_USER,
+            ['ktylzanowski@gmail.com'],
+        )
+        email.fail_silently = False
+        email.send()
 
         return redirect('Cart')
 
@@ -93,3 +108,5 @@ class DeleteItemView(LoginRequiredMixin, View):
         item_to_removed.delete()
         success(self.request, "Item Deleted")
         return redirect("Cart")
+
+

@@ -68,6 +68,7 @@ class Order(models.Model):
     ]
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     order_date = models.DateTimeField()
+    return_date = models.DateTimeField(null=True)
     status = models.CharField(choices=status_types, default="Ordered", max_length=100)
     total = models.IntegerField(null=False)
     payment = models.OneToOneField(Payment, on_delete=models.CASCADE, null=True, blank=False)
@@ -87,3 +88,4 @@ class OrderItem(models.Model):
     order = models.OneToOneField(Order, on_delete=models.CASCADE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
     price = models.IntegerField(null=False, blank=False, default=15)
+    debt = models.IntegerField(null=True, default=0)
