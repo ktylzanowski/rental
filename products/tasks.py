@@ -2,6 +2,9 @@ from __future__ import absolute_import, unicode_literals
 from celery import shared_task
 from products.models import Order, OrderItem
 from datetime import datetime, timedelta
+from django.core.mail import EmailMessage
+from django.conf import settings
+from django.template.loader import render_to_string
 
 
 @shared_task(bind=True)
@@ -21,4 +24,13 @@ def send_mail_func(self):
             item.save()
         order.return_date = datetime.today()+timedelta(days=7)
         order.save()
+        email_template = render_to_string('products/debt_email.html', {})
+        email = EmailMessage(
+            'DEBIT HAS BUILT UP',
+            email_template,
+            settings.EMAIL_HOST_USER,
+            [order.user.email],
+        )
+        email.fail_silently = False
+        email.send()
     return "Done"

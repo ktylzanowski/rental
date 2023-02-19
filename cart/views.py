@@ -84,7 +84,7 @@ class CheckoutView(LoginRequiredMixin, View):
 
         email_template = render_to_string('cart/email_payment_success.html', {})
         email = EmailMessage(
-            'TEST',
+            'Payment Success',
             email_template,
             settings.EMAIL_HOST_USER,
             ['ktylzanowski@gmail.com'],
