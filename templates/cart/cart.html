@@ -63,6 +63,8 @@
                         {% elif user.if_address %}
                         <p>Address is not complete</p>
                         {% else %}
+                        <input type="radio" id="pickup" value="pickup"/>Personal Pickup
+                        <input type="radio" id="inpost" value="inpost"/>Inpost
                         <div id="paypal-button-container"></div>
                         {% endif %}
 
@@ -95,6 +97,7 @@ const csrftoken = getCookie('csrftoken');
 
 var total = "{{ price }}"
 var url = "{% url 'Checkout' %}"
+var shippingMethod = "None"
 
 paypal.Buttons({
     createOrder: function(data, actions) {
@@ -109,8 +112,18 @@ paypal.Buttons({
 
 onApprove: function(data, actions) {
     return actions.order.capture().then(function(details){
+        setShipping();
         sendData();
         window.location.href = "{% url 'order_complete' %}";
+        function setShipping(){
+            if(document.getElementById('pickup').checked) {
+                shippingMethod = "pickup"
+            }
+            else if(document.getElementById('inpost').checked) {
+                shippingMethod = "inpost"
+            }
+        };
+
         function sendData(){
             fetch(url, {
                 method: "POST",
@@ -122,6 +135,7 @@ onApprove: function(data, actions) {
                     transID: details.id,
                     payment_method: "Paypal",
                     status: details.status,
+                    shipping: shippingMethod,
                 }),
             })
         }

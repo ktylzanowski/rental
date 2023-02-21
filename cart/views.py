@@ -52,6 +52,7 @@ class CheckoutView(LoginRequiredMixin, View):
             status=body['status'],
         )
         payment.save()
+        print(body['shipping'])
 
         order = Order.objects.create(
             user=request.user,
