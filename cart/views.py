@@ -1,6 +1,6 @@
 from django.views.generic import View
 from .models import CartItem, Cart
-from products.models import Order, OrderItem, Product, Payment
+from products.models import Order, OrderItem, Product, Payment, Shipping, ShippingMethod
 from django.shortcuts import redirect, render
 from django.utils import timezone
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -54,6 +54,17 @@ class CheckoutView(LoginRequiredMixin, View):
         payment.save()
         print(body['shipping'])
 
+        shipping_method = ShippingMethod.objects.get(name=body['shipping'])
+
+        shipping = Shipping.objects.create(
+            user=request.user,
+            shipping_method=shipping_method,
+            if_paid=True,
+            postage=shipping_method.price,
+            quantity_of_items=1,
+        )
+        shipping.save()
+
         order = Order.objects.create(
             user=request.user,
             order_date=timezone.now(),
@@ -61,6 +72,7 @@ class CheckoutView(LoginRequiredMixin, View):
             status="Ordered",
             total=user_cart.total(request),
             payment=payment,
+            shipping=shipping,
             first_name=request.user.first_name,
             last_name=request.user.last_name,
             phone=request.user.phone,

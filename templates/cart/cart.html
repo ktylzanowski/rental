@@ -117,10 +117,10 @@ onApprove: function(data, actions) {
         window.location.href = "{% url 'order_complete' %}";
         function setShipping(){
             if(document.getElementById('pickup').checked) {
-                shippingMethod = "pickup"
+                shippingMethod = "Personal Pickup"
             }
             else if(document.getElementById('inpost').checked) {
-                shippingMethod = "inpost"
+                shippingMethod = "Inpost"
             }
         };
 
