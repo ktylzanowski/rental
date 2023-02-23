@@ -1,8 +1,9 @@
 from django.views.generic import ListView, View
-from products.models import Product
+from products.models import Product, Category
 from django.shortcuts import redirect, render
 from cart.models import Cart, CartItem
 from django.contrib import messages
+from .forms import GenreForm
 
 
 class Home(ListView):
@@ -12,14 +13,12 @@ class Home(ListView):
 
 
 class ProductDetailView(View):
-
     def get(self, request, pk):
         product = Product.objects.get(id=pk)
         context = {'object': product}
         return render(request, "products/detailview.html", context)
 
     def post(self, request, pk):
-
         if not request.user.is_authenticated:
             messages.success(request, "You must be logged in")
             return redirect('Login')
@@ -52,8 +51,16 @@ class ProductDetailView(View):
         return redirect('home')
 
 
-class ProductsByCategoryView(View):
-    def get(self, request, cats):
-        cat = Product.objects.filter(category__name=cats)
-        context = {'object_list': cat}
-        return render(request, "products/home.html", context)
+class ProductsByCategoryView(ListView):
+    model = Product
+    template_name = 'products/home.html'
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        cat = Category.objects.get(name=self.kwargs['cats'])
+        return qs.filter(category=cat)
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data['form'] = GenreForm
+        return data

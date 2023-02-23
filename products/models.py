@@ -38,8 +38,13 @@ class CD(Product):
 
 
 class Book(Product):
+    GENRE_CHOICES = (
+        ('Comedy', 'Comedy'),
+        ('Adventure', 'Adventure'),
+    )
     author = models.CharField(max_length=100)
     isbn = models.CharField(max_length=100)
+    genre = models.CharField(max_length=100, choices=GENRE_CHOICES)
 
 
 class Film(Product):
