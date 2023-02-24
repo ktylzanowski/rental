@@ -8,6 +8,14 @@
 			<div class="alert alert-success text-center" role="alert">{{ message }}</div>
 		{% endfor %}
 	{% endif %}
+	{% if cats %}
+	<form method="GET">
+		{{ form }}
+		<input type="submit">
+	</form>
+
+	{% endif %}
+
 
 	<div class="row">
 	{% for object in object_list %}

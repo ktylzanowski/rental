@@ -1,9 +1,9 @@
 from django.views.generic import ListView, View
-from products.models import Product, Category
+from products.models import Product, Category, Book, Film, CD
 from django.shortcuts import redirect, render
 from cart.models import Cart, CartItem
 from django.contrib import messages
-from .forms import GenreForm
+from . import forms
 
 
 class Home(ListView):
@@ -58,9 +58,22 @@ class ProductsByCategoryView(ListView):
     def get_queryset(self):
         qs = super().get_queryset()
         cat = Category.objects.get(name=self.kwargs['cats'])
-        return qs.filter(category=cat)
+        qs = qs.filter(category=cat)
+        if self.request.GET and self.kwargs['cats'] == 'Book':
+            qs = Book.objects.filter(genre=self.request.GET['genre'])
+        elif self.request.GET and self.kwargs['cats'] == 'CD':
+            qs = CD.objects.filter(genre=self.request.GET['genre'])
+        elif self.request.GET and self.kwargs['cats'] == 'Film':
+            qs = Film.objects.filter(genre=self.request.GET['genre'])
+        return qs
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
-        data['form'] = GenreForm
+        if self.kwargs['cats'] == 'Book':
+            data['form'] = forms.BookGenreForm
+        elif self.kwargs['cats'] == 'CD':
+            data['form'] = forms.CDGenreForm
+        elif self.kwargs['cats'] == 'Film':
+            data['form'] = forms.FilmGenreForm
+        data['cats'] = True
         return data

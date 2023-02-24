@@ -33,14 +33,28 @@ class Product(PolymorphicModel):
 
 
 class CD(Product):
+    GENRE_CHOICES = (
+        ('Rock', 'Rock'),
+        ('Pop', 'Pop'),
+        ('Reggae', 'Reggae'),
+        ('Disco', 'Disco'),
+        ('Rap', 'Rap'),
+        ('Electronic music', 'Electronic music'),
+    )
     band = models.CharField(max_length=100)
     tracklist = models.TextField(max_length=500)
+    genre = models.CharField(max_length=100, choices=GENRE_CHOICES)
 
 
 class Book(Product):
     GENRE_CHOICES = (
-        ('Comedy', 'Comedy'),
-        ('Adventure', 'Adventure'),
+        ('Fantasy', 'Fantasy'),
+        ('Sci-Fi', 'Sci-Fi'),
+        ('Romance', 'Romance'),
+        ('Historical Novel', 'Historical Novel'),
+        ('Horror', 'Horror'),
+        ('Criminal', 'Criminal'),
+        ('Biography', 'Biography'),
     )
     author = models.CharField(max_length=100)
     isbn = models.CharField(max_length=100)
@@ -48,8 +62,17 @@ class Book(Product):
 
 
 class Film(Product):
+    GENRE_CHOICES = (
+        ('Comedy', 'Comedy'),
+        ('Adventure', 'Adventure'),
+        ('Romance', 'Romance'),
+        ('Horror', 'Horror'),
+        ('Thriller', 'Thriller'),
+        ('Animated', 'Animated'),
+    )
     director = models.CharField(max_length=100)
     duration = models.IntegerField()
+    genre = models.CharField(max_length=100, choices=GENRE_CHOICES)
 
 
 class Payment(models.Model):

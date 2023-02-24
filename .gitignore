@@ -129,3 +129,4 @@ dmypy.json
 .pyre/
 
 rental/confidential_data.py
+media/product
