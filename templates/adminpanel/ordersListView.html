@@ -3,7 +3,7 @@
 {% block content %}
 
 <div class="container">
-    {% for order in orders %}
+    {% for order in object_list %}
         <table>
             <tr>
                 <th>Email</th>
@@ -23,9 +23,6 @@
             </tr>
         </table>
 {% endfor %}
-    {% if orders %}
-        <h2><a href="{% url 'OrdersListView' %}">See all Orders</a></h2>
-    {% endif %}
 </div>
 
 {% endblock %}
