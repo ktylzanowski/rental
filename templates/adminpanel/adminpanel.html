@@ -2,4 +2,27 @@
 {% load static %}
 {% block content %}
 
+<div class="container">
+    {% for order in orders %}
+        <table>
+            <tr>
+                <th>Email</th>
+                <th>Ordered Date</th>
+                <th>Item in Order</th>
+                <th>Total</th>
+                <th>Status</th>
+                <th>details</th>
+            </tr>
+            <tr>
+                <td>{{order.user.email}}</td>
+                <td>{{order.order_date}}</td>
+                <td>1</td>
+                <td>{{order.total}}$</td>
+                <td>{{order.status}}</td>
+                <td></td>
+            </tr>
+        </table>
+{% endfor %}
+</div>
+
 {% endblock %}

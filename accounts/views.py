@@ -1,13 +1,12 @@
 from .forms import UserCreationForm, AddressForm
 from django.views.generic import (
-    CreateView, UpdateView, View
+    CreateView, UpdateView,
         )
 from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import MyUser
-from products.models import OrderItem
-from django.shortcuts import render
+
 from django.contrib.messages import success
 
 
@@ -47,13 +46,5 @@ class AccountView(LoginRequiredMixin, UpdateView):
         return MyUser.objects.filter(pk=self.request.user.pk)
 
 
-class OrdersView(LoginRequiredMixin, View):
-    model = OrderItem
-    template_name = "registration/orders.html"
-
-    def get(self, request):
-        obj = OrderItem.objects.filter(user=request.user)
-        context = {'object_list': obj}
-        return render(request, "registration/orders.html", context)
 
 
