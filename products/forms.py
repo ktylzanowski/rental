@@ -2,19 +2,42 @@ from django import forms
 from .models import Book, CD, Film
 
 
+class GenreChoiceField(forms.ChoiceField):
+    def __init__(self, choices=()):
+        super().__init__(choices=choices)
+        self.choices += (('popularity', 'By popularity'), ('alphabetical', 'Alphabetically'),)
+
+
 class BookGenreForm(forms.ModelForm):
+    genre = GenreChoiceField(choices=Book.GENRE_CHOICES)
+
     class Meta:
         model = Book
         fields = ('genre',)
 
 
 class CDGenreForm(forms.ModelForm):
+    genre = GenreChoiceField(choices=CD.GENRE_CHOICES)
+
     class Meta:
         model = CD
         fields = ('genre',)
 
 
 class FilmGenreForm(forms.ModelForm):
+    genre = GenreChoiceField(choices=Film.GENRE_CHOICES)
+
     class Meta:
         model = Film
         fields = ('genre',)
+
+
+class GenreForm(forms.Form):
+    choices = (
+        ('Adventure', 'Adventure'),
+    )
+    genreBook = forms.ChoiceField(choices=choices)
+    choices = (
+        ('Music', 'Music'),
+    )
+    genreCD = forms.ChoiceField(choices=choices)

@@ -53,7 +53,6 @@ class CheckoutView(LoginRequiredMixin, View):
             status=body['status'],
         )
         payment.save()
-        print(body['shipping'])
 
         shipping_method = ShippingMethod.objects.get(name=body['shipping'])
 
@@ -92,6 +91,7 @@ class CheckoutView(LoginRequiredMixin, View):
                 user=request.user,
             )
             orderitem.save()
+
 
         CartItem.objects.filter(cart=user_cart).delete()
         Cart.objects.get(user=request.user).delete()

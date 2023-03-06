@@ -19,6 +19,7 @@ class Product(PolymorphicModel):
     quantity = models.IntegerField(null=False)
     is_available = models.BooleanField(default=True, null=False)
     price = models.IntegerField(null=False, default=15)
+    popularity = models.IntegerField(null=False, default=0)
 
     def __str__(self):
         return str(self.title)

@@ -29,6 +29,8 @@ class ProductDetailView(View):
         cart.save()
 
         added_item = Product.objects.get(id=pk)
+        added_item.popularity += 1
+        added_item.save()
 
         item_in_cart = CartItem.objects.filter(cart=cart)
         for item in item_in_cart:
@@ -59,7 +61,11 @@ class ProductsByCategoryView(ListView):
         qs = super().get_queryset()
         cat = Category.objects.get(name=self.kwargs['cats'])
         qs = qs.filter(category=cat)
-        if self.request.GET and self.kwargs['cats'] == 'Book':
+        if self.request.GET and self.request.GET['genre'] == 'alphabetical':
+            qs = qs.filter(category=cat).order_by('title')
+        elif self.request.GET and self.request.GET['genre'] == 'popularity':
+            qs = qs.filter(category=cat).order_by('popularity')
+        elif self.request.GET and self.kwargs['cats'] == 'Book':
             qs = Book.objects.filter(genre=self.request.GET['genre'])
         elif self.request.GET and self.kwargs['cats'] == 'CD':
             qs = CD.objects.filter(genre=self.request.GET['genre'])
