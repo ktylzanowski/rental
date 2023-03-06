@@ -3,7 +3,8 @@
 {% block content %}
 
 <div class="container">
-    {% for order in orders %}
+
+    <h2>Orders</h2>
         <table>
             <tr>
                 <th>Email</th>
@@ -13,6 +14,7 @@
                 <th>Status</th>
                 <th>details</th>
             </tr>
+            {% for order in orders %}
             <tr>
                 <td>{{order.user.email}}</td>
                 <td>{{order.order_date}}</td>
@@ -21,10 +23,29 @@
                 <td>{{order.status}}</td>
                 <td></td>
             </tr>
+            {% endfor %}
         </table>
-{% endfor %}
+
     {% if orders %}
-        <h2><a href="{% url 'OrdersListView' %}">See all Orders</a></h2>
+        <h6><a href="{% url 'OrdersListView' %}">See all Orders</a></h6>
+    {% endif %}
+    <h2>Carts</h2>
+    <table>
+        <tr>
+            <th>User</th>
+            <th>Total Price</th>
+            <th>Quantity Of Items</th>
+        </tr>
+        {% for cart in carts %}
+        <tr>
+            <td>{{cart.user.email}}</td>
+            <td>{{cart.total}}</td>
+            <td>{{cart.quantity_of_items}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+     {% if carts %}
+        <h6><a href="{% url 'CartListView' %}">See all Carts</a></h6>
     {% endif %}
 </div>
 

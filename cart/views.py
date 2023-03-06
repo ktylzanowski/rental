@@ -22,9 +22,7 @@ class CartListView(LoginRequiredMixin, View):
         )
         user_cart.save()
         items = CartItem.objects.filter(cart=user_cart)
-        price = 0
-        for item in items:
-            price += item.product.price
+        price = user_cart.total()
         context = {"item_list": items, "price": price}
 
         return render(request, "cart/cart.html", context)

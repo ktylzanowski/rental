@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container">
+  {{ object.user.email }}
+  {% for item in cart_items %}
+    {{ item.product.title }}
+  {% endfor %}
+</div>
+{% endblock %}
