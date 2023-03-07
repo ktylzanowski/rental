@@ -3,7 +3,7 @@ from django.views.generic import View, ListView, DetailView, CreateView
 from orders.models import Order
 from cart.models import Cart, CartItem
 from accounts.models import MyUser
-from products.models import Product, Book
+from products.models import Product, Book, CD, Film
 
 
 class AdminPanel(View):
@@ -11,11 +11,23 @@ class AdminPanel(View):
     def get(self, request):
         orders = Order.objects.order_by('-order_date')[:5]
         carts = Cart.objects.filter()[:5]
-        context = {'orders': orders, 'carts': carts}
-        return render(request, 'adminpanel/adminpanel.html', context)
+        number_of_books = len(Book.objects.all())
+        number_of_cds = len(CD.objects.all())
+        number_of_films = len(Film.objects.all())
+        number_of_all_products = len(Product.objects.all())
 
-    def post(self):
-        pass
+        number_of_ordered = len(Order.objects.filter(status="Ordered"))
+        number_of_sent = len(Order.objects.filter(status="sent"))
+        number_of_delivered = len(Order.objects.filter(status="Delivered"))
+        number_of_extended = len(Order.objects.filter(status="Extended"))
+        number_of_returned = len(Order.objects.filter(status="Returned"))
+
+        context = {'orders': orders, 'carts': carts, 'number_of_books': number_of_books, 'number_of_cds': number_of_cds,
+                   'number_of_films': number_of_films, 'number_of_all_products': number_of_all_products, 'number_of_ordered':
+                   number_of_ordered, 'number_of_sent': number_of_sent, 'number_of_delivered': number_of_delivered,
+                   'number_of_extended': number_of_extended, 'number_of_returned': number_of_returned}
+
+        return render(request, 'adminpanel/adminpanel.html', context)
 
 
 class OrderListView(ListView):
@@ -71,5 +83,39 @@ class BookCreateView(CreateView):
         'price',
         'author',
         'isbn',
+        'genre',
+    ]
+
+
+class CDCreateView(CreateView):
+    model = CD
+    template_name = 'adminpanel/createProduct.html'
+    success_url = '/adminpanel/'
+
+    fields = [
+        'title',
+        'image',
+        'category',
+        'quantity',
+        'price',
+        'band',
+        'tracklist',
+        'genre',
+    ]
+
+
+class FilmCreateView(CreateView):
+    model = Film
+    template_name = 'adminpanel/createProduct.html'
+    success_url = '/adminpanel/'
+
+    fields = [
+        'title',
+        'image',
+        'category',
+        'quantity',
+        'price',
+        'director',
+        'duration',
         'genre',
     ]
