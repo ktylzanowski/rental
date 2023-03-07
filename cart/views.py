@@ -90,7 +90,6 @@ class CheckoutView(LoginRequiredMixin, View):
             )
             orderitem.save()
 
-
         CartItem.objects.filter(cart=user_cart).delete()
         Cart.objects.get(user=request.user).delete()
 

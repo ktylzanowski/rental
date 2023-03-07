@@ -3,7 +3,7 @@
 {% block content %}
 
 <div class="container">
-    {% for order in object_list %}
+
         <table>
             <tr>
                 <th>Email</th>
@@ -13,6 +13,7 @@
                 <th>Status</th>
                 <th>details</th>
             </tr>
+            {% for order in object_list %}
             <tr>
                 <td>{{order.user.email}}</td>
                 <td>{{order.order_date}}</td>
@@ -21,8 +22,9 @@
                 <td>{{order.status}}</td>
                 <td></td>
             </tr>
+            {% endfor %}
         </table>
-{% endfor %}
+
 </div>
 
 {% endblock %}

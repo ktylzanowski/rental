@@ -1,8 +1,9 @@
 from django.shortcuts import render
 from django.views.generic import View, ListView, DetailView
-from orders.models import Order, OrderItem
+from orders.models import Order
 from cart.models import Cart, CartItem
-
+from accounts.models import MyUser
+from products.models import Product
 
 class AdminPanel(View):
 
@@ -42,3 +43,15 @@ class CartDetailView(DetailView):
         user_cart = Cart.objects.get(user=self.request.user)
         data['cart_items'] = CartItem.objects.filter(cart=user_cart)
         return data
+
+
+class UsersListView(ListView):
+    model = MyUser
+    template_name = 'adminpanel/usersListView.html'
+    ordering = ['-pk']
+
+
+class ProductsListView(ListView):
+    model = Product
+    template_name = 'adminpanel/productListView.html'
+    ordering = ['-pk']

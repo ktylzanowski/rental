@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container">
+        <table>
+
+            <tr>
+                <th>Title</th>
+            </tr>
+            {% for product in object_list %}
+            <tr>
+                <td>{{product.title}}</td>
+              {% if product.model_name == "book" %}
+                <td>{{ product.isbn}}</td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+        </table>
+
+</div>
+
+{% endblock %}
