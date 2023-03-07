@@ -1,9 +1,10 @@
 from django.shortcuts import render
-from django.views.generic import View, ListView, DetailView
+from django.views.generic import View, ListView, DetailView, CreateView
 from orders.models import Order
 from cart.models import Cart, CartItem
 from accounts.models import MyUser
-from products.models import Product
+from products.models import Product, Book
+
 
 class AdminPanel(View):
 
@@ -55,3 +56,20 @@ class ProductsListView(ListView):
     model = Product
     template_name = 'adminpanel/productListView.html'
     ordering = ['-pk']
+
+
+class BookCreateView(CreateView):
+    model = Book
+    template_name = 'adminpanel/createProduct.html'
+    success_url = '/adminpanel/'
+
+    fields = [
+        'title',
+        'image',
+        'category',
+        'quantity',
+        'price',
+        'author',
+        'isbn',
+        'genre',
+    ]

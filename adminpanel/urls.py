@@ -9,4 +9,5 @@ urlpatterns = [
     path('adminpanel/carts/<int:pk>', views.CartDetailView.as_view(), name='CartDetailView'),
     path('adminpanel/users', views.UsersListView.as_view(), name='UsersListView'),
     path('adminpanel/products', views.ProductsListView.as_view(), name='ProductsListView'),
+    path('adminpanel/products/addBook', views.BookCreateView.as_view(), name='BookCreateView'),
 ]

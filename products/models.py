@@ -12,8 +12,7 @@ class Category(models.Model):
 
 class Product(PolymorphicModel):
 
-    title = models.CharField(max_length=100)
-    slug = models.SlugField(unique=True)
+    title = models.CharField(max_length=100, blank=True)
     image = models.ImageField(upload_to='product', default=None)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, default=None)
     quantity = models.IntegerField(null=False)
