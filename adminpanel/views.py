@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.views.generic import View, ListView, DetailView, CreateView
+from django.views.generic import View, ListView, DetailView, CreateView, DeleteView
 from orders.models import Order
 from cart.models import Cart, CartItem
 from accounts.models import MyUser
@@ -69,6 +69,13 @@ class ProductsListView(ListView):
     template_name = 'adminpanel/productListView.html'
     ordering = ['-pk']
 
+    def get_context_data(self, *, object_list=None, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data['books'] = Book.objects.all()
+        data['cds'] = CD.objects.all()
+        data['films'] = Film.objects.all()
+        return data
+
 
 class BookCreateView(CreateView):
     model = Book
@@ -119,3 +126,8 @@ class FilmCreateView(CreateView):
         'duration',
         'genre',
     ]
+
+
+class BookDeleteView(DeleteView):
+    model = Book
+    success_url = '/adminpanel/'

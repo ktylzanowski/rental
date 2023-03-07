@@ -3,21 +3,73 @@
 {% block content %}
 
 <div class="container">
-        <table>
+    <h2>Books</h2>
+    <table>
+        <tr>
+            <th>Title</th>
+            <th>Author</th>
+            <th>ISBN</th>
+            <th>Genre</th>
+            <th>quantity</th>
+            <th>price</th>
+        </tr>
+        {% for book in books %}
+        <tr>
+            <td> {{ book.title }}</td>
+            <td> {{ book.author }}</td>
+            <td> {{ book.isbn }}</td>
+            <td> {{ book.genre }}</td>
+            <td> {{ book.quantity }}</td>
+            <td> {{ book.popularity }}</td>
+            <td>Edit</td>
+            <td>Delete</td>
+        </tr>
+        {% endfor %}
+    </table>
 
-            <tr>
-                <th>Title</th>
-            </tr>
-            {% for product in object_list %}
-            <tr>
-                <td>{{product.title}}</td>
-              {% if product.model_name == "book" %}
-                <td>{{ product.isbn}}</td>
-                {% endif %}
-            </tr>
-            {% endfor %}
-        </table>
+        <h2>CD's</h2>
+    <table>
+        <tr>
+            <th>Title</th>
+            <th>band</th>
+            <th>tracklist</th>
+            <th>Genre</th>
+            <th>quantity</th>
+            <th>price</th>
+        </tr>
+        {% for cd in cds %}
+        <tr>
+            <td> {{ cd.title }}</td>
+            <td> {{ cd.band }}</td>
+            <td> {{ cd.tracklist }}</td>
+            <td> {{ cd.genre }}</td>
+            <td> {{ cd.quantity }}</td>
+            <td> {{ cd.popularity }}</td>
+        </tr>
+        {% endfor %}
+    </table>
 
+            <h2>Films</h2>
+    <table>
+        <tr>
+            <th>Title</th>
+            <th>director</th>
+            <th>duration</th>
+            <th>Genre</th>
+            <th>quantity</th>
+            <th>price</th>
+        </tr>
+        {% for film in films %}
+        <tr>
+            <td> {{ film.title }}</td>
+            <td> {{ film.director }}</td>
+            <td> {{ film.duration }}</td>
+            <td> {{ film.genre }}</td>
+            <td> {{ film.quantity }}</td>
+            <td> {{ film.popularity }}</td>
+        </tr>
+        {% endfor %}
+    </table>
 </div>
 
 {% endblock %}
