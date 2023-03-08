@@ -1,6 +1,6 @@
 from django.views.generic import View
 from .models import CartItem, Cart
-from orders.models import Order, OrderItem,Payment, Shipping, ShippingMethod
+from orders.models import Order, OrderItem, Payment, Shipping, ShippingMethod
 from products.models import Product
 from django.shortcuts import redirect, render
 from django.utils import timezone

@@ -1,7 +1,7 @@
 from django.contrib import admin
-from .models import CD, Book, Film, Category
+from .models import CD, Book, Film
 
 admin.site.register(CD)
 admin.site.register(Book)
 admin.site.register(Film)
-admin.site.register(Category)
+

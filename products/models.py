@@ -3,18 +3,16 @@ from django.db import models
 from django.urls import reverse
 
 
-class Category(models.Model):
-    name = models.CharField(max_length=100)
-
-    def __str__(self):
-        return str(self.name)
-
-
 class Product(PolymorphicModel):
+    CHOICES_CATEGORY = (
+        ('book', 'Book'),
+        ('cd', 'CD'),
+        ('film', 'Film'),
+    )
 
     title = models.CharField(max_length=100, blank=True)
     image = models.ImageField(upload_to='product', default=None)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, default=None)
+    category = models.CharField(choices=CHOICES_CATEGORY, max_length=20, blank=True, null=False)
     quantity = models.IntegerField(null=False)
     is_available = models.BooleanField(default=True, null=False)
     price = models.IntegerField(null=False, default=15)

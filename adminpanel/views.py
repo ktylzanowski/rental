@@ -71,9 +71,9 @@ class ProductsListView(ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         data = super().get_context_data(**kwargs)
-        data['books'] = Book.objects.all()
-        data['cds'] = CD.objects.all()
-        data['films'] = Film.objects.all()
+        data['books'] = Product.objects.filter(category='book')
+        data['cds'] = Product.objects.filter(category='cd')
+        data['films'] = Product.objects.filter(category='film')
         return data
 
 
@@ -128,6 +128,7 @@ class FilmCreateView(CreateView):
     ]
 
 
-class BookDeleteView(DeleteView):
-    model = Book
-    success_url = '/adminpanel/'
+class ProductDeleteView(DeleteView):
+    model = Product
+    template_name = 'adminpanel/productDelete.html'
+    success_url = '/adminpanel/products'

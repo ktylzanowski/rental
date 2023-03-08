@@ -1,5 +1,5 @@
 from django.views.generic import ListView, View
-from products.models import Product, Category, Book, Film, CD
+from products.models import Product
 from django.shortcuts import redirect, render
 from cart.models import Cart, CartItem
 from django.contrib import messages
@@ -59,27 +59,23 @@ class ProductsByCategoryView(ListView):
 
     def get_queryset(self):
         qs = super().get_queryset()
-        cat = Category.objects.get(name=self.kwargs['cats'])
-        qs = qs.filter(category=cat)
+        category = self.kwargs['category']
+        qs = qs.filter(category=category)
         if self.request.GET and self.request.GET['genre'] == 'alphabetical':
-            qs = qs.filter(category=cat).order_by('title')
+            qs = qs.filter(category=category).order_by('title')
         elif self.request.GET and self.request.GET['genre'] == 'popularity':
-            qs = qs.filter(category=cat).order_by('popularity')
-        elif self.request.GET and self.kwargs['cats'] == 'Book':
-            qs = Book.objects.filter(genre=self.request.GET['genre'])
-        elif self.request.GET and self.kwargs['cats'] == 'CD':
-            qs = CD.objects.filter(genre=self.request.GET['genre'])
-        elif self.request.GET and self.kwargs['cats'] == 'Film':
-            qs = Film.objects.filter(genre=self.request.GET['genre'])
+            qs = qs.filter(category=category).order_by('popularity')
+        elif self.request.GET:
+            qs = qs.filter(category=category, genre=self.request.GET['genre'])
         return qs
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
-        if self.kwargs['cats'] == 'Book':
+        if self.kwargs['category'] == 'book':
             data['form'] = forms.BookGenreForm
-        elif self.kwargs['cats'] == 'CD':
+        elif self.kwargs['category'] == 'cd':
             data['form'] = forms.CDGenreForm
-        elif self.kwargs['cats'] == 'Film':
+        elif self.kwargs['category'] == 'film':
             data['form'] = forms.FilmGenreForm
         data['cats'] = True
         return data
