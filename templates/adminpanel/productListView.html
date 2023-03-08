@@ -21,7 +21,7 @@
             <td> {{ book.genre }}</td>
             <td> {{ book.quantity }}</td>
             <td> {{ book.popularity }}</td>
-            <td>Edit</td>
+            <td><a href="{% url 'BookUpdateView' pk=book.pk %}">Edit</a></td>
             <td><a href="{% url 'ProductDeleteView' pk=book.pk %}">Delete</a></td>
         </tr>
         {% endfor %}
@@ -45,7 +45,7 @@
             <td> {{ cd.genre }}</td>
             <td> {{ cd.quantity }}</td>
             <td> {{ cd.popularity }}</td>
-            <td>Edit</td>
+            <td><a href="{% url 'CDUpdateView' pk=cd.pk %}">Edit</a></td>
             <td><a href="{% url 'ProductDeleteView' pk=cd.pk %}">Delete</a></td>
         </tr>
         {% endfor %}
@@ -69,7 +69,7 @@
             <td> {{ film.genre }}</td>
             <td> {{ film.quantity }}</td>
             <td> {{ film.popularity }}</td>
-            <td>Edit</td>
+            <td><a href="{% url 'FilmUpdateView' pk=film.pk %}">Edit</a></td>
             <td><a href="{% url 'ProductDeleteView' pk=film.pk %}">Delete</a></td>
         </tr>
         {% endfor %}

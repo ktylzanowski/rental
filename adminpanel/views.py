@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.views.generic import View, ListView, DetailView, CreateView, DeleteView
+from django.views.generic import View, ListView, DetailView, CreateView, DeleteView, UpdateView
 from orders.models import Order
 from cart.models import Cart, CartItem
 from accounts.models import MyUser
@@ -132,3 +132,51 @@ class ProductDeleteView(DeleteView):
     model = Product
     template_name = 'adminpanel/productDelete.html'
     success_url = '/adminpanel/products'
+
+
+class BookUpdateView(UpdateView):
+    model = Book
+    template_name = 'adminpanel/productUpdate.html'
+    success_url = '/adminpanel/products'
+    fields = [
+        'title',
+        'image',
+        'category',
+        'quantity',
+        'price',
+        'author',
+        'isbn',
+        'genre',
+    ]
+
+
+class CDUpdateView(UpdateView):
+    model = CD
+    template_name = 'adminpanel/productUpdate.html'
+    success_url = '/adminpanel/products'
+    fields = [
+        'title',
+        'image',
+        'category',
+        'quantity',
+        'price',
+        'band',
+        'tracklist',
+        'genre',
+    ]
+
+
+class FilmUpdateView(UpdateView):
+    model = Film
+    template_name = 'adminpanel/productUpdate.html'
+    success_url = '/adminpanel/products'
+    fields = [
+        'title',
+        'image',
+        'category',
+        'quantity',
+        'price',
+        'director',
+        'duration',
+        'genre',
+    ]
