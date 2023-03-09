@@ -11,6 +11,8 @@
             {% for user in object_list %}
             <tr>
                 <td>{{user.email}}</td>
+                <td><a href="{% url 'UserUpdateView' pk=user.pk %}">Edit</a></td>
+                <td><a href="{% url 'UserDeleteView' pk=user.pk %}">Delete</a></td>
             </tr>
             {% endfor %}
         </table>

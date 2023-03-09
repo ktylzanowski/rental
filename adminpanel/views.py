@@ -180,3 +180,29 @@ class FilmUpdateView(UpdateView):
         'duration',
         'genre',
     ]
+
+
+class UserDeleteView(DeleteView):
+    model = MyUser
+    template_name = 'adminpanel/productDelete.html'
+    success_url = '/adminpanel/users'
+
+
+class UserUpdateView(UpdateView):
+    model = MyUser
+    template_name = 'adminpanel/productUpdate.html'
+    success_url = '/adminpanel/users'
+    fields = [
+        'email',
+        'first_name',
+        'last_name',
+        'phone',
+        'city',
+        'zip_code',
+        'street',
+        'building_number',
+        'apartment_number',
+        'is_active',
+        'is_admin',
+        'is_staff',
+    ]

@@ -16,4 +16,6 @@ urlpatterns = [
     path('adminpanel/products/bookUpdate/<int:pk>', views.BookUpdateView.as_view(), name='BookUpdateView'),
     path('adminpanel/products/cdUpdate/<int:pk>', views.CDUpdateView.as_view(), name='CDUpdateView'),
     path('adminpanel/products/filmUpdate/<int:pk>', views.FilmUpdateView.as_view(), name='FilmUpdateView'),
+    path('adminpanel/users/userDelete/<int:pk>', views.UserDeleteView.as_view(), name='UserDeleteView'),
+    path('adminpanel/users/userUpdate/<int:pk>', views.UserUpdateView.as_view(), name='UserUpdateView'),
 ]
