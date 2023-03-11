@@ -18,4 +18,5 @@ urlpatterns = [
     path('adminpanel/products/filmUpdate/<int:pk>', views.FilmUpdateView.as_view(), name='FilmUpdateView'),
     path('adminpanel/users/userDelete/<int:pk>', views.UserDeleteView.as_view(), name='UserDeleteView'),
     path('adminpanel/users/userUpdate/<int:pk>', views.UserUpdateView.as_view(), name='UserUpdateView'),
+    path('adminpanel/order/changestatus/<int:pk>', views.ChangeOrderStatus.as_view(), name='ChangeOrderStatus'),
 ]

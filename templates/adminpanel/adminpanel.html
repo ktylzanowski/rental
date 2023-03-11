@@ -46,6 +46,7 @@
                 <th>Total</th>
                 <th>Status</th>
                 <th>details</th>
+                <th>Change Status</th>
             </tr>
             {% for order in orders %}
             <tr>
@@ -54,7 +55,13 @@
                 <td>1</td>
                 <td>{{order.total}}$</td>
                 <td>{{order.status}}</td>
-                <td></td>
+                <td><a href="{% url 'OrderDetailView' pk=order.pk %}">Details</a></td>
+                <td>
+                   <form action="{% url 'ChangeOrderStatus' pk=order.pk %}" method="POST">{% csrf_token %}
+                    {{ order_status.status }}
+                    <input type="submit" value="Change Status">
+                    </form>
+                </td>
             </tr>
             {% endfor %}
         </table>

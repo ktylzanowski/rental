@@ -1,9 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic import View, ListView, DetailView, CreateView, DeleteView, UpdateView
 from orders.models import Order, OrderItem
 from cart.models import Cart, CartItem
 from accounts.models import MyUser
 from products.models import Product, Book, CD, Film
+from .forms import OrderStatus
 
 
 class AdminPanel(View):
@@ -22,10 +23,13 @@ class AdminPanel(View):
         number_of_extended = len(Order.objects.filter(status="Extended"))
         number_of_returned = len(Order.objects.filter(status="Returned"))
 
+        change_order_status = OrderStatus
+
         context = {'orders': orders, 'carts': carts, 'number_of_books': number_of_books, 'number_of_cds': number_of_cds,
-                   'number_of_films': number_of_films, 'number_of_all_products': number_of_all_products, 'number_of_ordered':
-                   number_of_ordered, 'number_of_sent': number_of_sent, 'number_of_delivered': number_of_delivered,
-                   'number_of_extended': number_of_extended, 'number_of_returned': number_of_returned}
+                   'number_of_films': number_of_films, 'number_of_all_products': number_of_all_products,
+                   'number_of_ordered': number_of_ordered, 'number_of_sent': number_of_sent,
+                   'number_of_delivered': number_of_delivered, 'number_of_extended': number_of_extended,
+                   'number_of_returned': number_of_returned, 'order_status': change_order_status}
 
         return render(request, 'adminpanel/adminpanel.html', context)
 
@@ -35,6 +39,11 @@ class OrderListView(ListView):
     template_name = 'adminpanel/ordersListView.html'
     ordering = ['-pk']
 
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data['order_status'] = OrderStatus
+        return data
+
 
 class OrderDetailView(DetailView):
     model = Order
@@ -43,7 +52,7 @@ class OrderDetailView(DetailView):
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         order_items = OrderItem.objects.filter(order=kwargs['object'])
-        print(order_items)
+        data['order_status'] = OrderStatus
         data['order_items'] = order_items
         return data
 
@@ -213,3 +222,11 @@ class UserUpdateView(UpdateView):
         'is_admin',
         'is_staff',
     ]
+
+
+class ChangeOrderStatus(View):
+    def post(self, request, pk):
+        order = Order.objects.get(pk=pk)
+        order.status = self.request.POST['status']
+        order.save()
+        return redirect('OrdersListView')

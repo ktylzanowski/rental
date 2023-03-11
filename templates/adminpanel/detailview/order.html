@@ -10,6 +10,7 @@
                 <th>Item in Order</th>
                 <th>Total</th>
                 <th>Status</th>
+                <th>Change Status</th>
             </tr>
             <tr>
                 <td>{{object.user.email}}</td>
@@ -17,7 +18,27 @@
                 <td>1</td>
                 <td>{{object.total}}$</td>
                 <td>{{object.status}}</td>
+                <td>
+                    <form action="{% url 'ChangeOrderStatus' pk=order.pk %}" method="POST">{% csrf_token %}
+                    {{ order_status.status }}
+                    <input type="submit" value="Change Status">
+                    </form>
+                </td>
             </tr>
+    </table>
+    <table>
+        <tr>
+            <th>Product</th>
+            <th>Product id</th>
+            <th>Cost</th>
+        </tr>
+        {% for item in order_items %}
+        <tr>
+            <td> {{ item.product.title }}</td>
+            <td> {{ item.product.id }}</td>
+            <td> {{ item.price }}$</td>
+        </tr>
+        {% endfor %}
     </table>
 </div>
 {% endblock %}
