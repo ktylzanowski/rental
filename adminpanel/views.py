@@ -109,6 +109,14 @@ class BookCreateView(CreateView):
         'genre',
     ]
 
+    def form_valid(self, form):
+        books = Book.objects.all()
+        for book in books:
+            if book.author == self.request.POST['author'] and book.title == self.request.POST['title'] \
+                    and book.genre == self.request.POST['genre']:
+                return redirect('BookCreateView')
+        return super().form_valid(form)
+
 
 class CDCreateView(CreateView):
     model = CD
@@ -142,6 +150,15 @@ class FilmCreateView(CreateView):
         'duration',
         'genre',
     ]
+
+    def form_valid(self, form):
+        films = Film.objects.all()
+        for film in films:
+            
+            if film.director == self.request.POST['director'] and film.title == self.request.POST['title'] \
+                    and str(film.duration) == (self.request.POST['duration']):
+                return redirect('FilmCreateView')
+        return super().form_valid(form)
 
 
 class ProductDeleteView(DeleteView):

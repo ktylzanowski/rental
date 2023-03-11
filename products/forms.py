@@ -30,14 +30,3 @@ class FilmGenreForm(forms.ModelForm):
     class Meta:
         model = Film
         fields = ('genre',)
-
-
-class GenreForm(forms.Form):
-    choices = (
-        ('Adventure', 'Adventure'),
-    )
-    genreBook = forms.ChoiceField(choices=choices)
-    choices = (
-        ('Music', 'Music'),
-    )
-    genreCD = forms.ChoiceField(choices=choices)

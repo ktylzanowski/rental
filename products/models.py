@@ -15,8 +15,8 @@ class Product(PolymorphicModel):
     category = models.CharField(choices=CHOICES_CATEGORY, max_length=20, blank=True, null=False)
     quantity = models.IntegerField(null=False)
     is_available = models.BooleanField(default=True, null=False)
-    price = models.IntegerField(null=False, default=15)
-    popularity = models.IntegerField(null=False, default=0)
+    price = models.IntegerField(null=False, blank=False, default=15)
+    popularity = models.IntegerField(default=0)
 
     def __str__(self):
         return str(self.title)
@@ -29,6 +29,15 @@ class Product(PolymorphicModel):
         return self._meta.model_name
 
 
+class Rental(models.Model):
+    name = models.CharField(max_length=100, null=False, blank=False)
+    city = models.CharField(max_length=100, null=False, blank=False)
+    zip_code = models.CharField(max_length=100, null=False, blank=False)
+    street = models.CharField(max_length=100, null=False, blank=False)
+    building_number = models.CharField(max_length=10, null=False, blank=False)
+    apartment_number = models.CharField(max_length=10, null=True, blank=True)
+
+
 class CD(Product):
     GENRE_CHOICES = (
         ('Rock', 'Rock'),
@@ -38,9 +47,9 @@ class CD(Product):
         ('Rap', 'Rap'),
         ('Electronic music', 'Electronic music'),
     )
-    band = models.CharField(max_length=100)
-    tracklist = models.TextField(max_length=500)
-    genre = models.CharField(max_length=100, choices=GENRE_CHOICES)
+    band = models.CharField(max_length=100, null=False, blank=False)
+    tracklist = models.TextField(max_length=500, null=False, blank=False)
+    genre = models.CharField(max_length=100, choices=GENRE_CHOICES, null=False, blank=False)
 
 
 class Book(Product):
@@ -53,9 +62,9 @@ class Book(Product):
         ('Criminal', 'Criminal'),
         ('Biography', 'Biography'),
     )
-    author = models.CharField(max_length=100)
-    isbn = models.CharField(max_length=100)
-    genre = models.CharField(max_length=100, choices=GENRE_CHOICES)
+    author = models.CharField(max_length=100, null=False, blank=False)
+    isbn = models.CharField(max_length=100, null=False, blank=False)
+    genre = models.CharField(max_length=100, choices=GENRE_CHOICES, null=False, blank=False)
 
 
 class Film(Product):
@@ -67,6 +76,6 @@ class Film(Product):
         ('Thriller', 'Thriller'),
         ('Animated', 'Animated'),
     )
-    director = models.CharField(max_length=100)
-    duration = models.IntegerField()
-    genre = models.CharField(max_length=100, choices=GENRE_CHOICES)
+    director = models.CharField(max_length=100, null=False, blank=False)
+    duration = models.IntegerField(null=False, blank=False)
+    genre = models.CharField(max_length=100, choices=GENRE_CHOICES, null=False, blank=False)
