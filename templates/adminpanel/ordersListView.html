@@ -11,7 +11,6 @@
                 <th>Item in Order</th>
                 <th>Total</th>
                 <th>Status</th>
-                <th>details</th>
             </tr>
             {% for order in object_list %}
             <tr>
@@ -20,7 +19,7 @@
                 <td>1</td>
                 <td>{{order.total}}$</td>
                 <td>{{order.status}}</td>
-                <td></td>
+                <td><a href="{% url 'OrderDetailView' pk=order.pk %}">Details</a></td>
             </tr>
             {% endfor %}
         </table>

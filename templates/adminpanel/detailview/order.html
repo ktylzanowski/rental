@@ -3,6 +3,21 @@
 {% block content %}
 
 <div class="container">
-  {{ object.user.email }}
+  <table>
+            <tr>
+                <th>Email</th>
+                <th>Ordered Date</th>
+                <th>Item in Order</th>
+                <th>Total</th>
+                <th>Status</th>
+            </tr>
+            <tr>
+                <td>{{object.user.email}}</td>
+                <td>{{object.order_date}}</td>
+                <td>1</td>
+                <td>{{object.total}}$</td>
+                <td>{{object.status}}</td>
+            </tr>
+    </table>
 </div>
 {% endblock %}

@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views.generic import View, ListView, DetailView, CreateView, DeleteView, UpdateView
-from orders.models import Order
+from orders.models import Order, OrderItem
 from cart.models import Cart, CartItem
 from accounts.models import MyUser
 from products.models import Product, Book, CD, Film
@@ -39,6 +39,13 @@ class OrderListView(ListView):
 class OrderDetailView(DetailView):
     model = Order
     template_name = 'adminpanel/detailview/order.html'
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        order_items = OrderItem.objects.filter(order=kwargs['object'])
+        print(order_items)
+        data['order_items'] = order_items
+        return data
 
 
 class CartListView(ListView):

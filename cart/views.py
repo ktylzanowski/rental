@@ -47,7 +47,7 @@ class CheckoutView(LoginRequiredMixin, View):
             user=request.user,
             payment_id=body['transID'],
             payment_method=body['payment_method'],
-            amount_paid=user_cart.total(request),
+            amount_paid=user_cart.total(),
             status=body['status'],
         )
         payment.save()
@@ -68,7 +68,7 @@ class CheckoutView(LoginRequiredMixin, View):
             order_date=timezone.now(),
             return_date=timezone.now()+timedelta(days=7),
             status="Ordered",
-            total=user_cart.total(request),
+            total=user_cart.total(),
             payment=payment,
             shipping=shipping,
             first_name=request.user.first_name,
@@ -83,12 +83,11 @@ class CheckoutView(LoginRequiredMixin, View):
         order.save()
 
         for item in items_in_cart:
-            orderitem = OrderItem.objects.create(
+            OrderItem.objects.create(
                 product=item.product,
                 order=order,
                 user=request.user,
-            )
-            orderitem.save()
+            ).save()
 
         CartItem.objects.filter(cart=user_cart).delete()
         Cart.objects.get(user=request.user).delete()
