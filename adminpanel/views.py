@@ -10,26 +10,28 @@ from .forms import OrderStatus
 class AdminPanel(View):
 
     def get(self, request):
-        orders = Order.objects.order_by('-order_date')[:5]
-        carts = Cart.objects.filter()[:5]
         number_of_books = len(Book.objects.all())
         number_of_cds = len(CD.objects.all())
         number_of_films = len(Film.objects.all())
         number_of_all_products = len(Product.objects.all())
 
         number_of_ordered = len(Order.objects.filter(status="Ordered"))
-        number_of_sent = len(Order.objects.filter(status="sent"))
+        number_of_sent = len(Order.objects.filter(status="Sent"))
         number_of_delivered = len(Order.objects.filter(status="Delivered"))
         number_of_extended = len(Order.objects.filter(status="Extended"))
         number_of_returned = len(Order.objects.filter(status="Returned"))
 
-        change_order_status = OrderStatus
+        number_of_carts = len(Cart.objects.all())
+        number_of_items_in_carts = len(CartItem.objects.all())
 
-        context = {'orders': orders, 'carts': carts, 'number_of_books': number_of_books, 'number_of_cds': number_of_cds,
+        number_of_users = len(MyUser.objects.all())
+
+        context = {'number_of_books': number_of_books, 'number_of_cds': number_of_cds,
                    'number_of_films': number_of_films, 'number_of_all_products': number_of_all_products,
                    'number_of_ordered': number_of_ordered, 'number_of_sent': number_of_sent,
                    'number_of_delivered': number_of_delivered, 'number_of_extended': number_of_extended,
-                   'number_of_returned': number_of_returned, 'order_status': change_order_status}
+                   'number_of_returned': number_of_returned, 'number_of_carts': number_of_carts,
+                   'number_of_items_in_carts': number_of_items_in_carts, 'number_of_users': number_of_users}
 
         return render(request, 'adminpanel/adminpanel.html', context)
 
@@ -38,6 +40,14 @@ class OrderListView(ListView):
     model = Order
     template_name = 'adminpanel/ordersListView.html'
     ordering = ['-pk']
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+
+        if self.request.GET:
+            qs = qs.filter(status=self.request.GET['status'])
+
+        return qs
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
@@ -101,7 +111,6 @@ class BookCreateView(CreateView):
     fields = [
         'title',
         'image',
-        'category',
         'quantity',
         'price',
         'author',
@@ -126,7 +135,6 @@ class CDCreateView(CreateView):
     fields = [
         'title',
         'image',
-        'category',
         'quantity',
         'price',
         'band',
@@ -143,7 +151,6 @@ class FilmCreateView(CreateView):
     fields = [
         'title',
         'image',
-        'category',
         'quantity',
         'price',
         'director',
@@ -154,7 +161,6 @@ class FilmCreateView(CreateView):
     def form_valid(self, form):
         films = Film.objects.all()
         for film in films:
-            
             if film.director == self.request.POST['director'] and film.title == self.request.POST['title'] \
                     and str(film.duration) == (self.request.POST['duration']):
                 return redirect('FilmCreateView')
@@ -174,7 +180,6 @@ class BookUpdateView(UpdateView):
     fields = [
         'title',
         'image',
-        'category',
         'quantity',
         'price',
         'author',
@@ -190,7 +195,6 @@ class CDUpdateView(UpdateView):
     fields = [
         'title',
         'image',
-        'category',
         'quantity',
         'price',
         'band',
@@ -206,7 +210,6 @@ class FilmUpdateView(UpdateView):
     fields = [
         'title',
         'image',
-        'category',
         'quantity',
         'price',
         'director',

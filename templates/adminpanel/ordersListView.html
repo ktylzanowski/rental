@@ -4,13 +4,20 @@
 
 <div class="container">
 
+    <form method="GET">
+		{{ order_status }}
+		<input type="submit">
+	</form>
+
         <table>
             <tr>
-                <th>Email</th>
+                <th>User</th>
                 <th>Ordered Date</th>
                 <th>Item in Order</th>
                 <th>Total</th>
                 <th>Status</th>
+                <th>Phone</th>
+                <th>Address</th>
                 <th>Detail</th>
                 <th>Change Status</th>
             </tr>
@@ -21,16 +28,23 @@
                 <td>1</td>
                 <td>{{order.total}}$</td>
                 <td>{{order.status}}</td>
+                <td>{{order.phone}}</td>
+                <td>
+                    {{order.city}} {{order.zip_code}} {{ order.street}} {{order.building_number}}
+                    {% if order.apartment_number %}
+                    {{order.apartment_number}}
+                    {% endif %}
+                </td>
                 <td><a href="{% url 'OrderDetailView' pk=order.pk %}">Details</a></td>
                 <td>
                     <form action="{% url 'ChangeOrderStatus' pk=order.pk %}" method="POST">{% csrf_token %}
                     {{ order_status.status }}
                     <input type="submit" value="Change Status">
+                    </form>
                 </td>
             </tr>
             {% endfor %}
         </table>
-
 </div>
 
 {% endblock %}

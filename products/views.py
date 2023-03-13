@@ -1,5 +1,5 @@
 from django.views.generic import ListView, View
-from products.models import Product
+from products.models import Product, Book, CD, Film
 from django.shortcuts import redirect, render
 from cart.models import Cart, CartItem
 from django.contrib import messages
@@ -9,7 +9,7 @@ from . import forms
 class Home(ListView):
     model = Product
     template_name = 'products/home.html'
-    ordering = ['-pk']
+    ordering = ['popularity']
 
 
 class ProductDetailView(View):
@@ -56,6 +56,7 @@ class ProductDetailView(View):
 class ProductsByCategoryView(ListView):
     model = Product
     template_name = 'products/home.html'
+    ordering = ['popularity']
 
     def get_queryset(self):
         qs = super().get_queryset()
@@ -65,12 +66,17 @@ class ProductsByCategoryView(ListView):
             qs = qs.filter(category=category).order_by('title')
         elif self.request.GET and self.request.GET['genre'] == 'popularity':
             qs = qs.filter(category=category).order_by('popularity')
-        elif self.request.GET:
-            qs = qs.filter(category=category, genre=self.request.GET['genre'])
+        elif self.request.GET and category == 'book':
+            qs = Book.objects.filter(genre=self.request.GET['genre'])
+        elif self.request.GET and category == 'cd':
+            qs = CD.objects.filter(genre=self.request.GET['genre'])
+        elif self.request.GET and category == 'film':
+            qs = Film.objects.filter(genre=self.request.GET['genre'])
         return qs
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
+        data['form'] = forms.GenreChoiceField
         if self.kwargs['category'] == 'book':
             data['form'] = forms.BookGenreForm
         elif self.kwargs['category'] == 'cd':

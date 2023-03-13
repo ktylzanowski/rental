@@ -3,10 +3,11 @@
 {% block content %}
 
 <div class="container">
+    <h2>Products</h2>
     <a href="{% url 'BookCreateView' %}"><input type="submit" value="Add Book"></a>
     <a href="{% url 'CDCreateView'%}"><input type="submit" value="Add CD"></a>
     <a href="{% url 'FilmCreateView'%}"><input type="submit" value="Add Film"></a>
-    <a href="{% url 'ProductsListView' %}">All Products</a>
+
     <table>
         <tr>
             <th>number of all products</th>
@@ -21,6 +22,8 @@
             <td>{{ number_of_films }}</td>
         </tr>
     </table>
+    <a href="{% url 'ProductsListView' %}">All Products</a>
+    <hr>
     <h2>Orders</h2>
     <table>
         <tr>
@@ -31,64 +34,38 @@
             <td>number of returned</td>
         </tr>
         <tr>
-            <td>{{ number_of_ordered }}</td>
-            <td>{{ number_of_sent }}</td>
-            <td>{{ number_of_delivered }}</td>
-            <td>{{ number_of_extended }}</td>
-            <td>{{ number_of_returned }}</td>
+            <th>{{ number_of_ordered }}</th>
+            <th>{{ number_of_sent }}</th>
+            <th>{{ number_of_delivered }}</th>
+            <th>{{ number_of_extended }}</th>
+            <th>{{ number_of_returned }}</th>
         </tr>
     </table>
-        <table>
-            <tr>
-                <th>Email</th>
-                <th>Ordered Date</th>
-                <th>Item in Order</th>
-                <th>Total</th>
-                <th>Status</th>
-                <th>details</th>
-                <th>Change Status</th>
-            </tr>
-            {% for order in orders %}
-            <tr>
-                <td>{{order.user.email}}</td>
-                <td>{{order.order_date}}</td>
-                <td>1</td>
-                <td>{{order.total}}$</td>
-                <td>{{order.status}}</td>
-                <td><a href="{% url 'OrderDetailView' pk=order.pk %}">Details</a></td>
-                <td>
-                   <form action="{% url 'ChangeOrderStatus' pk=order.pk %}" method="POST">{% csrf_token %}
-                    {{ order_status.status }}
-                    <input type="submit" value="Change Status">
-                    </form>
-                </td>
-            </tr>
-            {% endfor %}
-        </table>
-
-    {% if orders %}
-        <h6><a href="{% url 'OrdersListView' %}">See all Orders</a></h6>
-    {% endif %}
-
+    <h6><a href="{% url 'OrdersListView' %}">See all Orders</a></h6>
+    <hr>
     <h2>Carts</h2>
     <table>
         <tr>
-            <th>User</th>
-            <th>Total Price</th>
-            <th>Quantity Of Items</th>
+            <td>Number of carts</td>
+            <td>Number of items in carts</td>
         </tr>
-        {% for cart in carts %}
         <tr>
-            <td>{{cart.user.email}}</td>
-            <td>{{cart.total}}</td>
-            <td>{{cart.quantity_of_items}}</td>
+            <td>{{ number_of_carts }}</td>
+            <td>{{ number_of_items_in_carts}}</td>
         </tr>
-        {% endfor %}
     </table>
-     {% if carts %}
-        <h6><a href="{% url 'CartListView' %}">See all Carts</a></h6>
-    {% endif %}
-    <h5><a href="{% url 'UsersListView' %}">Users</a></h5>
+    <h6><a href="{% url 'CartListView' %}">See all Carts</a></h6>
+    <hr>
+    <h2>Users</h2>
+    <table>
+        <tr>
+            <td>Number of users</td>
+        </tr>
+        <tr>
+            <th> {{ number_of_users }}</th>
+        </tr>
+    </table>
+    <h6><a href="{% url 'UsersListView' %}">See all Users</a></h6>
 </div>
 
 {% endblock %}
