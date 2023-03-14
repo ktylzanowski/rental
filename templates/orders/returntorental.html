@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container">
+
+	<div class="row">
+        <h2>Return the product in question in person to any of the addresses:</h2>
+	{% for object in object_list %}
+        <p>{{ object.city }}, {{object.zip_code}}, {{object.street}},
+		{{object.building_number}},
+			{% if object.apartment_number %}
+				{{object.apartment_number}}
+			{% endif %}
+		</p>
+	{% endfor %}
+	</div>
+</div>
+{% endblock %}

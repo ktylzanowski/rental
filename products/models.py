@@ -36,7 +36,8 @@ class Rental(models.Model):
     street = models.CharField(max_length=100, null=False, blank=False)
     building_number = models.CharField(max_length=10, null=False, blank=False)
     apartment_number = models.CharField(max_length=10, null=True, blank=True)
-
+    def __str__(self):
+        return self.name
 
 class CD(Product):
     GENRE_CHOICES = (

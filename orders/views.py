@@ -3,7 +3,8 @@ from django.shortcuts import render, redirect
 from django.views.generic import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages import success
-
+from products.models import Rental
+from django.views.generic import ListView
 
 class OrdersView(LoginRequiredMixin, View):
     model = OrderItem
@@ -29,7 +30,7 @@ class PayDebt(View):
     def post(self, request):
         orders = Order.objects.filter(user=request.user, status='Extended')
         orders_items_extended = OrderItem.objects.filter(user=request.user, order__status='Extended')
-        
+
         for item in orders_items_extended:
             item.debt = 0
             item.save()
@@ -39,3 +40,9 @@ class PayDebt(View):
             order.save()
 
         return redirect("home")
+
+
+class ReturnView(ListView):
+    model = Rental
+    template_name = 'orders/returntorental.html'
+

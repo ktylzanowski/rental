@@ -14,6 +14,7 @@
 								<th scope="col" width="120">Status</th>
 								<th scope="col" width="120">Price</th>
 								<th scope="col" width="120">Debit</th>
+								<th scope="col" width="120">Return</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -38,6 +39,11 @@
 										<div class="price-wrap">
 											<div class="price">{{ item.debt }} $</div>
 											<p><small class="text-muted">Debt</small></p>
+										</div>
+									</td>
+									<td class="text-right">
+										<div class="price-wrap">
+											<div class="price"><a href="{% url 'ReturnView' %}">Return</a></div>
 										</div>
 									</td>
 								</tr>
