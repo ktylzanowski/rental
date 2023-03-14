@@ -30,14 +30,14 @@
 									</td>
 									<td>
 										<div class="price-wrap">
-											<div class="price">$15</div>
+											<div class="price">{{ item.price }} $</div>
 											<p><small class="text-muted">per two weeks</small></p>
 										</div>
 									</td>
 									<td class="text-right">
 										<div class="price-wrap">
-											<div class="price">$15</div>
-											<p><small class="text-muted">Debit</small></p>
+											<div class="price">{{ item.debt }} $</div>
+											<p><small class="text-muted">Debt</small></p>
 										</div>
 									</td>
 								</tr>
@@ -51,12 +51,16 @@
 					<div class="card-body">
 						<dl class="dlist-align">
 							<dt>Total debit:</dt>
-							<dd class="text-right">$30</dd>
+							<dd class="text-right">{{price}}$</dd>
 						</dl>
+						{% if price != 0 %}
 						<form method="POST">
 							{% csrf_token %}
 							<div id="paypal-button-container"></div>
 						</form>
+						{% else %}
+							No debt
+						{% endif %}
 					</div>
 				</div>
 			</aside>
@@ -84,7 +88,7 @@ function getCookie(name) {
 }
 const csrftoken = getCookie('csrftoken');
 
-var total = 30
+var total = {{ price }}
 var url = "{% url 'PayDebt' %}"
 
 paypal.Buttons({
@@ -101,7 +105,7 @@ paypal.Buttons({
 onApprove: function(data, actions) {
     return actions.order.capture().then(function(details){
         sendData();
-		window.location.href = "{% url 'CompletePayDebt' %}";
+        window.location.href = url;
         function sendData(){
             fetch(url, {
                 method: "POST",

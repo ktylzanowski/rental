@@ -248,5 +248,10 @@ class ChangeOrderStatus(View):
     def post(self, request, pk):
         order = Order.objects.get(pk=pk)
         order.status = self.request.POST['status']
+        if self.request.POST['status'] == 'Extended':
+            items = OrderItem.objects.filter(order=order)
+            for item in items:
+                item.debt += item.price
+                item.save()
         order.save()
         return redirect('OrdersListView')

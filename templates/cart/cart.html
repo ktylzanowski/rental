@@ -65,7 +65,11 @@
                         {% else %}
                         <input type="radio" id="pickup" value="pickup" name="shipping" checked/>Personal Pickup
                         <input type="radio" id="inpost" value="inpost" name="shipping"/>Inpost
-                        <div id="paypal-button-container"></div>
+                        <form method="POST">
+                            {% csrf_token %}
+                            <div id="paypal-button-container"></div>
+                        </form>
+
                         {% endif %}
 
                     </div>
