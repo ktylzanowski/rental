@@ -55,7 +55,7 @@
 						</dl>
 						<form method="POST">
 							{% csrf_token %}
-							<button class="btn btn-primary btn-block">Pay debit</button>
+							<div id="paypal-button-container"></div>
 						</form>
 					</div>
 				</div>
@@ -64,4 +64,60 @@
 	</div>
 </section>
 
+<script src="https://www.paypal.com/sdk/js?client-id=ASSy-9ZwcMqTUmhxXQbvWkM6gGMm0ZpY-fpQJoMxMTxXHU0qxKVerVhwZSGfJxqUleLOYu5YADkZbTH1&currency=USD"></script>
+
+<script>
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+const csrftoken = getCookie('csrftoken');
+
+var total = 30
+var url = "{% url 'PayDebt' %}"
+
+paypal.Buttons({
+    createOrder: function(data, actions) {
+        return actions.order.create({
+            purchase_units: [{
+                amount: {
+                    value: total
+                }
+            }]
+        });
+    },
+
+onApprove: function(data, actions) {
+    return actions.order.capture().then(function(details){
+        sendData();
+		window.location.href = "{% url 'CompletePayDebt' %}";
+        function sendData(){
+            fetch(url, {
+                method: "POST",
+                headers: {
+                    "Content-type": "application/json",
+                    "X-CSRFToken": csrftoken,
+                },
+                body: JSON.stringify({
+                    transID: details.id,
+                    payment_method: "Paypal",
+                }),
+            })
+        }
+    });
+}
+}).render('#paypal-button-container');
+
+</script>
 {% endblock %}

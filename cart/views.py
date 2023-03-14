@@ -6,7 +6,6 @@ from django.shortcuts import redirect, render
 from django.utils import timezone
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages import success
-from django.contrib.auth.decorators import login_required
 import json
 from django.core.mail import EmailMessage
 from django.conf import settings
@@ -28,13 +27,11 @@ class CartListView(LoginRequiredMixin, View):
         return render(request, "cart/cart.html", context)
 
 
-@login_required()
-def order_complete(request):
-    success(request, "Your order was successful!")
-    return redirect('home')
-
-
 class CheckoutView(LoginRequiredMixin, View):
+
+    def get(self, request):
+        success(request, "Your order was successful!")
+        return redirect('home')
 
     def post(self, request):
         user_cart = Cart.objects.get(user=request.user)
@@ -101,8 +98,7 @@ class CheckoutView(LoginRequiredMixin, View):
         )
         email.fail_silently = False
         email.send()
-
-        return redirect('Cart')
+        return redirect('home')
 
 
 class DeleteItemView(LoginRequiredMixin, View):
