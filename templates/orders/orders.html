@@ -43,7 +43,7 @@
 									</td>
 									<td class="text-right">
 										<div class="price-wrap">
-											<div class="price"><a href="{% url 'ReturnView' %}">Return</a></div>
+											<div class="price"><a href="{% url 'ReturnView' pk=item.order.pk %}">Return</a></div>
 										</div>
 									</td>
 								</tr>
@@ -52,6 +52,7 @@
 					</table>
 				</div>
 			</aside>
+
 			<aside class="col-lg-3">
 				<div class="card">
 					<div class="card-body">
@@ -70,9 +71,12 @@
 					</div>
 				</div>
 			</aside>
+			<h2><a href="{% url 'OrdersArchive' %}">Archive</a></h2>
 		</div>
 	</div>
+
 </section>
+
 
 <script src="https://www.paypal.com/sdk/js?client-id=ASSy-9ZwcMqTUmhxXQbvWkM6gGMm0ZpY-fpQJoMxMTxXHU0qxKVerVhwZSGfJxqUleLOYu5YADkZbTH1&currency=USD"></script>
 

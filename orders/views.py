@@ -6,20 +6,34 @@ from django.contrib.messages import success
 from products.models import Rental
 from django.views.generic import ListView
 
-class OrdersView(LoginRequiredMixin, View):
+
+class OrdersView(LoginRequiredMixin, ListView):
     model = OrderItem
-    template_name = "registration/orders.html"
+    template_name = "orders/orders.html"
 
-    def get(self, request):
-        orders_items = OrderItem.objects.filter(user=request.user)
-        orders_items_extended = OrderItem.objects.filter(user=request.user, order__status='Extended')
+    def get_queryset(self):
+        qs = super().get_queryset()
+        qs = qs.filter(user=self.request.user).exclude(order__status='Returned')
+        return qs
 
+    def get_context_data(self, *, object_list=None, **kwargs):
+        data = super().get_context_data(**kwargs)
+        orders_items_extended = OrderItem.objects.filter(user=self.request.user, order__status='Extended')
         price = 0
         for item in orders_items_extended:
             price += item.debt
+        data['price'] = price
+        return data
 
-        context = {'object_list': orders_items, 'price': price}
-        return render(request, "orders/orders.html", context)
+
+class OrdersArchiveView(ListView):
+    model = Order
+    template_name = "orders/ordersarchive.html"
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        qs = qs.filter(status='Returned')
+        return qs
 
 
 class PayDebt(View):
@@ -42,7 +56,17 @@ class PayDebt(View):
         return redirect("home")
 
 
-class ReturnView(ListView):
-    model = Rental
-    template_name = 'orders/returntorental.html'
+class ReturnView(View):
+    def get(self, request, pk):
+        rental = Rental.objects.all()
+        product_rental = Rental.objects.get(pk=1)
 
+        context = {'object_list': rental, 'product_rental': product_rental}
+
+        return render(self.request, 'orders/returntorental.html', context)
+
+    def post(self, request, pk):
+        order = Order.objects.get(pk=pk)
+        order.status = 'Returned'
+        order.save()
+        return redirect('home')
