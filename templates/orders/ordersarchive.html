@@ -10,15 +10,22 @@
 					<table class="table table-borderless table-shopping-cart">
 						<thead class="text-muted">
 							<tr class="small text-uppercase">
-								<th scope="col" width="120">Status</th>
+								<th>Product</th>
+								<th scope="col" width="120">Return Date</th>
 							</tr>
 						</thead>
 						<tbody>
 							{% for order in object_list %}
 								<tr>
 									<td>
+										{% for item in order.orderitem_set.all %}
+										<div class="aside"><img src="{{ item.product.image.url }}" class="img-sm" style="max-width:40%"></div>
+										<a href="{{ item.product.get_absolute_url }}" class="title text-dark">{{ item.product.title }}</a>
+    									{% endfor %}
+									</td>
+									<td>
 										<div class="price-wrap">
-											<div class="price">{{order.status}}</div>
+											<div class="price">{{order.return_date}}</div>
 										</div>
 									</td>
 								</tr>

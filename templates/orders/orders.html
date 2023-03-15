@@ -2,6 +2,8 @@
 {% load static %}
 {% block content %}
 
+
+
 <section class="section-content padding-y bg">
 	<div class="container">
 		<div class="row">
@@ -18,32 +20,34 @@
 							</tr>
 						</thead>
 						<tbody>
-							{% for item in object_list %}
+							{% for order in object_list %}
 								<tr>
 									<td>
+										{% for item in order.orderitem_set.all %}
 										<div class="aside"><img src="{{ item.product.image.url }}" class="img-sm" style="max-width:40%"></div>
 										<a href="{{ item.product.get_absolute_url }}" class="title text-dark">{{ item.product.title }}</a>
+    									{% endfor %}
 									</td>
 									<td>
 										<div class="price-wrap">
-											<div class="price">{{item.order.status}}</div>
+											<div class="price">{{order.status}}</div>
 										</div>
 									</td>
 									<td>
 										<div class="price-wrap">
-											<div class="price">{{ item.price }} $</div>
+											<div class="price">{{ order.total }} $</div>
 											<p><small class="text-muted">per two weeks</small></p>
 										</div>
 									</td>
 									<td class="text-right">
 										<div class="price-wrap">
-											<div class="price">{{ item.debt }} $</div>
+											<div class="price"> 0 $</div>
 											<p><small class="text-muted">Debt</small></p>
 										</div>
 									</td>
 									<td class="text-right">
 										<div class="price-wrap">
-											<div class="price"><a href="{% url 'ReturnView' pk=item.order.pk %}">Return</a></div>
+											<div class="price"><a href="{% url 'ReturnView' pk=order.pk %}">Return</a></div>
 										</div>
 									</td>
 								</tr>

@@ -55,6 +55,9 @@ class Order(models.Model):
     building_number = models.CharField(max_length=10, null=False, blank=False, default=None)
     apartment_number = models.CharField(max_length=10, null=True, blank=True, default=None)
 
+    if_extended = models.BooleanField(default=False, null=True, blank=True)
+    number_of_extensions = models.IntegerField(default=0, null=True, blank=True)
+
 
 class OrderItem(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)

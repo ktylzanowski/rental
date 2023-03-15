@@ -5,15 +5,19 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages import success
 from products.models import Rental
 from django.views.generic import ListView
+from django.db.models import Prefetch
+import datetime
 
 
 class OrdersView(LoginRequiredMixin, ListView):
-    model = OrderItem
+    model = Order
     template_name = "orders/orders.html"
 
     def get_queryset(self):
         qs = super().get_queryset()
-        qs = qs.filter(user=self.request.user).exclude(order__status='Returned')
+        qs = qs.prefetch_related(
+            Prefetch('orderitem_set', OrderItem.objects.select_related('product'))
+        ).filter(user=self.request.user).exclude(status='Returned')
         return qs
 
     def get_context_data(self, *, object_list=None, **kwargs):
@@ -32,7 +36,9 @@ class OrdersArchiveView(ListView):
 
     def get_queryset(self):
         qs = super().get_queryset()
-        qs = qs.filter(status='Returned')
+        qs = qs.prefetch_related(
+            Prefetch('orderitem_set', OrderItem.objects.select_related('product'))
+        ).filter(user=self.request.user, status='Returned')
         return qs
 
 
@@ -68,5 +74,6 @@ class ReturnView(View):
     def post(self, request, pk):
         order = Order.objects.get(pk=pk)
         order.status = 'Returned'
+        order.return_date = datetime.datetime.now()
         order.save()
         return redirect('home')

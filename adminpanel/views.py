@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, HttpResponseRedirect
 from django.views.generic import View, ListView, DetailView, CreateView, DeleteView, UpdateView
 from orders.models import Order, OrderItem
 from cart.models import Cart, CartItem
@@ -119,12 +119,15 @@ class BookCreateView(CreateView):
     ]
 
     def form_valid(self, form):
+        self.object = form.save(commit=False)
         books = Book.objects.all()
         for book in books:
             if book.author == self.request.POST['author'] and book.title == self.request.POST['title'] \
                     and book.genre == self.request.POST['genre']:
                 return redirect('BookCreateView')
-        return super().form_valid(form)
+        self.object.category = 'book'
+        self.object.save()
+        return HttpResponseRedirect(self.get_success_url())
 
 
 class CDCreateView(CreateView):
@@ -141,6 +144,12 @@ class CDCreateView(CreateView):
         'tracklist',
         'genre',
     ]
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.category = 'cd'
+        self.object.save()
+        return HttpResponseRedirect(self.get_success_url())
 
 
 class FilmCreateView(CreateView):
@@ -159,12 +168,15 @@ class FilmCreateView(CreateView):
     ]
 
     def form_valid(self, form):
+        self.object = form.save(commit=False)
         films = Film.objects.all()
         for film in films:
             if film.director == self.request.POST['director'] and film.title == self.request.POST['title'] \
                     and str(film.duration) == (self.request.POST['duration']):
                 return redirect('FilmCreateView')
-        return super().form_valid(form)
+        self.object.category = 'book'
+        self.object.save()
+        return HttpResponseRedirect(self.get_success_url())
 
 
 class ProductDeleteView(DeleteView):

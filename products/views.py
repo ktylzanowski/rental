@@ -62,6 +62,8 @@ class ProductsByCategoryView(ListView):
         qs = super().get_queryset()
         category = self.kwargs['category']
         qs = qs.filter(category=category)
+        print(category)
+        print(qs)
         if self.request.GET and self.request.GET['genre'] == 'alphabetical':
             qs = qs.filter(category=category).order_by('title')
         elif self.request.GET and self.request.GET['genre'] == 'popularity':
