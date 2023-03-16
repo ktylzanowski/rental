@@ -2,7 +2,6 @@
 {% load static %}
 {% block content %}
 
-<div class="container">
     <h2>Products</h2>
     <a href="{% url 'BookCreateView' %}"><input type="submit" value="Add Book"></a>
     <a href="{% url 'CDCreateView'%}"><input type="submit" value="Add CD"></a>
@@ -66,6 +65,5 @@
         </tr>
     </table>
     <h6><a href="{% url 'UsersListView' %}">See all Users</a></h6>
-</div>
 
 {% endblock %}

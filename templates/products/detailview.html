@@ -2,35 +2,29 @@
 {% load static %}
 {% block content %}
 
-<div class="container">
-	{% if messages %}
-		{% for message in messages %}
-			<div class="alert alert-success text-center" role="alert">{{ message }}</div>
-		{% endfor %}
-	{% endif %}
-	<div class="col-md-3 mx-auto">
-		<div class="card card-product-grid">
-			<img src="{{ object.image.url }}">
-			{% if object.model_name == 'book' %}
-            	<div class="text-center">{{ object.author }}: {{ object.title }}</div>
-				<div class="text-center">ISBN: {{ object.isbn }}</div>
-			{% elif object.model_name == 'film' %}
-				<div class="text-center">{{ object.director }}: {{ object.title }}</div>
-				<div class="text-center">Duration: {{ object.duration }}</div>
-			{% else %}
-				<div class="text-center">{{ object.band }}: {{ object.title }}</div>
-				<div class="text-center">Track list: {{ object.tracklist }}</div>
-			{% endif %}
 
-			{% if object.is_available == False %}
-				<div class="text-center">The product is unavailable</div>
-			{% else %}
-				<form method="POST" align='center'>
-					{% csrf_token %}
-					<button class="btn btn-primary">Add to Cart</button>
-				</form>
-			{% endif %}
-		</div>
+<div class="col-md-3 mx-auto">
+	<div class="card card-product-grid">
+		<img src="{{ object.image.url }}">
+		{% if object.model_name == 'book' %}
+			<div class="text-center">{{ object.author }}: {{ object.title }}</div>
+			<div class="text-center">ISBN: {{ object.isbn }}</div>
+		{% elif object.model_name == 'film' %}
+			<div class="text-center">{{ object.director }}: {{ object.title }}</div>
+			<div class="text-center">Duration: {{ object.duration }}</div>
+		{% else %}
+			<div class="text-center">{{ object.band }}: {{ object.title }}</div>
+			<div class="text-center">Track list: {{ object.tracklist }}</div>
+		{% endif %}
+
+		{% if object.is_available == False %}
+			<div class="text-center">The product is unavailable</div>
+		{% else %}
+			<form method="POST" align='center'>
+				{% csrf_token %}
+				<button class="btn btn-primary">Add to Cart</button>
+			</form>
+		{% endif %}
 	</div>
 </div>
 {% endblock %}

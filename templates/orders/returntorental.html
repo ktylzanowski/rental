@@ -2,7 +2,6 @@
 {% load static %}
 {% block content %}
 
-<div class="container">
 
 	<div class="row">
         <h2>Return the product in question in person to any of the addresses:</h2>
@@ -18,5 +17,5 @@
 	<form method="POST"> {% csrf_token %}
 		<button class="btn btn-primary">Return</button>
 	</form>
-</div>
+
 {% endblock %}

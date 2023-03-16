@@ -47,7 +47,7 @@ class ProductDetailView(View):
 
         item_in_cart = CartItem.objects.filter(cart=cart)
         for item in item_in_cart:
-            if item.product.title == added_item.title:
+            if item.product == added_item:
                 messages.success(request, "It's already in the basket")
                 return redirect('ProductDetail', pk=pk)
 

@@ -1,8 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-  
-<div class="container">
+
     <form method="POST">
         {% csrf_token %}
         
@@ -28,5 +27,5 @@
         {% endif %}
         <button type="submit" class="btn btn-primary">Register</button>
     </form>
-  </div>
+
 {% endblock content %}

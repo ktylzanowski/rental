@@ -121,6 +121,7 @@ class BookCreateView(CreateView):
     def form_valid(self, form):
         self.object = form.save(commit=False)
         books = Book.objects.all()
+
         for book in books:
             if book.author == self.request.POST['author'] and book.title == self.request.POST['title'] \
                     and book.genre == self.request.POST['genre']:

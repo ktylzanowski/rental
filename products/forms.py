@@ -5,7 +5,9 @@ from .models import Book, CD, Film
 class GenreChoiceField(forms.ChoiceField):
     def __init__(self, choices=()):
         super().__init__(choices=choices)
-        self.choices += (('popularity', 'By popularity'), ('alphabetical', 'Alphabetically'),)
+        current_choices = self.choices
+        self.choices = (('alphabetical', 'Alphabetically'), ('popularity', 'By popularity'))
+        self.choices += current_choices
 
 
 class HomeForm(forms.Form):

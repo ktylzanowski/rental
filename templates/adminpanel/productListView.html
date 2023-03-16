@@ -2,7 +2,6 @@
 {% load static %}
 {% block content %}
 
-<div class="container">
     <a href="{% url 'BookCreateView' %}"><input type="submit" value="Add Book"></a>
     <a href="{% url 'CDCreateView'%}"><input type="submit" value="Add CD"></a>
     <a href="{% url 'FilmCreateView'%}"><input type="submit" value="Add Film"></a>
@@ -77,6 +76,6 @@
         </tr>
         {% endfor %}
     </table>
-</div>
+
 
 {% endblock %}

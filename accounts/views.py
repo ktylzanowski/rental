@@ -6,7 +6,6 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import MyUser
-
 from django.contrib.messages import success
 
 
@@ -37,6 +36,7 @@ class AccountView(LoginRequiredMixin, UpdateView):
     template_name = 'registration/account.html'
 
     def get_success_url(self):
+        success(self.request, "Correctly change personal information")
         return self.request.path
 
     def form_valid(self, form):
