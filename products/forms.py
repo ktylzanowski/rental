@@ -8,6 +8,11 @@ class GenreChoiceField(forms.ChoiceField):
         self.choices += (('popularity', 'By popularity'), ('alphabetical', 'Alphabetically'),)
 
 
+class HomeForm(forms.Form):
+    choices = ()
+    genre = GenreChoiceField(choices=choices)
+
+
 class BookGenreForm(forms.ModelForm):
     genre = GenreChoiceField(choices=Book.GENRE_CHOICES)
 

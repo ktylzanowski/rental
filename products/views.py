@@ -11,6 +11,19 @@ class Home(ListView):
     template_name = 'products/home.html'
     ordering = ['popularity']
 
+    def get_queryset(self):
+        qs = super().get_queryset()
+        if self.request.GET and self.request.GET['genre'] == 'alphabetical':
+            qs = qs.order_by('title')
+        elif self.request.GET and self.request.GET['genre'] == 'popularity':
+            qs = qs.order_by('popularity')
+        return qs
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data['form'] = forms.HomeForm
+        return data
+
 
 class ProductDetailView(View):
     def get(self, request, pk):
@@ -62,8 +75,7 @@ class ProductsByCategoryView(ListView):
         qs = super().get_queryset()
         category = self.kwargs['category']
         qs = qs.filter(category=category)
-        print(category)
-        print(qs)
+
         if self.request.GET and self.request.GET['genre'] == 'alphabetical':
             qs = qs.filter(category=category).order_by('title')
         elif self.request.GET and self.request.GET['genre'] == 'popularity':
@@ -78,7 +90,7 @@ class ProductsByCategoryView(ListView):
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
-        data['form'] = forms.GenreChoiceField
+        data['form'] = forms.HomeForm
         if self.kwargs['category'] == 'book':
             data['form'] = forms.BookGenreForm
         elif self.kwargs['category'] == 'cd':
