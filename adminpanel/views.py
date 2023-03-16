@@ -5,6 +5,7 @@ from cart.models import Cart, CartItem
 from accounts.models import MyUser
 from products.models import Product, Book, CD, Film
 from .forms import OrderStatus
+from django.core.exceptions import ObjectDoesNotExist
 
 
 class AdminPanel(View):
@@ -120,15 +121,14 @@ class BookCreateView(CreateView):
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
-        books = Book.objects.all()
+        try:
+            Book.objects.get(author=self.request.POST['author'], title=self.request.POST['title'], genre=self.request.POST['genre'])
+        except ObjectDoesNotExist:
+            self.object.category = 'book'
+            self.object.save()
+            return HttpResponseRedirect(self.get_success_url())
 
-        for book in books:
-            if book.author == self.request.POST['author'] and book.title == self.request.POST['title'] \
-                    and book.genre == self.request.POST['genre']:
-                return redirect('BookCreateView')
-        self.object.category = 'book'
-        self.object.save()
-        return HttpResponseRedirect(self.get_success_url())
+        return redirect('home')
 
 
 class CDCreateView(CreateView):
@@ -148,6 +148,23 @@ class CDCreateView(CreateView):
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
+
+        try:
+            CD.objects.get(genre=self.request.POST['genre'], tracklist=self.request.POST['tracklist'])
+            return redirect('CDCreateView')
+        except ObjectDoesNotExist:
+            pass
+
+        try:
+            cds = CD.objects.filter(band=self.request.POST['band'])
+            tab = []
+            for cd in cds:
+                tab.append(cd.genre)
+            set(tab)
+            if self.request.POST not in tab and len(tab) > 2:
+                return redirect('CDCreateView')
+        except ObjectDoesNotExist:
+            pass
         self.object.category = 'cd'
         self.object.save()
         return HttpResponseRedirect(self.get_success_url())
@@ -170,12 +187,26 @@ class FilmCreateView(CreateView):
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
-        films = Film.objects.all()
-        for film in films:
-            if film.director == self.request.POST['director'] and film.title == self.request.POST['title'] \
-                    and str(film.duration) == (self.request.POST['duration']):
-                return redirect('FilmCreateView')
-        self.object.category = 'book'
+
+        try:
+            films = Film.objects.filter(director=self.request.POST['director'], title=self.request.POST['title'])
+            for film in films:
+                if film.duration == self.request.POST['duration']:
+                    return redirect('FilmCreateView')
+        except ObjectDoesNotExist:
+            pass
+
+        genres = ('Comedy', 'Adventure', 'Romance', 'Horror', 'Thriller', 'Animated')
+        tab = []
+        for genre in genres:
+            tab.append(len(Film.objects.filter(genre=genre)))
+            if self.request.POST['genre'] == genre:
+                tab[-1] += 1
+
+        if max(tab) - min(tab) > 3:
+            return redirect('FilmCreateView')
+
+        self.object.category = 'film'
         self.object.save()
         return HttpResponseRedirect(self.get_success_url())
 
