@@ -4,15 +4,8 @@ from django.urls import reverse
 
 
 class Product(PolymorphicModel):
-    CHOICES_CATEGORY = (
-        ('book', 'Book'),
-        ('cd', 'CD'),
-        ('film', 'Film'),
-    )
-
     title = models.CharField(max_length=100, blank=True)
     image = models.ImageField(upload_to='product', default=None)
-    category = models.CharField(choices=CHOICES_CATEGORY, max_length=20, blank=True, null=False)
     quantity = models.IntegerField(null=False)
     is_available = models.BooleanField(default=True, null=False)
     price = models.IntegerField(null=False, blank=False, default=15)

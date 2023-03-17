@@ -120,15 +120,12 @@ class BookCreateView(CreateView):
     ]
 
     def form_valid(self, form):
-        self.object = form.save(commit=False)
         try:
-            Book.objects.get(author=self.request.POST['author'], title=self.request.POST['title'], genre=self.request.POST['genre'])
+            Book.objects.get(author=self.request.POST['author'], title=self.request.POST['title'],
+                             genre=self.request.POST['genre'])
+            return redirect('BookCreateView')
         except ObjectDoesNotExist:
-            self.object.category = 'book'
-            self.object.save()
-            return HttpResponseRedirect(self.get_success_url())
-
-        return redirect('home')
+            return super().form_valid(form)
 
 
 class CDCreateView(CreateView):
@@ -147,7 +144,6 @@ class CDCreateView(CreateView):
     ]
 
     def form_valid(self, form):
-        self.object = form.save(commit=False)
 
         try:
             CD.objects.get(genre=self.request.POST['genre'], tracklist=self.request.POST['tracklist'])
@@ -165,8 +161,7 @@ class CDCreateView(CreateView):
                 return redirect('CDCreateView')
         except ObjectDoesNotExist:
             pass
-        self.object.category = 'cd'
-        self.object.save()
+
         return HttpResponseRedirect(self.get_success_url())
 
 
@@ -186,8 +181,6 @@ class FilmCreateView(CreateView):
     ]
 
     def form_valid(self, form):
-        self.object = form.save(commit=False)
-
         try:
             films = Film.objects.filter(director=self.request.POST['director'], title=self.request.POST['title'])
             for film in films:
@@ -206,8 +199,6 @@ class FilmCreateView(CreateView):
         if max(tab) - min(tab) > 3:
             return redirect('FilmCreateView')
 
-        self.object.category = 'film'
-        self.object.save()
         return HttpResponseRedirect(self.get_success_url())
 
 

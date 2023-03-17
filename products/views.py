@@ -1,23 +1,14 @@
-from django.views.generic import ListView, View
+from django.views.generic import ListView, DetailView, View
 from products.models import Product, Book, CD, Film
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect
 from cart.models import Cart, CartItem
 from django.contrib import messages
 from . import forms
+from .mixin import HomeMixin
 
 
-class Home(ListView):
+class Home(HomeMixin, ListView):
     model = Product
-    template_name = 'products/home.html'
-    ordering = ['popularity']
-
-    def get_queryset(self):
-        qs = super().get_queryset()
-        if self.request.GET and self.request.GET['genre'] == 'alphabetical':
-            qs = qs.order_by('title')
-        elif self.request.GET and self.request.GET['genre'] == 'popularity':
-            qs = qs.order_by('popularity')
-        return qs
 
     def get_context_data(self, *, object_list=None, **kwargs):
         data = super().get_context_data(**kwargs)
@@ -25,13 +16,42 @@ class Home(ListView):
         return data
 
 
-class ProductDetailView(View):
-    def get(self, request, pk):
-        product = Product.objects.get(id=pk)
-        context = {'object': product}
-        return render(request, "products/detailview.html", context)
+class BookListView(HomeMixin, ListView):
+    model = Book
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data['form'] = forms.BookGenreForm
+        return data
+
+
+class FilmListView(HomeMixin, ListView):
+    model = Film
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data['form'] = forms.FilmGenreForm
+        return data
+
+
+class CDListView(HomeMixin, ListView):
+    model = CD
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data['form'] = forms.CDGenreForm
+        return data
+
+
+class ProductDetailView(DetailView):
+    model = Product
+    template_name = "products/detailview.html"
+
+
+class AddToCart(View):
 
     def post(self, request, pk):
+
         if not request.user.is_authenticated:
             messages.success(request, "You must be logged in")
             return redirect('Login')
@@ -46,6 +66,7 @@ class ProductDetailView(View):
         added_item.save()
 
         item_in_cart = CartItem.objects.filter(cart=cart)
+
         for item in item_in_cart:
             if item.product == added_item:
                 messages.success(request, "It's already in the basket")
@@ -55,9 +76,11 @@ class ProductDetailView(View):
             product=added_item,
             cart=cart,
         )
+
         new_item_in_cart.save()
 
         added_item.quantity -= 1
+
         if added_item.quantity == 0:
             added_item.is_available = False
         added_item.save()
@@ -66,36 +89,7 @@ class ProductDetailView(View):
         return redirect('home')
 
 
-class ProductsByCategoryView(ListView):
-    model = Product
-    template_name = 'products/home.html'
-    ordering = ['popularity']
 
-    def get_queryset(self):
-        qs = super().get_queryset()
-        category = self.kwargs['category']
-        qs = qs.filter(category=category)
 
-        if self.request.GET and self.request.GET['genre'] == 'alphabetical':
-            qs = qs.filter(category=category).order_by('title')
-        elif self.request.GET and self.request.GET['genre'] == 'popularity':
-            qs = qs.filter(category=category).order_by('popularity')
-        elif self.request.GET and category == 'book':
-            qs = Book.objects.filter(genre=self.request.GET['genre'])
-        elif self.request.GET and category == 'cd':
-            qs = CD.objects.filter(genre=self.request.GET['genre'])
-        elif self.request.GET and category == 'film':
-            qs = Film.objects.filter(genre=self.request.GET['genre'])
-        return qs
 
-    def get_context_data(self, **kwargs):
-        data = super().get_context_data(**kwargs)
-        data['form'] = forms.HomeForm
-        if self.kwargs['category'] == 'book':
-            data['form'] = forms.BookGenreForm
-        elif self.kwargs['category'] == 'cd':
-            data['form'] = forms.CDGenreForm
-        elif self.kwargs['category'] == 'film':
-            data['form'] = forms.FilmGenreForm
-        data['cats'] = True
-        return data
+
