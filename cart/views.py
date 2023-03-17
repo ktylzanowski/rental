@@ -1,7 +1,6 @@
 from django.views.generic import View, ListView
 from .models import CartItem, Cart
 from orders.models import Order, OrderItem, Payment, Shipping, ShippingMethod
-from products.models import Product
 from django.shortcuts import redirect
 from django.utils import timezone
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -113,13 +112,12 @@ class DeleteItemView(LoginRequiredMixin, View):
 
     def post(self, request, pk):
         item_to_removed = CartItem.objects.get(pk=pk)
+        item_to_removed.product.quantity += 1
 
-        item = Product.objects.get(pk=item_to_removed.product.pk)
-        item.quantity += 1
+        if not item_to_removed.product.is_available:
+            item_to_removed.product.is_available = True
+        item_to_removed.product.save()
 
-        if not item.is_available:
-            item.is_available = True
-        item.save()
         item_to_removed.delete()
         success(self.request, "Item Deleted")
         return redirect("Cart")

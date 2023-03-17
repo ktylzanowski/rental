@@ -1,4 +1,4 @@
-from orders.models import OrderItem, Order
+from orders.models import OrderItem, Order, Payment
 from django.shortcuts import render, redirect
 from django.views.generic import View
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -7,6 +7,7 @@ from products.models import Rental
 from django.views.generic import ListView
 from django.db.models import Prefetch
 import datetime
+import json
 
 
 class OrdersView(LoginRequiredMixin, ListView):
@@ -51,6 +52,18 @@ class PayDebt(View):
         orders = Order.objects.filter(user=request.user, status='Extended')
         orders_items_extended = OrderItem.objects.filter(user=request.user, order__status='Extended')
 
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+
+        payment = Payment.objects.create(
+            user=request.user,
+            payment_id=body['transID'],
+            payment_method=body['payment_method'],
+            amount_paid=15,
+            status='payment',
+        )
+        payment.save()
+
         for item in orders_items_extended:
             item.debt = 0
             item.save()
@@ -68,7 +81,6 @@ class ReturnView(View):
         product_rental = Rental.objects.get(pk=1)
 
         context = {'object_list': rental, 'product_rental': product_rental}
-
         return render(self.request, 'orders/returntorental.html', context)
 
     def post(self, request, pk):
