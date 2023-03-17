@@ -17,7 +17,8 @@
                         </thead>
                         <tbody>
 
-                            {% for item in item_list %}
+
+                            {% for item in object_list %}
                             <tr>
                                 <td>
                                     <div class="aside"><img src="{{ item.product.image.url }}" class="img-sm" style="max-width:40%"></div>
@@ -51,7 +52,7 @@
                             <dd class="text-right">{{ price }}$</dd>
                         </dl>
 
-                        {% if not item_list %}
+                        {% if not object_list %}
                         <p>Cart is empty</p>
                         {% elif user.if_address %}
                         <p>Address is not complete</p>

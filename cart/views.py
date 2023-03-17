@@ -1,8 +1,8 @@
-from django.views.generic import View
+from django.views.generic import View, ListView
 from .models import CartItem, Cart
 from orders.models import Order, OrderItem, Payment, Shipping, ShippingMethod
 from products.models import Product
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect
 from django.utils import timezone
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages import success
@@ -13,18 +13,26 @@ from django.template.loader import render_to_string
 from datetime import timedelta
 
 
-class CartListView(LoginRequiredMixin, View):
+class CartListView(LoginRequiredMixin, ListView):
+    model = CartItem
+    template_name = 'cart/cart.html'
 
-    def get(self, request):
+    def user_cart(self):
         user_cart, created = Cart.objects.get_or_create(
-            user=request.user,
+            user=self.request.user,
         )
         user_cart.save()
-        items = CartItem.objects.filter(cart=user_cart)
-        price = user_cart.total()
-        context = {"item_list": items, "price": price}
+        return user_cart
 
-        return render(request, "cart/cart.html", context)
+    def get_queryset(self):
+        qs = super().get_queryset()
+        qs = qs.filter(cart=self.user_cart())
+        return qs
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data['price'] = self.user_cart().total
+        return data
 
 
 class CheckoutView(LoginRequiredMixin, View):
@@ -102,6 +110,7 @@ class CheckoutView(LoginRequiredMixin, View):
 
 
 class DeleteItemView(LoginRequiredMixin, View):
+
     def post(self, request, pk):
         item_to_removed = CartItem.objects.get(pk=pk)
 
