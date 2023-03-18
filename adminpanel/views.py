@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, HttpResponseRedirect
+from django.shortcuts import render, redirect
 from django.views.generic import View, ListView, DetailView, CreateView, DeleteView, UpdateView
 from orders.models import Order, OrderItem
 from cart.models import Cart, CartItem
@@ -6,10 +6,10 @@ from accounts.models import MyUser
 from products.models import Product, Book, CD, Film
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
-from .mixin import StatusMixin
+from .mixin import StatusMixin, OnlyAdmin
 
 
-class AdminPanel(View):
+class AdminPanel(OnlyAdmin, View):
 
     def get(self, request):
         number_of_books = len(Book.objects.all())
@@ -38,7 +38,7 @@ class AdminPanel(View):
         return render(request, 'adminpanel/adminpanel.html', context)
 
 
-class OrderListView(StatusMixin, ListView):
+class OrderListView(OnlyAdmin, StatusMixin, ListView):
     model = Order
     template_name = 'adminpanel/ordersListView.html'
     ordering = ['-pk']
@@ -50,29 +50,29 @@ class OrderListView(StatusMixin, ListView):
         return qs
 
 
-class OrderDetailView(StatusMixin, DetailView):
+class OrderDetailView(OnlyAdmin, StatusMixin, DetailView):
     model = Order
     template_name = 'adminpanel/detailview/order.html'
 
 
-class CartListView(ListView):
+class CartListView(OnlyAdmin, ListView):
     model = Cart
     template_name = 'adminpanel/cartListView.html'
     ordering = ['-pk']
 
 
-class CartDetailView(DetailView):
+class CartDetailView(OnlyAdmin, DetailView):
     model = Cart
     template_name = 'adminpanel/detailview/cart.html'
 
 
-class UsersListView(ListView):
+class UsersListView(OnlyAdmin, ListView):
     model = MyUser
     template_name = 'adminpanel/usersListView.html'
     ordering = ['-pk']
 
 
-class ProductsListView(ListView):
+class ProductsListView(OnlyAdmin, ListView):
     model = Product
     template_name = 'adminpanel/productListView.html'
     ordering = ['-pk']
@@ -85,7 +85,7 @@ class ProductsListView(ListView):
         return data
 
 
-class BookCreateView(CreateView):
+class BookCreateView(OnlyAdmin, CreateView):
     model = Book
     template_name = 'adminpanel/createProduct.html'
     success_url = '/adminpanel/'
@@ -111,7 +111,7 @@ class BookCreateView(CreateView):
             return super().form_valid(form)
 
 
-class CDCreateView(CreateView):
+class CDCreateView(OnlyAdmin, CreateView):
     model = CD
     template_name = 'adminpanel/createProduct.html'
     success_url = '/adminpanel/'
@@ -148,7 +148,7 @@ class CDCreateView(CreateView):
         return super().form_valid(form)
 
 
-class FilmCreateView(CreateView):
+class FilmCreateView(OnlyAdmin, CreateView):
     model = Film
     template_name = 'adminpanel/createProduct.html'
     success_url = '/adminpanel/'
@@ -184,13 +184,13 @@ class FilmCreateView(CreateView):
             return super().form_valid(form)
 
 
-class ProductDeleteView(DeleteView):
+class ProductDeleteView(OnlyAdmin, DeleteView):
     model = Product
     template_name = 'adminpanel/productDelete.html'
     success_url = '/adminpanel/products'
 
 
-class BookUpdateView(UpdateView):
+class BookUpdateView(OnlyAdmin, UpdateView):
     model = Book
     template_name = 'adminpanel/productUpdate.html'
     success_url = '/adminpanel/products'
@@ -205,7 +205,7 @@ class BookUpdateView(UpdateView):
     ]
 
 
-class CDUpdateView(UpdateView):
+class CDUpdateView(OnlyAdmin, UpdateView):
     model = CD
     template_name = 'adminpanel/productUpdate.html'
     success_url = '/adminpanel/products'
@@ -220,7 +220,7 @@ class CDUpdateView(UpdateView):
     ]
 
 
-class FilmUpdateView(UpdateView):
+class FilmUpdateView(OnlyAdmin, UpdateView):
     model = Film
     template_name = 'adminpanel/productUpdate.html'
     success_url = '/adminpanel/products'
@@ -235,13 +235,13 @@ class FilmUpdateView(UpdateView):
     ]
 
 
-class UserDeleteView(DeleteView):
+class UserDeleteView(OnlyAdmin, DeleteView):
     model = MyUser
     template_name = 'adminpanel/productDelete.html'
     success_url = '/adminpanel/users'
 
 
-class UserUpdateView(UpdateView):
+class UserUpdateView(OnlyAdmin, UpdateView):
     model = MyUser
     template_name = 'adminpanel/productUpdate.html'
     success_url = '/adminpanel/users'
@@ -261,7 +261,7 @@ class UserUpdateView(UpdateView):
     ]
 
 
-class ChangeOrderStatus(View):
+class ChangeOrderStatus(OnlyAdmin, View):
     def post(self, request, pk):
         order = Order.objects.get(pk=pk)
         order.status = self.request.POST['status']
