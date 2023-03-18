@@ -1,10 +1,9 @@
 from orders.models import OrderItem, Order, Payment
-from django.shortcuts import render, redirect
-from django.views.generic import View
+from django.shortcuts import redirect
+from django.views.generic import View, DetailView, ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages import success
 from products.models import Rental
-from django.views.generic import ListView
 from django.db.models import Prefetch
 import datetime
 import json
@@ -75,17 +74,24 @@ class PayDebt(View):
         return redirect("home")
 
 
-class ReturnView(View):
-    def get(self, request, pk):
+class ReturnView(DetailView):
+    model = Order
+    template_name = 'orders/returntorental.html'
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
         rental = Rental.objects.all()
-        product_rental = Rental.objects.get(pk=1)
+        data['object_list'] = rental
+        return data
 
-        context = {'object_list': rental, 'product_rental': product_rental}
-        return render(self.request, 'orders/returntorental.html', context)
 
+class MakeReturn(View):
     def post(self, request, pk):
         order = Order.objects.get(pk=pk)
         order.status = 'Returned'
         order.return_date = datetime.datetime.now()
         order.save()
         return redirect('home')
+
+
+
