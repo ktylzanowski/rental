@@ -44,6 +44,7 @@ class Order(models.Model):
     return_date = models.DateTimeField(null=True)
     status = models.CharField(choices=status_types, default="Ordered", max_length=100)
     total = models.IntegerField(null=False)
+    debt = models.IntegerField(null=True, default=0)
     payment = models.OneToOneField(Payment, on_delete=models.CASCADE, null=False, blank=False)
     shipping = models.ForeignKey(Shipping, on_delete=models.CASCADE, null=False, blank=False)
     first_name = models.CharField(max_length=255, null=False, blank=False)
@@ -54,7 +55,6 @@ class Order(models.Model):
     street = models.CharField(max_length=255, null=False, blank=False, default=None)
     building_number = models.CharField(max_length=10, null=False, blank=False, default=None)
     apartment_number = models.CharField(max_length=10, null=True, blank=True, default=None)
-
     if_extended = models.BooleanField(default=False, null=True, blank=True)
     number_of_extensions = models.IntegerField(default=0, null=True, blank=True)
 
@@ -64,4 +64,5 @@ class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
     price = models.IntegerField(null=False, blank=False, default=15)
-    debt = models.IntegerField(null=True, default=0)
+
+

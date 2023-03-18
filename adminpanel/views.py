@@ -266,9 +266,6 @@ class ChangeOrderStatus(OnlyAdmin, View):
         order = Order.objects.get(pk=pk)
         order.status = self.request.POST['status']
         if self.request.POST['status'] == 'Extended':
-            items = OrderItem.objects.filter(order=order)
-            for item in items:
-                item.debt += item.price
-                item.save()
-        order.save()
+            order.debt = order.total
+            order.save()
         return redirect('OrdersListView')

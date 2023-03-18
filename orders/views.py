@@ -22,10 +22,10 @@ class OrdersView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         data = super().get_context_data(**kwargs)
-        orders_items_extended = OrderItem.objects.filter(user=self.request.user, order__status='Extended')
+        orders_extended = Order.objects.filter(user=self.request.user, status='Extended')
         price = 0
-        for item in orders_items_extended:
-            price += item.debt
+        for order in orders_extended:
+            price += order.debt
         data['price'] = price
         return data
 
@@ -49,7 +49,6 @@ class PayDebt(View):
 
     def post(self, request):
         orders = Order.objects.filter(user=request.user, status='Extended')
-        orders_items_extended = OrderItem.objects.filter(user=request.user, order__status='Extended')
 
         body_unicode = request.body.decode('utf-8')
         body = json.loads(body_unicode)
@@ -63,12 +62,9 @@ class PayDebt(View):
         )
         payment.save()
 
-        for item in orders_items_extended:
-            item.debt = 0
-            item.save()
-
         for order in orders:
             order.status = 'Delivered'
+            order.debt = 0
             order.save()
 
         return redirect("home")
