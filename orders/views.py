@@ -91,7 +91,5 @@ class MakeReturn(View):
         order.status = 'Returned'
         order.return_date = datetime.datetime.now()
         order.save()
+        success(request, "Order returned")
         return redirect('home')
-
-
-

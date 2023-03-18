@@ -14,8 +14,10 @@
 		</p>
 	{% endfor %}
 	</div>
+	{% if object.status == "Delivered" %}
 	<form method="POST" action="{% url 'MakeReturn' pk=object.pk %}"> {% csrf_token %}
 		<button class="btn btn-primary">Return</button>
 	</form>
+	{% endif %}
 
 {% endblock %}

@@ -4,8 +4,9 @@ from orders.models import Order, OrderItem
 from cart.models import Cart, CartItem
 from accounts.models import MyUser
 from products.models import Product, Book, CD, Film
-from .forms import OrderStatus
+from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
+from .mixin import StatusMixin
 
 
 class AdminPanel(View):
@@ -37,35 +38,21 @@ class AdminPanel(View):
         return render(request, 'adminpanel/adminpanel.html', context)
 
 
-class OrderListView(ListView):
+class OrderListView(StatusMixin, ListView):
     model = Order
     template_name = 'adminpanel/ordersListView.html'
     ordering = ['-pk']
 
     def get_queryset(self):
         qs = super().get_queryset()
-
         if self.request.GET:
             qs = qs.filter(status=self.request.GET['status'])
-
         return qs
 
-    def get_context_data(self, **kwargs):
-        data = super().get_context_data(**kwargs)
-        data['order_status'] = OrderStatus
-        return data
 
-
-class OrderDetailView(DetailView):
+class OrderDetailView(StatusMixin, DetailView):
     model = Order
     template_name = 'adminpanel/detailview/order.html'
-
-    def get_context_data(self, **kwargs):
-        data = super().get_context_data(**kwargs)
-        order_items = OrderItem.objects.filter(order=kwargs['object'])
-        data['order_status'] = OrderStatus
-        data['order_items'] = order_items
-        return data
 
 
 class CartListView(ListView):
@@ -77,12 +64,6 @@ class CartListView(ListView):
 class CartDetailView(DetailView):
     model = Cart
     template_name = 'adminpanel/detailview/cart.html'
-
-    def get_context_data(self, **kwargs):
-        data = super().get_context_data(**kwargs)
-        user_cart = Cart.objects.get(user=self.request.user)
-        data['cart_items'] = CartItem.objects.filter(cart=user_cart)
-        return data
 
 
 class UsersListView(ListView):
@@ -98,9 +79,9 @@ class ProductsListView(ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         data = super().get_context_data(**kwargs)
-        data['books'] = Product.objects.filter(category='book')
-        data['cds'] = Product.objects.filter(category='cd')
-        data['films'] = Product.objects.filter(category='film')
+        data['books'] = Book.objects.all()
+        data['cds'] = CD.objects.all()
+        data['films'] = Film.objects.all()
         return data
 
 
@@ -123,8 +104,10 @@ class BookCreateView(CreateView):
         try:
             Book.objects.get(author=self.request.POST['author'], title=self.request.POST['title'],
                              genre=self.request.POST['genre'])
+            messages.success(self.request, 'Author, title and genre must not be repeated')
             return redirect('BookCreateView')
         except ObjectDoesNotExist:
+            messages.success(self.request, 'Book added')
             return super().form_valid(form)
 
 
@@ -144,9 +127,9 @@ class CDCreateView(CreateView):
     ]
 
     def form_valid(self, form):
-
         try:
             CD.objects.get(genre=self.request.POST['genre'], tracklist=self.request.POST['tracklist'])
+            messages.success(self.request, 'Within one genre, we cannot offer two albums with the same track list')
             return redirect('CDCreateView')
         except ObjectDoesNotExist:
             pass
@@ -158,11 +141,11 @@ class CDCreateView(CreateView):
                 tab.append(cd.genre)
             set(tab)
             if self.request.POST not in tab and len(tab) > 2:
+                messages.success(self.request, 'CDs of a given band can only be offered in two genres')
                 return redirect('CDCreateView')
         except ObjectDoesNotExist:
             pass
-
-        return HttpResponseRedirect(self.get_success_url())
+        return super().form_valid(form)
 
 
 class FilmCreateView(CreateView):
@@ -182,24 +165,23 @@ class FilmCreateView(CreateView):
 
     def form_valid(self, form):
         try:
-            films = Film.objects.filter(director=self.request.POST['director'], title=self.request.POST['title'])
-            for film in films:
-                if film.duration == self.request.POST['duration']:
-                    return redirect('FilmCreateView')
-        except ObjectDoesNotExist:
-            pass
-
-        genres = ('Comedy', 'Adventure', 'Romance', 'Horror', 'Thriller', 'Animated')
-        tab = []
-        for genre in genres:
-            tab.append(len(Film.objects.filter(genre=genre)))
-            if self.request.POST['genre'] == genre:
-                tab[-1] += 1
-
-        if max(tab) - min(tab) > 3:
+            Film.objects.get(director=self.request.POST['director'], title=self.request.POST['title'],
+                             duration=int(self.request.POST['duration']))
+            messages.success(self.request, 'If the director and title are repeated, the duration must differ')
             return redirect('FilmCreateView')
-
-        return HttpResponseRedirect(self.get_success_url())
+        except ObjectDoesNotExist:
+            genres = ('Comedy', 'Adventure', 'Romance', 'Horror', 'Thriller', 'Animated')
+            tab = []
+            for genre in genres:
+                tab.append(len(Film.objects.filter(genre=genre)))
+                if self.request.POST['genre'] == genre:
+                    tab[-1] += 1
+            if max(tab) - min(tab) > 3:
+                messages.success(self.request, 'The numbers of different films of a given genre within the entire '
+                                               'collection may vary by 3')
+                return redirect('FilmCreateView')
+            messages.success(self.request, 'Film Added')
+            return super().form_valid(form)
 
 
 class ProductDeleteView(DeleteView):

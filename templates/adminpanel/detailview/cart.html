@@ -2,10 +2,33 @@
 {% load static %}
 {% block content %}
 
-<div class="container">
-  {{ object.user.email }}
-  {% for item in cart_items %}
-    {{ item.product.title }}
+<table>
+  <tr>
+    <th>Email</th>
+    <th>Total Price</th>
+    <th>Quantity Of Items</th>
+  </tr>
+  <tr>
+    <td>{{ object.user.email }}</td>
+    <td>{{object.total}}</td>
+    <td>{{object.quantity_of_items}}</td>
+  </tr>
+</table>
+
+
+<table>
+  <tr>
+    <th>Title</th>
+    <th>Category</th>
+    <th>price</th>
+  </tr>
+      {% for item in object.cartitem_set.all %}
+  <tr>
+    <td>{{ item.product.title }}</td>
+    <td>{{ item.product.model_name }}</td>
+    <td>{{ item.product.price}}</td>
+  </tr>
   {% endfor %}
-</div>
+</table>
+
 {% endblock %}

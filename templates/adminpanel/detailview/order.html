@@ -40,12 +40,11 @@
             <th>Product</th>
             <th>Category</th>
             <th>Cost</th>
-            {% if order
         </tr>
-        {% for item in order_items %}
+        {% for item in order.orderitem_set.all %}
         <tr>
             <td> {{ item.product.title }}</td>
-            <td> {{ item.product.category }}</td>
+            <td> {{ item.product.model_name }}</td>
             <td> {{ item.price }}$</td>
         </tr>
         {% endfor %}

@@ -15,7 +15,7 @@
 								<th scope="col" width="120">Status</th>
 								<th scope="col" width="120">Price</th>
 								<th scope="col" width="120">Debit</th>
-								<th scope="col" width="120">Return</th>
+								<th scope="col" width="120">Receive/Return </th>
 							</tr>
 						</thead>
 						<tbody>
@@ -46,7 +46,13 @@
 									</td>
 									<td class="text-right">
 										<div class="price-wrap">
-											<div class="price"><a href="{% url 'ReturnView' pk=order.pk %}">Return</a></div>
+											{% if order.status == "Delivered" %}
+												<div class="price"><a href="{% url 'ReturnView' pk=order.pk %}">Return</a></div>
+											{% elif order.shipping.shipping_method == "Personal Pickup" %}
+												Personal Pickup
+											{% else %}
+												Package on the way
+											{% endif %}
 										</div>
 									</td>
 								</tr>
