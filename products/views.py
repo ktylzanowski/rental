@@ -3,6 +3,7 @@ from products.models import Product, Book, CD, Film
 from . import forms
 from .mixin import HomeMixin
 
+
 class Home(HomeMixin, ListView):
     model = Product
 
