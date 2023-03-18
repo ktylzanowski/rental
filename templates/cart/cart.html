@@ -16,27 +16,27 @@
                             </tr>
                         </thead>
                         <tbody>
-
-
-                            {% for item in object_list %}
+                            {% for item in cart %}
+                            {% with product=item.product %}
                             <tr>
                                 <td>
-                                    <div class="aside"><img src="{{ item.product.image.url }}" class="img-sm" style="max-width:40%"></div>
-                                    <a href="{{ item.product.get_absolute_url }}" class="title text-dark">{{ item.product.title }}</a>
+                                    <div class="aside"><img src="{{ product.image.url }}" class="img-sm" style="max-width:40%"></div>
+                                    <a href="{{ product.get_absolute_url }}" class="title text-dark">{{ item.product.title }}</a>
                                 </td>
                                 <td>
                                     <div class="price-wrap">
-                                        <div class="price">{{ item.product.price }}$</div>
+                                        <div class="price">{{ item.price }}$</div>
                                         <p><small class="text-muted">per two weeks</small></p>
                                     </div>
                                 </td>
                                 <td class="text-right">
-                                    <form method="POST" action="{% url 'DeleteItemFromCart' pk=item.pk %}">
+                                    <form method="POST" action="{% url 'DeleteItemFromCart' product.pk %}">
                                         {% csrf_token %}
                                         <button class="btn btn-danger"> Remove</button>
                                     </form>
                                 </td>
                             </tr>
+                            {% endwith %}
                             {% endfor %}
 
                         </tbody>
@@ -49,10 +49,10 @@
                     <div class="card-body">
                         <dl class="dlist-align">
                             <dt>Total price:</dt>
-                            <dd class="text-right">{{ price }}$</dd>
+                            <dd class="text-right">{{ cart.get_total_price }}$</dd>
                         </dl>
 
-                        {% if not object_list %}
+                        {% if not cart %}
                         <p>Cart is empty</p>
                         {% elif user.if_address %}
                         <p>Address is not complete</p>
@@ -92,8 +92,8 @@ function getCookie(name) {
 }
 const csrftoken = getCookie('csrftoken');
 
-var total = "{{ price }}"
-var url = "{% url 'Checkout' %}"
+var total = "{{ cart.get_total_price }}"
+var url = "{% url 'OrderCreate' %}"
 var shippingMethod = "None"
 
 paypal.Buttons({

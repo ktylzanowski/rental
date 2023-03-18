@@ -151,3 +151,5 @@ EMAIL_HOST_PASSWORD = confidential_data.password_email
 
 
 CELERY_BROKER_URL = 'redis://localhost:6379'
+
+CART_SESSION_ID = 'cart'

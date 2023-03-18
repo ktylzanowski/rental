@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect
 from django.views.generic import View, ListView, DetailView, CreateView, DeleteView, UpdateView
-from orders.models import Order, OrderItem
-from cart.models import Cart, CartItem
+from orders.models import Order
 from accounts.models import MyUser
 from products.models import Product, Book, CD, Film
 from django.contrib import messages
@@ -23,17 +22,13 @@ class AdminPanel(OnlyAdmin, View):
         number_of_extended = len(Order.objects.filter(status="Extended"))
         number_of_returned = len(Order.objects.filter(status="Returned"))
 
-        number_of_carts = len(Cart.objects.all())
-        number_of_items_in_carts = len(CartItem.objects.all())
-
         number_of_users = len(MyUser.objects.all())
 
         context = {'number_of_books': number_of_books, 'number_of_cds': number_of_cds,
                    'number_of_films': number_of_films, 'number_of_all_products': number_of_all_products,
                    'number_of_ordered': number_of_ordered, 'number_of_sent': number_of_sent,
                    'number_of_delivered': number_of_delivered, 'number_of_extended': number_of_extended,
-                   'number_of_returned': number_of_returned, 'number_of_carts': number_of_carts,
-                   'number_of_items_in_carts': number_of_items_in_carts, 'number_of_users': number_of_users}
+                   'number_of_returned': number_of_returned, 'number_of_users': number_of_users}
 
         return render(request, 'adminpanel/adminpanel.html', context)
 
@@ -53,17 +48,6 @@ class OrderListView(OnlyAdmin, StatusMixin, ListView):
 class OrderDetailView(OnlyAdmin, StatusMixin, DetailView):
     model = Order
     template_name = 'adminpanel/detailview/order.html'
-
-
-class CartListView(OnlyAdmin, ListView):
-    model = Cart
-    template_name = 'adminpanel/cartListView.html'
-    ordering = ['-pk']
-
-
-class CartDetailView(OnlyAdmin, DetailView):
-    model = Cart
-    template_name = 'adminpanel/detailview/cart.html'
 
 
 class UsersListView(OnlyAdmin, ListView):

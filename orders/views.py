@@ -1,4 +1,4 @@
-from orders.models import OrderItem, Order, Payment
+from orders.models import OrderItem, Order, Payment, Shipping, ShippingMethod
 from django.shortcuts import redirect
 from django.views.generic import View, DetailView, ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -7,6 +7,12 @@ from products.models import Rental
 from django.db.models import Prefetch
 import datetime
 import json
+from cart.cart import Cart
+from django.utils import timezone
+from datetime import timedelta
+from django.core.mail import EmailMessage
+from django.conf import settings
+from django.template.loader import render_to_string
 
 
 class OrdersView(LoginRequiredMixin, ListView):
@@ -40,6 +46,77 @@ class OrdersArchiveView(ListView):
             Prefetch('orderitem_set', OrderItem.objects.select_related('product'))
         ).filter(user=self.request.user, status='Returned')
         return qs
+
+
+class OrderCreate(View):
+    def get(self, request):
+        success(request, "Your order was successful!")
+        return redirect('home')
+
+    def post(self, request):
+        cart = Cart(request)
+
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+
+        payment = Payment.objects.create(
+            user=request.user,
+            payment_id=body['transID'],
+            payment_method=body['payment_method'],
+            amount_paid=cart.get_total_price(),
+            status=body['status'],
+        )
+        payment.save()
+
+        shipping_method = ShippingMethod.objects.get(name=body['shipping'])
+
+        shipping = Shipping.objects.create(
+            user=request.user,
+            shipping_method=shipping_method,
+            if_paid=True,
+            postage=shipping_method.price,
+            quantity_of_items=1,
+        )
+        shipping.save()
+
+        order = Order.objects.create(
+            user=request.user,
+            order_date=timezone.now(),
+            return_date=timezone.now()+timedelta(days=7),
+            status="Ordered",
+            total=cart.get_total_price(),
+            payment=payment,
+            shipping=shipping,
+            first_name=request.user.first_name,
+            last_name=request.user.last_name,
+            phone=request.user.phone,
+            city=request.user.city,
+            zip_code=request.user.zip_code,
+            street=request.user.street,
+            building_number=request.user.building_number,
+            apartment_number=request.user.apartment_number,
+        )
+        order.save()
+        for item in cart:
+            OrderItem.objects.create(
+                product=item['product'],
+                user=self.request.user,
+                price=item['price'],
+                order=order,
+            )
+
+        cart.clear()
+
+        email_template = render_to_string('cart/email_payment_success.html', {})
+        email = EmailMessage(
+            'Payment Success',
+            email_template,
+            settings.EMAIL_HOST_USER,
+            ['ktylzanowski@gmail.com'],
+        )
+        email.fail_silently = False
+        email.send()
+        return redirect('home')
 
 
 class PayDebt(View):
