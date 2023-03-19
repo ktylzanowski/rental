@@ -67,7 +67,7 @@ class OrderCreate(View):
             status=body['status'],
         )
         payment.save()
-
+        
         shipping_method = ShippingMethod.objects.get(name=body['shipping'])
 
         shipping = Shipping.objects.create(

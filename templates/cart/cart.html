@@ -2,6 +2,24 @@
 {% load static %}
 {% block content %}
 
+<script type="text/javascript">
+    var total = {{ cart.get_total_price }}
+    var shippingMethod = "Personal Pickup";
+
+    function myFunction(){
+    if(document.getElementById('pickup').checked) {
+        shippingMethod = "Personal Pickup";
+        total = {{ cart.get_total_price }};
+        document.getElementById("total_price").innerHTML = total+"$";
+        }
+    else if(document.getElementById('inpost').checked) {
+        shippingMethod = "Inpost";
+        total = total + 10;
+        document.getElementById("total_price").innerHTML = total+"$";
+        }
+}
+</script>
+
 <section class="section-content padding-y bg">
 
         <div class="row">
@@ -49,7 +67,11 @@
                     <div class="card-body">
                         <dl class="dlist-align">
                             <dt>Total price:</dt>
-                            <dd class="text-right">{{ cart.get_total_price }}$</dd>
+                            <dd class="text-right" id="total_price">
+                                <div></div>
+                                     <script type="text/javascript">
+                                        document.write(total)
+                                     </script>$</dd>
                         </dl>
 
                         {% if not cart %}
@@ -57,8 +79,8 @@
                         {% elif user.if_address %}
                         <p>Address is not complete</p>
                         {% else %}
-                        <input type="radio" id="pickup" value="pickup" name="shipping" checked/>Personal Pickup
-                        <input type="radio" id="inpost" value="inpost" name="shipping"/>Inpost
+                        <input type="radio" id="pickup" value="pickup" name="shipping" onclick="myFunction()" checked/>Personal Pickup
+                        <input type="radio" id="inpost" value="inpost" name="shipping" onclick="myFunction()"/>Inpost
                         <form method="POST">
                             {% csrf_token %}
                             <div id="paypal-button-container"></div>
@@ -76,6 +98,7 @@
 
 <script>
 
+
 function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -92,9 +115,10 @@ function getCookie(name) {
 }
 const csrftoken = getCookie('csrftoken');
 
-var total = "{{ cart.get_total_price }}"
+
 var url = "{% url 'OrderCreate' %}"
-var shippingMethod = "None"
+
+
 
 paypal.Buttons({
     createOrder: function(data, actions) {
@@ -109,17 +133,8 @@ paypal.Buttons({
 
 onApprove: function(data, actions) {
     return actions.order.capture().then(function(details){
-        setShipping();
         sendData();
         window.location.href = url;
-        function setShipping(){
-            if(document.getElementById('pickup').checked) {
-                shippingMethod = "Personal Pickup";
-            }
-            else if(document.getElementById('inpost').checked) {
-                shippingMethod = "Inpost";
-            }
-        };
 
         function sendData(){
             fetch(url, {
