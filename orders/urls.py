@@ -1,8 +1,9 @@
 from django.urls import path
-from .views import OrdersView, PayDebt, ReturnView, OrdersArchiveView, MakeReturn, OrderCreate
+from .views import OrdersView, PayDebt, ReturnView, OrdersArchiveView, MakeReturn, OrderCreate, Statistics
 
 urlpatterns = [
     path('orders/', OrdersView.as_view(), name='Orders'),
+    path('orders/statics', Statistics.as_view(), name='Statistics'),
     path('orders/archive', OrdersArchiveView.as_view(), name='OrdersArchive'),
     path('orders/ordercreate', OrderCreate.as_view(), name='OrderCreate'),
     path('orders/paydebt', PayDebt.as_view(), name='PayDebt'),

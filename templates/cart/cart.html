@@ -79,8 +79,12 @@
                         {% elif user.if_address %}
                         <p>Address is not complete</p>
                         {% else %}
-                        <input type="radio" id="pickup" value="pickup" name="shipping" onclick="myFunction()" checked/>Personal Pickup
-                        <input type="radio" id="inpost" value="inpost" name="shipping" onclick="myFunction()"/>Inpost
+                        <p>
+                        <input type="radio" id="pickup" value="pickup" name="shipping" onclick="myFunction()" checked/>Personal Pickup 0$
+                        </p>
+                        <p>
+                        <input type="radio" id="inpost" value="inpost" name="shipping" onclick="myFunction()"/>Inpost 10$
+                        </p>
                         <form method="POST">
                             {% csrf_token %}
                             <div id="paypal-button-container"></div>

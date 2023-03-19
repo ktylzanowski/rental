@@ -1,5 +1,5 @@
 from orders.models import OrderItem, Order, Payment, Shipping, ShippingMethod
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.views.generic import View, DetailView, ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages import success
@@ -67,7 +67,7 @@ class OrderCreate(View):
             status=body['status'],
         )
         payment.save()
-        
+
         shipping_method = ShippingMethod.objects.get(name=body['shipping'])
 
         shipping = Shipping.objects.create(
@@ -166,3 +166,9 @@ class MakeReturn(View):
         order.save()
         success(request, "Order returned")
         return redirect('home')
+
+
+class Statistics(View):
+    def get(self, request):
+        return render(request, 'orders/statistics.html', {})
+    
