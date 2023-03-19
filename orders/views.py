@@ -170,5 +170,5 @@ class MakeReturn(View):
 
 class Statistics(View):
     def get(self, request):
-        return render(request, 'orders/statistics.html', {})
-    
+        orders = OrderItem.objects.all()
+        return render(request, 'orders/statistics.html', {'orders': orders})

@@ -37,12 +37,12 @@ class Rental(models.Model):
 
 class CD(Product):
     GENRE_CHOICES = (
+        ('Disco', 'Disco'),
+        ('Electronic music', 'Electronic music'),
+        ('Rap', 'Rap'),
+        ('Reggae', 'Reggae'),
         ('Rock', 'Rock'),
         ('Pop', 'Pop'),
-        ('Reggae', 'Reggae'),
-        ('Disco', 'Disco'),
-        ('Rap', 'Rap'),
-        ('Electronic music', 'Electronic music'),
     )
     band = models.CharField(max_length=100, null=False, blank=False)
     tracklist = models.TextField(max_length=500, null=False, blank=False)
@@ -65,13 +65,13 @@ class CD(Product):
 
 class Book(Product):
     GENRE_CHOICES = (
+        ('Biography', 'Biography'),
+        ('Criminal', 'Criminal'),
         ('Fantasy', 'Fantasy'),
-        ('Sci-Fi', 'Sci-Fi'),
-        ('Romance', 'Romance'),
         ('Historical Novel', 'Historical Novel'),
         ('Horror', 'Horror'),
-        ('Criminal', 'Criminal'),
-        ('Biography', 'Biography'),
+        ('Romance', 'Romance'),
+        ('Sci-Fi', 'Sci-Fi'),
     )
     author = models.CharField(max_length=100, null=False, blank=False)
     isbn = models.CharField(max_length=100, null=False, blank=False, unique=True)
@@ -84,12 +84,12 @@ class Book(Product):
 
 class Film(Product):
     GENRE_CHOICES = (
-        ('Comedy', 'Comedy'),
         ('Adventure', 'Adventure'),
-        ('Romance', 'Romance'),
+        ('Animated', 'Animated'),
+        ('Comedy', 'Comedy'),
         ('Horror', 'Horror'),
         ('Thriller', 'Thriller'),
-        ('Animated', 'Animated'),
+        ('Romance', 'Romance'),
     )
     director = models.CharField(max_length=100, null=False, blank=False)
     duration = models.IntegerField(null=False, blank=False)
