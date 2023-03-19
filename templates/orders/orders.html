@@ -53,7 +53,7 @@
 									<td class="text-right">
 										<div class="price-wrap">
 											{% if order.status == "Delivered" %}
-												<div class="price"><a href="{% url 'ReturnView' pk=order.pk %}">Return</a></div>
+												<div class="price"><a href="{% url 'ReturnView' pk=order.pk %}">Click to Return</a></div>
 											{% elif order.shipping.shipping_method.name == "Personal Pickup" %}
 												Personal Pickup
 											{% else %}

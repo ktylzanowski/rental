@@ -6,6 +6,7 @@ from accounts.models import MyUser
 from django.contrib.messages import success
 from django.shortcuts import get_object_or_404, render, redirect
 from django.utils import timezone
+from datetime import datetime, timedelta
 
 
 class Dashboard(OnlyAdmin, View):
@@ -179,6 +180,8 @@ class ChangeStatus(OnlyAdmin, View):
         order.status = self.request.POST['status']
         if self.request.POST['status'] == 'Extended':
             order.debt += order.total
+            order.deadline = order.deadline + timedelta(days=7)
+        elif self.request.POST['status'] == 'Returned':
             order.return_date = timezone.now()
         order.save()
         success(request, 'The status has been changed')
