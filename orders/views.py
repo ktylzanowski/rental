@@ -48,6 +48,16 @@ class OrdersArchiveView(ListView):
         return qs
 
 
+class PaymentListView(ListView):
+    model = Payment
+    template_name = "orders/paymentListView.html"
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        qs = qs.filter(user=self.request.user)
+        return qs
+
+
 class OrderCreate(View):
     def get(self, request):
         success(request, "Your order was successful!")
