@@ -1,6 +1,6 @@
 from __future__ import absolute_import, unicode_literals
 from celery import shared_task
-from orders.models import Order, OrderItem
+from orders.models import Order
 from datetime import datetime, timedelta
 from django.core.mail import EmailMessage
 from django.conf import settings
@@ -20,7 +20,7 @@ def send_mail_func(self):
     for order in orders:
         order.debt += order.total
         order.save()
-        order.return_date = datetime.today()+timedelta(days=7)
+        order.deadline = datetime.today()+timedelta(days=7)
         order.save()
         email_template = render_to_string('products/debt_email.html', {})
         email = EmailMessage(

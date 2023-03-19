@@ -5,6 +5,7 @@ from orders.models import Order
 from accounts.models import MyUser
 from django.contrib.messages import success
 from django.shortcuts import get_object_or_404, render, redirect
+from django.utils import timezone
 
 
 class Dashboard(OnlyAdmin, View):
@@ -104,7 +105,7 @@ class FilmCreateView(OnlyAdmin, CreateView):
 
 class BookUpdateView(OnlyAdmin, UpdateView):
     model = Book
-    template_name = 'dashboard/forms/updateProduct.html'
+    template_name = 'dashboard/forms/update.html'
     success_url = '/dashboard/products'
     fields = [
         'title',
@@ -119,7 +120,7 @@ class BookUpdateView(OnlyAdmin, UpdateView):
 
 class CDUpdateView(OnlyAdmin, UpdateView):
     model = CD
-    template_name = 'dashboard/forms/updateProduct.html'
+    template_name = 'dashboard/forms/update.html'
     success_url = '/dashboard/products'
     fields = [
         'title',
@@ -134,7 +135,7 @@ class CDUpdateView(OnlyAdmin, UpdateView):
 
 class FilmUpdateView(OnlyAdmin, UpdateView):
     model = Film
-    template_name = 'dashboard/forms/updateProduct.html'
+    template_name = 'dashboard/forms/update.html'
     success_url = '/dashboard/products'
     fields = [
         'title',
@@ -171,6 +172,7 @@ class ChangeStatus(OnlyAdmin, View):
         order.status = self.request.POST['status']
         if self.request.POST['status'] == 'Extended':
             order.debt += order.total
+            order.return_date = timezone.now()
         order.save()
         success(request, 'The status has been changed')
         return redirect('OrderListView')
@@ -180,3 +182,35 @@ class UserListView(OnlyAdmin, ListView):
     model = MyUser
     template_name = 'dashboard/listview/userListView.html'
     ordering = ['-pk']
+
+
+class UserUpdateView(OnlyAdmin, UpdateView):
+    model = MyUser
+    template_name = 'dashboard/forms/update.html'
+    success_url = '/dashboard/users'
+    fields = [
+        'email',
+        'first_name',
+        'last_name',
+        'phone',
+        'city',
+        'zip_code',
+        'street',
+        'building_number',
+        'apartment_number',
+        'is_active',
+        'is_admin',
+        'is_staff',
+    ]
+
+    def form_valid(self, form):
+        success(self.request, "User information has been updated")
+        return super().form_valid(form)
+
+
+class UserDeleteView(OnlyAdmin, View):
+    def get(self, request, pk):
+        user = get_object_or_404(MyUser, pk=pk)
+        user.delete()
+        success(request, "User deleted")
+        return redirect('Dashboard')

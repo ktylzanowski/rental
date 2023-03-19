@@ -82,7 +82,7 @@ class OrderCreate(View):
         order = Order.objects.create(
             user=request.user,
             order_date=timezone.now(),
-            return_date=timezone.now()+timedelta(days=7),
+            deadline=timezone.now()+timedelta(days=7),
             status="Ordered",
             total=cart.get_total_price(),
             payment=payment,

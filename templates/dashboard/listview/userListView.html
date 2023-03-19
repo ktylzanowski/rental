@@ -11,6 +11,8 @@
                 <th>Phone</th>
                 <th>Address</th>
                 <th>If admin</th>
+                <th>Detail</th>
+                <th>Delete</th>
             </tr>
             {% for user in object_list %}
             <tr>
@@ -30,6 +32,8 @@
                         No
                     {% endif %}
                 </td>
+                <td><a href="{% url 'UserUpdateView' pk=user.pk %}">Detail</a></td>
+                <td><a href="{% url 'UserDeleteView' pk=user.pk %}">Delete</a></td>
             </tr>
             {% endfor %}
         </table>
