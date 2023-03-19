@@ -11,8 +11,9 @@ urlpatterns = [
     path('favicon.ico', RedirectView.as_view(url=staticfiles_storage.url('rental/favicon/favicon.ico'))),
     path('', include('products.urls')),
     path('', include('accounts.urls')),
-    path('', include('cart.urls')),
-    path('', include('orders.urls')),
+    path('cart/', include('cart.urls')),
+    path('orders/', include('orders.urls')),
+    path('dashboard/', include('dashboard.urls')),
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
