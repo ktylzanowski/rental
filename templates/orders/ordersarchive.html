@@ -11,6 +11,7 @@
 							<tr class="small text-uppercase">
 								<th>Product</th>
 								<th scope="col" width="120">Return Date</th>
+								<th scope="col" width="120">Total cost</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -25,6 +26,11 @@
 									<td>
 										<div class="price-wrap">
 											<div class="price">{{order.return_date}}</div>
+										</div>
+									</td>
+									<td>
+										<div class="price-wrap">
+											<div class="price">{{order.total_cost}}$</div>
 										</div>
 									</td>
 								</tr>

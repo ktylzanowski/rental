@@ -59,6 +59,9 @@ class Order(models.Model):
     if_extended = models.BooleanField(default=False, null=True, blank=True)
     number_of_extensions = models.IntegerField(default=0, null=True, blank=True)
 
+    def total_cost(self):
+        return (self.number_of_extensions * self.total) + self.total
+
 
 class OrderItem(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
