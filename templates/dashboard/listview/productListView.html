@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+    <a href="{% url 'BookCreateView' %}"><input type="submit" value="Add Book"></a>
+    <a href="{% url 'CDCreateView'%}"><input type="submit" value="Add CD"></a>
+    <a href="{% url 'FilmCreateView'%}"><input type="submit" value="Add Film"></a>
+    <h2>Books</h2>
+    <table>
+        <tr>
+            <th>Title</th>
+            <th>Author</th>
+            <th>ISBN</th>
+            <th>Genre</th>
+            <th>quantity</th>
+            <th>price</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>
+        {% for book in books %}
+        <tr>
+            <td> {{ book.title }}</td>
+            <td> {{ book.author }}</td>
+            <td> {{ book.isbn }}</td>
+            <td> {{ book.genre }}</td>
+            <td> {{ book.quantity }}</td>
+            <td> {{ book.price }}$</td>
+            <td><a href="{% url 'BookUpdateView' pk=book.pk %}">Edit</a></td>
+            <td><a href="{% url 'ProductDeleteView' pk=book.pk %}">Delete</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+
+        <h2>CD's</h2>
+    <table>
+        <tr>
+            <th>Title</th>
+            <th>band</th>
+            <th>tracklist</th>
+            <th>Genre</th>
+            <th>quantity</th>
+            <th>price</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>
+        {% for cd in cds %}
+        <tr>
+            <td> {{ cd.title }}</td>
+            <td> {{ cd.band }}</td>
+            <td> {{ cd.tracklist }}</td>
+            <td> {{ cd.genre }}</td>
+            <td> {{ cd.quantity }}</td>
+            <td> {{ cd.price }} $</td>
+            <td><a href="{% url 'CDUpdateView' pk=cd.pk %}">Edit</a></td>
+            <td><a href="{% url 'ProductDeleteView' pk=cd.pk %}">Delete</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+
+            <h2>Films</h2>
+    <table>
+        <tr>
+            <th>Title</th>
+            <th>director</th>
+            <th>duration</th>
+            <th>Genre</th>
+            <th>quantity</th>
+            <th>price</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>
+        {% for film in films %}
+        <tr>
+            <td> {{ film.title }}</td>
+            <td> {{ film.director }}</td>
+            <td> {{ film.duration }}</td>
+            <td> {{ film.genre }}</td>
+            <td> {{ film.quantity }}</td>
+            <td> {{ film.price }}$</td>
+            <td><a href="{% url 'FilmUpdateView' pk=film.pk %}">Edit</a></td>
+            <td><a href="{% url 'ProductDeleteView' pk=film.pk %}">Delete</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+
+
+{% endblock %}

@@ -12,6 +12,9 @@
     {% if user.is_authenticated %}
       <div class="col-md-3 text-end">
         <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
+          {% if user.is_admin %}
+          <li><a href="{% url 'Dashboard' %}" class="nav-link px-2 link-dark">Dashboard</a></li>
+          {% endif %}
           <li><a href="{% url 'Account' user.pk %}" class="nav-link px-2 link-dark">Account</a></li>
           <li><a href="{% url 'Orders' %}" class="nav-link px-2 link-dark">Orders</a></li>
           <li><a href="{% url 'Cart' %}" class="nav-link px-2 link-dark">Cart</a></li>

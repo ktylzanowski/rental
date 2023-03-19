@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container">
+         <table>
+            <tr>
+                <th>User</th>
+                <th>Ordered Date</th>
+                <th>Item in Order</th>
+                <th>Total</th>
+                <th>Status</th>
+                <th>Phone</th>
+                <th>Address</th>
+                <th>Change Status</th>
+            </tr>
+            <tr>
+                <td>{{object.user.email}}</td>
+                <td>{{object.order_date}}</td>
+                <td>1</td>
+                <td>{{object.total}}$</td>
+                <td>{{object.status}}</td>
+                <td>{{object.phone}}</td>
+                <td>
+                    {{object.city}} {{object.zip_code}} {{ object.street}} {{object.building_number}}
+                    {% if object.apartment_number %}
+                    {{object.apartment_number}}
+                    {% endif %}
+                </td>
+                <td>
+                    <form action="{% url 'ChangeStatus' pk=order.pk %}" method="POST">{% csrf_token %}
+                    {{ status.status }}
+                    <input type="submit" value="Change Status">
+                    </form>
+                </td>
+            </tr>
+        </table>
+    <table>
+        <tr>
+            <th>Product</th>
+            <th>Category</th>
+            <th>Cost</th>
+        </tr>
+        {% for item in order.orderitem_set.all %}
+        <tr>
+            <td> {{ item.product.title }}</td>
+            <td> {{ item.product.model_name }}</td>
+            <td> {{ item.price }}$</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}
