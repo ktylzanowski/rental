@@ -20,7 +20,6 @@ class AddToCart(LoginRequiredMixin, View):
         if not request.user.is_authenticated:
             messages.success(request, "You must be logged in")
             return redirect('Login')
-
         cart = Cart(request)
         product = get_object_or_404(Product, id=product_id)
         if cart.add(product):

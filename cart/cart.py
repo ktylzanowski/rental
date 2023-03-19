@@ -4,7 +4,6 @@ from products.models import Product
 
 
 class Cart(object):
-
     def __init__(self, request):
         self.session = request.session
         cart = self.session.get(settings.CART_SESSION_ID)
@@ -13,7 +12,6 @@ class Cart(object):
         self.cart = cart
 
     def __iter__(self):
-
         product_ids = self.cart.keys()
         products = Product.objects.filter(id__in=product_ids)
         cart = self.cart.copy()
