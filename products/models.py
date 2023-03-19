@@ -48,21 +48,19 @@ class CD(Product):
     tracklist = models.TextField(max_length=500, null=False, blank=False)
     genre = models.CharField(max_length=100, choices=GENRE_CHOICES, null=False, blank=False)
 
-    def save(self):
-        try:
-            CD.objects.get(genre=self.genre, tracklist=self.tracklist)
+    def full_clean(self):
+        if CD.objects.filter(genre=self.genre, tracklist=self.tracklist).exists():
             ValueError('Within one genre, we cannot offer two albums with the same track list')
+        try:
+            cds = CD.objects.filter(band=self.band)
+            tab = []
+            for cd in cds:
+                tab.append(cd.genre)
+            set(tab)
+            if self.genre not in tab and len(tab) > 2:
+                ValueError('CDs of a given band can only be offered in two genres')
         except ObjectDoesNotExist:
-            try:
-                cds = CD.objects.filter(band=self.band)
-                tab = []
-                for cd in cds:
-                    tab.append(cd.genre)
-                set(tab)
-                if self.genre not in tab and len(tab) > 2:
-                    ValueError('CDs of a given band can only be offered in two genres')
-            except ObjectDoesNotExist:
-                super().save()
+            pass
 
 
 class Book(Product):
@@ -79,12 +77,9 @@ class Book(Product):
     isbn = models.CharField(max_length=100, null=False, blank=False, unique=True)
     genre = models.CharField(max_length=100, choices=GENRE_CHOICES, null=False, blank=False)
 
-    def save(self):
-        try:
-            Book.objects.get(author=self.author, title=self.title, genre=self.genre)
+    def full_clean(self, exclude, validate_unique=True, validate_constraints=True):
+        if Book.objects.filter(author=self.author, title=self.title, genre=self.genre).exists():
             raise ValueError("Author, title and genre must not be repeated")
-        except ObjectDoesNotExist:
-            super().save()
 
 
 class Film(Product):
@@ -100,18 +95,16 @@ class Film(Product):
     duration = models.IntegerField(null=False, blank=False)
     genre = models.CharField(max_length=100, choices=GENRE_CHOICES, null=False, blank=False)
 
-    def save(self):
-        try:
-            Film.objects.get(director=self.director, title=self.title, duration=self.duration)
+    def full_clean(self, exclude, validate_unique=True, validate_constraints=True):
+        if Film.objects.filter(director=self.director, title=self.title, duration=self.duration).exists():
             raise ValueError("If the director and title are repeated, the duration must differ")
-        except ObjectDoesNotExist:
 
-            genres = ('Comedy', 'Adventure', 'Romance', 'Horror', 'Thriller', 'Animated')
-            tab = []
-            for genre in genres:
-                tab.append(len(Film.objects.filter(genre=genre)))
-                if self.genre == genre:
-                    tab[-1] += 1
-            if max(tab) - min(tab) > 3:
-                ValueError('The numbers of different films of a given genre within the entire collection may vary by 3')
-            super().save()
+        genres = ('Comedy', 'Adventure', 'Romance', 'Horror', 'Thriller', 'Animated')
+        tab = []
+        for genre in genres:
+            tab.append(len(Film.objects.filter(genre=genre)))
+            if self.genre == genre:
+                tab[-1] += 1
+        if max(tab) - min(tab) > 3:
+            ValueError('The numbers of different films of a given genre within the entire collection may vary by 3')
+
