@@ -10,6 +10,7 @@
 						<thead class="text-muted">
 							<tr class="small text-uppercase">
 								<th scope="col" width="120">Payment ID</th>
+								<th scope="col" width="120">Email</th>
 								<th scope="col" width="120">Cost</th>
 								<th scope="col" width="120">Order</th>
 							</tr>
@@ -18,6 +19,7 @@
 							{% for payment in object_list %}
 								<tr>
 									<td>{{ payment.payment_id }}</td>
+									<td>{{ payment.order.user.email }}</td>
 									<td>{{ payment.amount_paid }}$</td>
 									<td>Order number: {{ payment.order.pk }}</td>
 								</tr>

@@ -13,7 +13,6 @@ urlpatterns = [
     path('products/add-cd', views.BookCreateView.as_view(), name='CDCreateView'),
     path('products/add-film', views.BookCreateView.as_view(), name='FilmCreateView'),
 
-
     path('orders/', views.OrderListView.as_view(), name="OrderListView"),
     path('orders/<int:pk>', views.OrderDetailView.as_view(), name="OrderDetailView"),
     path('orders/<int:pk>/change-status', views.ChangeStatus.as_view(), name='ChangeStatus'),
@@ -21,4 +20,6 @@ urlpatterns = [
     path('users/', views.UserListView.as_view(), name="UserListView"),
     path('users/<int:pk>/update', views.UserUpdateView.as_view(), name="UserUpdateView"),
     path('users/<int:pk>/delete', views.UserDeleteView.as_view(), name="UserDeleteView"),
+
+    path('payment/', views.PaymentListView.as_view(), name="PaymentListView"),
 ]

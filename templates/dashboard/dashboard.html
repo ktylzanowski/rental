@@ -52,4 +52,16 @@
         </tr>
     </table>
     <h2><a href="{% url 'UserListView' %}">All Users</a></h2>
+    <hr>
+    <table>
+        <tr>
+            <th>Number of payment</th>
+            <th>Total income</th>
+        </tr>
+        <tr>
+            <td>{{number_of_payments}}</td>
+            <td>{{total_income}}$</td>
+        </tr>
+    </table>
+    <h2><a href="{% url 'PaymentListView' %}">All Payments</a></h2>
 {% endblock %}

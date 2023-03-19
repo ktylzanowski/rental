@@ -1,7 +1,7 @@
 from .mixin import OnlyAdmin, OrderChangeStatusMixin
 from django.views.generic import View, CreateView, UpdateView, ListView, DetailView
 from products.models import Book, CD, Film, Product
-from orders.models import Order
+from orders.models import Order, Payment
 from accounts.models import MyUser
 from django.contrib.messages import success
 from django.shortcuts import get_object_or_404, render, redirect
@@ -24,11 +24,18 @@ class Dashboard(OnlyAdmin, View):
 
         number_of_users = len(MyUser.objects.all())
 
+        number_of_payments = len(Payment.objects.all())
+        payments = Payment.objects.all()
+        total_income = 0
+        for payment in payments:
+            total_income += int(payment.amount_paid)
+
         context = {'number_of_books': number_of_books, 'number_of_cds': number_of_cds,
                    'number_of_films': number_of_films, 'number_of_all_products': number_of_all_products,
                    'number_of_ordered': number_of_ordered, 'number_of_sent': number_of_sent,
                    'number_of_delivered': number_of_delivered, 'number_of_extended': number_of_extended,
-                   'number_of_returned': number_of_returned, 'number_of_users': number_of_users}
+                   'number_of_returned': number_of_returned, 'number_of_users': number_of_users,
+                   'number_of_payments': number_of_payments, 'total_income': total_income}
 
         return render(request, 'dashboard/dashboard.html', context)
 
@@ -214,3 +221,8 @@ class UserDeleteView(OnlyAdmin, View):
         user.delete()
         success(request, "User deleted")
         return redirect('Dashboard')
+
+
+class PaymentListView(OnlyAdmin, ListView):
+    model = Payment
+    template_name = "dashboard/listview/paymentListView.html"
