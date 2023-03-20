@@ -48,7 +48,7 @@ class CD(Product):
     tracklist = models.TextField(max_length=500, null=False, blank=False)
     genre = models.CharField(max_length=100, choices=GENRE_CHOICES, null=False, blank=False)
 
-    def full_clean(self):
+    def full_clean(self, exclude, validate_unique=True, validate_constraints=True):
         if CD.objects.filter(genre=self.genre, tracklist=self.tracklist).exists():
             ValueError('Within one genre, we cannot offer two albums with the same track list')
         try:

@@ -1,5 +1,27 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-HELLO
+
+    <form method="get">
+        {{ form }}
+        <input type="submit" value="Search">
+    </form>
+
+    <table>
+        <tr>
+            <th>Title</th>
+            <th>Category</th>
+            <th>Genre</th>
+            <th>Popularity</th>
+        </tr>
+        {% for item in object_list %}
+        <tr>
+            <td>{{ item.title }}</td>
+            <td>{{ item.model_name}}</td>
+            <td>{{ item.genre }}</td>
+            <td>{{item.popularity}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
 {% endblock %}

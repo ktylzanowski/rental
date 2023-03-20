@@ -10,8 +10,8 @@ urlpatterns = [
     path('products/<int:pk>/update-film', views.FilmUpdateView.as_view(), name='FilmUpdateView'),
     path('products/<int:pk>/delete', views.ProductDeleteView.as_view(), name='ProductDeleteView'),
     path('products/add-book', views.BookCreateView.as_view(), name='BookCreateView'),
-    path('products/add-cd', views.BookCreateView.as_view(), name='CDCreateView'),
-    path('products/add-film', views.BookCreateView.as_view(), name='FilmCreateView'),
+    path('products/add-cd', views.CDCreateView.as_view(), name='CDCreateView'),
+    path('products/add-film', views.FilmCreateView.as_view(), name='FilmCreateView'),
 
     path('orders/', views.OrderListView.as_view(), name="OrderListView"),
     path('orders/<int:pk>', views.OrderDetailView.as_view(), name="OrderDetailView"),

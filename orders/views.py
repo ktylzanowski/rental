@@ -1,9 +1,9 @@
 from orders.models import OrderItem, Order, Payment, Shipping, ShippingMethod
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect
 from django.views.generic import View, DetailView, ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages import success
-from products.models import Rental
+from products.models import Rental, Product, Book, CD, Film
 from django.db.models import Prefetch
 import datetime
 import json
@@ -13,6 +13,7 @@ from datetime import timedelta
 from django.core.mail import EmailMessage
 from django.conf import settings
 from django.template.loader import render_to_string
+from .forms import CategoryForm
 
 
 class OrdersView(LoginRequiredMixin, ListView):
@@ -108,6 +109,7 @@ class OrderCreate(View):
         )
         order.save()
         for item in cart:
+            print(item['product'])
             OrderItem.objects.create(
                 product=item['product'],
                 user=self.request.user,
@@ -178,7 +180,22 @@ class MakeReturn(View):
         return redirect('home')
 
 
-class Statistics(View):
-    def get(self, request):
-        orders = OrderItem.objects.all()
-        return render(request, 'orders/statistics.html', {'orders': orders})
+class Statistics(ListView):
+    model = Product
+    template_name = 'orders/statistics.html'
+    ordering = ['popularity']
+
+    def get_queryset(self):
+        qs = super(Statistics, self).get_queryset()
+        if self.request.GET and self.request.GET['category'] == 'book':
+            qs = Book.objects.all().order_by('popularity')
+        elif self.request.GET and self.request.GET['category'] == 'cd':
+            qs = CD.objects.all().order_by('popularity')
+        elif self.request.GET and self.request.GET['category'] == 'film':
+            qs = Film.objects.all().order_by('popularity')
+        return qs
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data['form'] = CategoryForm
+        return data
