@@ -188,10 +188,9 @@ class Statistics(ListView):
     ordering = ['-popularity']
 
     def get_queryset(self):
-
         if self.request.GET:
             my_model = apps.get_model(app_label="products", model_name=self.request.GET["category"])
-            return my_model.objects.all().order_by('-popularity')
+            return my_model.objects.all()
         return super(Statistics, self).get_queryset()
 
     def get_context_data(self, **kwargs):
