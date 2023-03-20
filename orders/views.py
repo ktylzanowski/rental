@@ -14,6 +14,7 @@ from django.core.mail import EmailMessage
 from django.conf import settings
 from django.template.loader import render_to_string
 from .forms import CategoryForm
+from django.apps import apps
 
 
 class OrdersView(LoginRequiredMixin, ListView):
@@ -109,7 +110,8 @@ class OrderCreate(View):
         )
         order.save()
         for item in cart:
-            print(item['product'])
+            item['product'].popularity += 1
+            item['product'].save()
             OrderItem.objects.create(
                 product=item['product'],
                 user=self.request.user,
@@ -183,17 +185,14 @@ class MakeReturn(View):
 class Statistics(ListView):
     model = Product
     template_name = 'orders/statistics.html'
-    ordering = ['popularity']
+    ordering = ['-popularity']
 
     def get_queryset(self):
-        qs = super(Statistics, self).get_queryset()
-        if self.request.GET and self.request.GET['category'] == 'book':
-            qs = Book.objects.all().order_by('popularity')
-        elif self.request.GET and self.request.GET['category'] == 'cd':
-            qs = CD.objects.all().order_by('popularity')
-        elif self.request.GET and self.request.GET['category'] == 'film':
-            qs = Film.objects.all().order_by('popularity')
-        return qs
+
+        if self.request.GET:
+            my_model = apps.get_model(app_label="products", model_name=self.request.GET["category"])
+            return my_model.objects.all().order_by('-popularity')
+        return super(Statistics, self).get_queryset()
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
