@@ -13,7 +13,6 @@ from datetime import timedelta
 from django.core.mail import EmailMessage
 from django.conf import settings
 from django.template.loader import render_to_string
-from .forms import CategoryForm
 from django.apps import apps
 
 
@@ -187,13 +186,9 @@ class Statistics(ListView):
     template_name = 'orders/statistics.html'
     ordering = ['-popularity']
 
-    def get_queryset(self):
-        if self.request.GET:
-            my_model = apps.get_model(app_label="products", model_name=self.request.GET["category"])
-            return my_model.objects.all()
-        return super(Statistics, self).get_queryset()
-
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
-        data['form'] = CategoryForm
+        data['books'] = Book.objects.all().order_by('-popularity')
+        data['films'] = Film.objects.all().order_by('-popularity')
+        data['cds'] = CD.objects.all().order_by('-popularity')
         return data
