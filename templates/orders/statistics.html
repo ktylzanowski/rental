@@ -2,22 +2,48 @@
 {% load static %}
 {% block content %}
 
-    <form method="get">
-        {{ form }}
-        <input type="submit" value="Search">
-    </form>
-
+    <h2>Books</h2>
     <table>
         <tr>
             <th>Title</th>
-            <th>Category</th>
             <th>Genre</th>
             <th>Popularity</th>
         </tr>
-        {% for item in object_list %}
+        {% for item in books %}
         <tr>
             <td>{{ item.title }}</td>
-            <td>{{ item.model_name}}</td>
+            <td>{{ item.genre }}</td>
+            <td>{{item.popularity}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h2>Films</h2>
+    <table>
+        <tr>
+            <th>Title</th>
+            <th>Genre</th>
+            <th>Popularity</th>
+        </tr>
+        {% for item in films %}
+        <tr>
+            <td>{{ item.title }}</td>
+            <td>{{ item.genre }}</td>
+            <td>{{item.popularity}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h2>Cds</h2>
+    <table>
+        <tr>
+            <th>Title</th>
+            <th>Genre</th>
+            <th>Popularity</th>
+        </tr>
+        {% for item in cds %}
+        <tr>
+            <td>{{ item.title }}</td>
             <td>{{ item.genre }}</td>
             <td>{{item.popularity}}</td>
         </tr>
