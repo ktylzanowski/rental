@@ -2,12 +2,13 @@ from django.views.generic import ListView, DetailView
 from products.models import Product, Book, CD, Film
 from . import forms
 from .mixin import HomeMixin
+from.forms import MatchForm
 
 
 class Home(HomeMixin, ListView):
     model = Product
 
-    def get_context_data(self, *, object_list=None, **kwargs):
+    def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         data['form'] = forms.HomeForm
         return data
@@ -18,7 +19,7 @@ class BookListView(HomeMixin, ListView):
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
-        data['form'] = forms.BookGenreForm
+        data['form'] = forms.MatchForm(category="book")
         return data
 
 
@@ -27,7 +28,7 @@ class FilmListView(HomeMixin, ListView):
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
-        data['form'] = forms.FilmGenreForm
+        data['form'] = forms.MatchForm(category="cd")
         return data
 
 
@@ -36,7 +37,7 @@ class CDListView(HomeMixin, ListView):
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
-        data['form'] = forms.CDGenreForm
+        data['form'] = forms.MatchForm(category="film")
         return data
 
 

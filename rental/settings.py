@@ -86,12 +86,8 @@ WSGI_APPLICATION = 'rental.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'rentaldb',
-        'USER': confidential_data.user_db,
-        'PASSWORD': confidential_data.password_db,
-        'HOST': 'localhost',
-        'PORT': '',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 

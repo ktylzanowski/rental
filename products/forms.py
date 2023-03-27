@@ -1,5 +1,5 @@
 from django import forms
-from .models import Book, CD, Film
+from .models import Genre
 
 
 class GenreChoiceField(forms.ChoiceField):
@@ -11,29 +11,12 @@ class GenreChoiceField(forms.ChoiceField):
 
 
 class HomeForm(forms.Form):
-    choices = ()
-    genre = GenreChoiceField(choices=choices)
+    genre = GenreChoiceField(choices=[])
 
 
-class BookGenreForm(forms.ModelForm):
-    genre = GenreChoiceField(choices=Book.GENRE_CHOICES)
+class MatchForm(forms.Form):
+    genre = GenreChoiceField(choices=[])
 
-    class Meta:
-        model = Book
-        fields = ('genre',)
-
-
-class CDGenreForm(forms.ModelForm):
-    genre = GenreChoiceField(choices=CD.GENRE_CHOICES)
-
-    class Meta:
-        model = CD
-        fields = ('genre',)
-
-
-class FilmGenreForm(forms.ModelForm):
-    genre = GenreChoiceField(choices=Film.GENRE_CHOICES)
-
-    class Meta:
-        model = Film
-        fields = ('genre',)
+    def __init__(self, category, *args, **kwargs):
+        super(MatchForm, self).__init__(*args, **kwargs)
+        self.fields['genre'].choices += [(x.pk, x.name) for x in Genre.objects.filter(category=category)]
