@@ -3,7 +3,7 @@ from django.shortcuts import redirect
 from django.views.generic import View, DetailView, ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages import success
-from products.models import Rental, Product, Book, CD, Film
+from products.models import Rental, Product, Book, CD, Film, Genre
 from django.db.models import Prefetch
 import datetime
 import json
@@ -188,7 +188,16 @@ class Statistics(ListView):
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
-        data['books'] = Book.objects.all().order_by('-popularity')
-        data['films'] = Film.objects.all().order_by('-popularity')
-        data['cds'] = CD.objects.all().order_by('-popularity')
+        genre = Genre.objects.all()
+
+        dictionary = {}
+        for g in genre:
+            total = 0
+            products = Product.objects.filter(genre=g)
+            for product in products:
+                total += product.popularity
+            dictionary[g.category] = {g.name: total}
+
+        print(dictionary)
+        data["pop"] = dictionary
         return data

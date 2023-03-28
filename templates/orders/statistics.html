@@ -5,15 +5,14 @@
     <h2>Books</h2>
     <table>
         <tr>
-            <th>Title</th>
             <th>Genre</th>
             <th>Popularity</th>
         </tr>
-        {% for item in books %}
+        {% for key, value in pop.book.items %}
         <tr>
-            <td>{{ item.title }}</td>
-            <td>{{ item.genre }}</td>
-            <td>{{item.popularity}}</td>
+            <td>{{ key }}</td>
+            <td>{{ value }}</td>
+
         </tr>
         {% endfor %}
     </table>
@@ -25,7 +24,7 @@
             <th>Genre</th>
             <th>Popularity</th>
         </tr>
-        {% for item in films %}
+        {% for item in pop.film %}
         <tr>
             <td>{{ item.title }}</td>
             <td>{{ item.genre }}</td>
@@ -41,7 +40,7 @@
             <th>Genre</th>
             <th>Popularity</th>
         </tr>
-        {% for item in cds %}
+        {% for item in pop.cd %}
         <tr>
             <td>{{ item.title }}</td>
             <td>{{ item.genre }}</td>
