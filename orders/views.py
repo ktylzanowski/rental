@@ -15,6 +15,7 @@ from django.conf import settings
 from django.template.loader import render_to_string
 from collections import defaultdict
 from accounts.models import MyUser
+from .forms import TimeSection
 
 
 class OrdersView(LoginRequiredMixin, ListView):
@@ -189,8 +190,15 @@ class Statistics(ListView):
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
-        genre = Genre.objects.all()
+        data['form'] = TimeSection
+        if self.request.GET:
+            t1 = self.request.GET['t1']
+            t2 = self.request.GET['t2']
+        else:
+            t1 = timezone.now()
+            t2 = timezone.now()
 
+        genre = Genre.objects.all()
         dictionary = defaultdict(dict)
 
         for g in genre:
@@ -205,10 +213,12 @@ class Statistics(ListView):
         users_items = {}
         users = MyUser.objects.all()
         for user in users:
-            books = OrderItem.objects.filter(user=user, product__genre__category="book").count()
+            books = OrderItem.objects.filter(user=user, order__order_date__range=(t1, t2)).count()
             cds = OrderItem.objects.filter(user=user, product__genre__category="cd").count()
             films = OrderItem.objects.filter(user=user, product__genre__category="film").count()
-            tab = [books, cds, films]
+            print(films)
+            tab = [cds, films, books]
+            print(tab)
             users_items[user.email] = tab
 
         data['users_items'] = users_items

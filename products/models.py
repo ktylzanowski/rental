@@ -82,13 +82,3 @@ class Film(Product):
     def full_clean(self, exclude, validate_unique=True, validate_constraints=True):
         if Film.objects.filter(director=self.director, title=self.title, duration=self.duration).exists():
             raise ValueError("If the director and title are repeated, the duration must differ")
-
-        genres = ('Comedy', 'Adventure', 'Romance', 'Horror', 'Thriller', 'Animated')
-        tab = []
-        for genre in genres:
-            tab.append(len(Film.objects.filter(genre=genre)))
-            if self.genre == genre:
-                tab[-1] += 1
-        if max(tab) - min(tab) > 3:
-            ValueError('The numbers of different films of a given genre within the entire collection may vary by 3')
-

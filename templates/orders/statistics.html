@@ -2,6 +2,11 @@
 {% load static %}
 {% block content %}
 
+    <form method="GET">
+        {{ form.t1 }} {{ form.t2 }}
+        <button class="btn btn-secondary btn-sm">Search</button>
+    </form>
+
     <h2>Books</h2>
     <table>
         <tr>
@@ -54,13 +59,15 @@
             <td>Films</td>
             <td>Cds</td>
         </tr>
-        <tr>
+
         {% for key, values in users_items.items %}
+        <tr>
             <td>{{key}}</td>
             {% for value in values %}
                 <td>{{ value }}</td>
             {% endfor %}
-        {% endfor %}
         </tr>
+        {% endfor %}
+
     </table>
 {% endblock %}
