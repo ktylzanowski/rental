@@ -2,7 +2,6 @@ from django.views.generic import ListView, DetailView
 from products.models import Product, Book, CD, Film
 from . import forms
 from .mixin import HomeMixin
-from.forms import MatchForm
 
 
 class Home(HomeMixin, ListView):

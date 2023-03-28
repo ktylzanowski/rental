@@ -3,7 +3,7 @@ from django.shortcuts import redirect
 from django.views.generic import View, DetailView, ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages import success
-from products.models import Rental, Product, Book, CD, Film, Genre
+from products.models import Rental, Product, Genre
 from django.db.models import Prefetch
 import datetime
 import json
@@ -13,7 +13,8 @@ from datetime import timedelta
 from django.core.mail import EmailMessage
 from django.conf import settings
 from django.template.loader import render_to_string
-from django.apps import apps
+from collections import defaultdict
+from accounts.models import MyUser
 
 
 class OrdersView(LoginRequiredMixin, ListView):
@@ -190,14 +191,25 @@ class Statistics(ListView):
         data = super().get_context_data(**kwargs)
         genre = Genre.objects.all()
 
-        dictionary = {}
+        dictionary = defaultdict(dict)
+
         for g in genre:
             total = 0
             products = Product.objects.filter(genre=g)
             for product in products:
                 total += product.popularity
-            dictionary[g.category] = {g.name: total}
+            dictionary[g.category][g.name] = total
 
-        print(dictionary)
         data["pop"] = dictionary
+
+        users_items = {}
+        users = MyUser.objects.all()
+        for user in users:
+            books = OrderItem.objects.filter(user=user, product__genre__category="book").count()
+            cds = OrderItem.objects.filter(user=user, product__genre__category="cd").count()
+            films = OrderItem.objects.filter(user=user, product__genre__category="film").count()
+            tab = [books, cds, films]
+            users_items[user.email] = tab
+
+        data['users_items'] = users_items
         return data
