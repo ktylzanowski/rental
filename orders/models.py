@@ -22,6 +22,9 @@ class Shipping(models.Model):
     postage = models.IntegerField(null=False)
     quantity_of_items = models.IntegerField(null=False)
 
+    def __str__(self):
+        return str(self.user.email) + " " + str(self.pk)
+
 
 class Order(models.Model):
     status_types = [
@@ -54,6 +57,9 @@ class Order(models.Model):
     def total_cost(self):
         return (self.number_of_extensions * self.total) + self.total
 
+    def __str__(self):
+        return str(self.user) + " " +str(self.pk)
+
 
 class OrderItem(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
@@ -61,4 +67,5 @@ class OrderItem(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
     price = models.IntegerField(null=False, blank=False, default=15)
 
-
+    def __str__(self):
+        return str(self.product) + " " + str(self.order)
