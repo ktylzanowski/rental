@@ -4,6 +4,18 @@ from django.urls import reverse
 from django.core.exceptions import ObjectDoesNotExist
 
 
+class Rental(models.Model):
+    name = models.CharField(max_length=100, null=False, blank=False)
+    city = models.CharField(max_length=100, null=False, blank=False)
+    zip_code = models.CharField(max_length=100, null=False, blank=False)
+    street = models.CharField(max_length=100, null=False, blank=False)
+    building_number = models.CharField(max_length=10, null=False, blank=False)
+    apartment_number = models.CharField(max_length=10, null=True, blank=True)
+
+    def __str__(self):
+        return self.name
+
+
 class Genre(models.Model):
     CATEGORY_CHOICES = (('book', 'Book'),
                         ('cd', 'CD'),
@@ -29,22 +41,6 @@ class Product(PolymorphicModel):
 
     def get_absolute_url(self):
         return reverse("ProductDetail", args=[str(self.pk)])
-
-    @property
-    def model_name(self):
-        return self._meta.model_name
-
-
-class Rental(models.Model):
-    name = models.CharField(max_length=100, null=False, blank=False)
-    city = models.CharField(max_length=100, null=False, blank=False)
-    zip_code = models.CharField(max_length=100, null=False, blank=False)
-    street = models.CharField(max_length=100, null=False, blank=False)
-    building_number = models.CharField(max_length=10, null=False, blank=False)
-    apartment_number = models.CharField(max_length=10, null=True, blank=True)
-
-    def __str__(self):
-        return self.name
 
 
 class CD(Product):

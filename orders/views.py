@@ -3,9 +3,8 @@ from django.shortcuts import redirect
 from django.views.generic import View, DetailView, ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages import success
-from products.models import Rental, Product, Genre, Book
-from django.db.models import Prefetch, Q
-import datetime
+from products.models import Rental, Product, Genre
+from django.db.models import Prefetch
 import json
 from cart.cart import Cart
 from django.utils import timezone
@@ -203,6 +202,7 @@ class Statistics(ListView):
         dictionary = defaultdict(dict)
         for g in genre:
             prod = OrderItem.objects.filter(product__genre=g,
+                                            product__genre__category=g.category,
                                             order__order_date__range=(t1, t2)).count()
             dictionary[g.category][g.name] = prod
         data["pop"] = dictionary
