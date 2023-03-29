@@ -87,7 +87,7 @@
 				</div>
 			</aside>
 			<h2><a href="{% url 'OrdersArchive' %}">Archive</a></h2>
-			<h2><a href="{% url 'PaymentListView' %}">List of payments</a></h2>
+			<h2><a href="{% url 'PaymentUserListView' %}">List of payments</a></h2>
 		</div>
 </section>
 
@@ -140,6 +140,7 @@ onApprove: function(data, actions) {
                 body: JSON.stringify({
                     transID: details.id,
                     payment_method: "Paypal",
+                    cost: total,
                 }),
             })
         }

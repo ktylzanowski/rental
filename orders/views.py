@@ -1,4 +1,4 @@
-from orders.models import OrderItem, Order, Payment, Shipping, ShippingMethod
+from orders.models import OrderItem, Order, Payment, Shipping
 from django.shortcuts import redirect
 from django.views.generic import View, DetailView, ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -81,14 +81,12 @@ class OrderCreate(View):
         )
         payment.save()
 
-        shipping_method = ShippingMethod.objects.get(name=body['shipping'])
-
         shipping = Shipping.objects.create(
             user=request.user,
-            shipping_method=shipping_method,
+            shipping_method=body['shipping'],
             if_paid=True,
-            postage=shipping_method.price,
-            quantity_of_items=1,
+            postage=body['shippingCost'],
+            quantity_of_items=cart.get_total_quantity,
         )
         shipping.save()
 
@@ -149,7 +147,7 @@ class PayDebt(View):
             user=request.user,
             payment_id=body['transID'],
             payment_method=body['payment_method'],
-            amount_paid=15,
+            amount_paid=body['cost'],
             status='payment',
         )
         payment.save()
@@ -169,11 +167,12 @@ class ReturnView(DetailView):
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         rental = Rental.objects.all()
-        data['object_list'] = rental
+        data['rental_list'] = rental
         return data
 
 
 class MakeReturn(View):
+
     def post(self, request, pk):
         order = Order.objects.get(pk=pk)
         order.status = 'Returned'

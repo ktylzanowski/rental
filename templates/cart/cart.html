@@ -5,16 +5,19 @@
 <script type="text/javascript">
     var total = {{ cart.get_total_price }}
     var shippingMethod = "Personal Pickup";
+    var shippingCost = 0;
 
     function myFunction(){
     if(document.getElementById('pickup').checked) {
         shippingMethod = "Personal Pickup";
         total = {{ cart.get_total_price }};
+        shippingCost = 0;
         document.getElementById("total_price").innerHTML = total+"$";
         }
     else if(document.getElementById('inpost').checked) {
         shippingMethod = "Inpost";
         total = total + 10;
+        shippingCost = 10;
         document.getElementById("total_price").innerHTML = total+"$";
         }
 }
@@ -122,7 +125,7 @@ const csrftoken = getCookie('csrftoken');
 
 var url = "{% url 'OrderCreate' %}"
 
-
+document.write(shippingCost);
 
 paypal.Buttons({
     createOrder: function(data, actions) {
@@ -152,6 +155,7 @@ onApprove: function(data, actions) {
                     payment_method: "Paypal",
                     status: details.status,
                     shipping: shippingMethod,
+                    shippingCost: shippingCost,
                 }),
             })
         }

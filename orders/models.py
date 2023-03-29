@@ -15,17 +15,9 @@ class Payment(models.Model):
         return self.payment_id
 
 
-class ShippingMethod(models.Model):
-    name = models.CharField(null=False, max_length=100)
-    price = models.IntegerField(null=False)
-
-    def __str__(self):
-        return str(self.name)
-
-
 class Shipping(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    shipping_method = models.ForeignKey(ShippingMethod, on_delete=models.CASCADE)
+    shipping_method = models.CharField(max_length=100)
     if_paid = models.BooleanField(default=False, null=False)
     postage = models.IntegerField(null=False)
     quantity_of_items = models.IntegerField(null=False)

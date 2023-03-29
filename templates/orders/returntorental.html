@@ -5,11 +5,11 @@
 
 	<div class="row">
         <h2>Return the product in question in person to any of the addresses:</h2>
-	{% for object in object_list %}
-        <p>{{ object.city }}, {{object.zip_code}}, {{object.street}},
-		{{object.building_number}},
-			{% if object.apartment_number %}
-				{{object.apartment_number}}
+	{% for rental in rental_list %}
+        <p>{{ rental.city }}, {{rental.zip_code}}, {{rental.street}},
+		{{rental.building_number}},
+			{% if rental.apartment_number %}
+				{{rental.apartment_number}}
 			{% endif %}
 		</p>
 	{% endfor %}
