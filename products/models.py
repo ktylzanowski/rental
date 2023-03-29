@@ -24,7 +24,7 @@ class Genre(models.Model):
     category = models.CharField(max_length=100, choices=CATEGORY_CHOICES)
 
     def __str__(self):
-        return str(self.name) + " " + str(self.category)
+        return str(self.name)
 
 
 class Product(PolymorphicModel):
