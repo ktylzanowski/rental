@@ -23,7 +23,7 @@ class Shipping(models.Model):
     quantity_of_items = models.IntegerField(null=False)
 
     def __str__(self):
-        return str(self.user.email) + " " + str(self.pk)
+        return str(self.pk)
 
 
 class Order(models.Model):

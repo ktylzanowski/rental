@@ -86,7 +86,7 @@ class OrderCreate(View):
             shipping_method=body['shipping'],
             if_paid=True,
             postage=body['shippingCost'],
-            quantity_of_items=cart.get_total_quantity,
+            quantity_of_items=len(cart),
         )
         shipping.save()
 
