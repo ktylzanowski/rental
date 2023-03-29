@@ -125,14 +125,12 @@ const csrftoken = getCookie('csrftoken');
 
 var url = "{% url 'OrderCreate' %}"
 
-document.write(shippingCost);
-
 paypal.Buttons({
     createOrder: function(data, actions) {
         return actions.order.create({
             purchase_units: [{
                 amount: {
-                    value: total
+                    value: total,
                 }
             }]
         });
