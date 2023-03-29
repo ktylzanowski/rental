@@ -2,6 +2,11 @@ from django.contrib import admin
 from .models import Payment, Shipping, Order, OrderItem
 
 
+class CommentInline(admin.StackedInline):
+    model = OrderItem
+    extra = 0
+
+
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
     ordering = ('pk',)
@@ -9,12 +14,13 @@ class OrderAdmin(admin.ModelAdmin):
     list_filter = ['status', 'if_extended']
     exclude = ['order_date', 'deadline', 'return_date', 'total', 'payment', 'shipping', 'if_extended', 'number_of_extensions']
     search_fields = ('pk',)
+    inlines = [CommentInline, ]
 
 
 @admin.register(OrderItem)
 class OrderItemAdmin(admin.ModelAdmin):
     ordering = ('pk',)
-    list_display = ['product', 'order', 'user', 'price']
+    list_display = ['pk', 'product', 'order', 'user', 'price']
     list_filter = ['order', 'user']
 
 
