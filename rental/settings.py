@@ -31,7 +31,7 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
-LOGIN_URL = 'login'
+LOGIN_URL = 'Login'
 LOGOUT_REDIRECT_URL = 'home'
 
 INSTALLED_APPS = [
@@ -45,7 +45,6 @@ INSTALLED_APPS = [
     'products',
     'cart',
     'orders',
-    'dashboard',
 ]
 
 AUTH_USER_MODEL = 'accounts.MyUser'
