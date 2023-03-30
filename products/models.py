@@ -28,7 +28,7 @@ class Genre(models.Model):
 
 
 class Product(PolymorphicModel):
-    title = models.CharField(max_length=100, blank=True)
+    title = models.CharField(max_length=100, blank=False, null=False)
     image = models.ImageField(upload_to='product', default=None)
     genre = models.ForeignKey(Genre, on_delete=models.CASCADE)
     quantity = models.IntegerField(null=False)

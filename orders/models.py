@@ -58,7 +58,7 @@ class Order(models.Model):
         return (self.number_of_extensions * self.total) + self.total
 
     def __str__(self):
-        return str(self.user) + " " +str(self.pk)
+        return str(self.pk)
 
 
 class OrderItem(models.Model):
