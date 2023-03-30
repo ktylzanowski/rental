@@ -1,6 +1,14 @@
 from django.contrib import admin
-from .models import Rental, Book, CD, Film, Genre
+from .models import Rental, Book, CD, Film, Genre, ProductIndex
 from .forms_admin import BookForm, FilmForm, CDForm
+
+
+admin.site.register(ProductIndex)
+
+
+class ItemInline(admin.StackedInline):
+    model = ProductIndex
+    extra = 0
 
 
 @admin.register(Book)
@@ -9,6 +17,8 @@ class BookAdmin(admin.ModelAdmin):
     list_filter = ['genre', 'is_available']
     search_fields = ['title']
     exclude = ['popularity']
+
+    inlines = [ItemInline]
     form = BookForm
 
 

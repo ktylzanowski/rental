@@ -42,6 +42,15 @@ class Product(PolymorphicModel):
         return reverse("ProductDetail", args=[str(self.pk)])
 
 
+class ProductIndex(models.Model):
+    inventory_number = models.CharField(max_length=255)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    rental = models.ForeignKey(Rental, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return str(self.name)
+
+
 class CD(Product):
     band = models.CharField(max_length=100, null=False, blank=False)
     tracklist = models.TextField(max_length=500, null=False, blank=False)
