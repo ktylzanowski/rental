@@ -48,7 +48,7 @@ class ProductIndex(models.Model):
     rental = models.ForeignKey(Rental, on_delete=models.CASCADE)
 
     def __str__(self):
-        return str(self.name)
+        return str(self.inventory_number)
 
 
 class CD(Product):

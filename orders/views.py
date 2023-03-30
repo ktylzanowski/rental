@@ -117,7 +117,7 @@ class OrderCreate(View):
                 price=item['price'],
                 order=order,
             )
-
+        print(cart)
         cart.clear()
 
         email_template = render_to_string('cart/email_payment_success.html', {})
