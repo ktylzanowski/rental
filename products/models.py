@@ -1,7 +1,6 @@
 from polymorphic.models import PolymorphicModel
 from django.db import models
 from django.urls import reverse
-from django.core.exceptions import ObjectDoesNotExist
 
 
 class Rental(models.Model):
@@ -47,34 +46,13 @@ class CD(Product):
     band = models.CharField(max_length=100, null=False, blank=False)
     tracklist = models.TextField(max_length=500, null=False, blank=False)
 
-    def full_clean(self, exclude, validate_unique=True, validate_constraints=True):
-        if CD.objects.filter(genre=self.genre, tracklist=self.tracklist).exists():
-            ValueError('Within one genre, we cannot offer two albums with the same track list')
-        try:
-            cds = CD.objects.filter(band=self.band)
-            tab = []
-            for cd in cds:
-                tab.append(cd.genre)
-            set(tab)
-            if self.genre not in tab and len(tab) > 2:
-                ValueError('CDs of a given band can only be offered in two genres')
-        except ObjectDoesNotExist:
-            pass
-
 
 class Book(Product):
     author = models.CharField(max_length=100, null=False, blank=False)
     isbn = models.CharField(max_length=100, null=False, blank=False, unique=True)
-
-    def full_clean(self, exclude, validate_unique=True, validate_constraints=True):
-        if Book.objects.filter(author=self.author, title=self.title, genre=self.genre).exists():
-            raise ValueError("Author, title and genre must not be repeated")
 
 
 class Film(Product):
     director = models.CharField(max_length=100, null=False, blank=False)
     duration = models.IntegerField(null=False, blank=False)
 
-    def full_clean(self, exclude, validate_unique=True, validate_constraints=True):
-        if Film.objects.filter(director=self.director, title=self.title, duration=self.duration).exists():
-            raise ValueError("If the director and title are repeated, the duration must differ")

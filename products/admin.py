@@ -3,7 +3,6 @@ from .models import Rental, Book, CD, Film, Genre
 from .forms_admin import BookForm, FilmForm, CDForm
 
 
-
 @admin.register(Book)
 class BookAdmin(admin.ModelAdmin):
     list_display = ['title', 'genre', 'price', 'quantity', 'is_available']

@@ -16,8 +16,10 @@ class OrderAdmin(admin.ModelAdmin):
     list_display = ['pk', 'user', 'order_date', 'deadline', 'status', 'payment_link', 'total', 'debt', 'shipping_link']
     list_filter = ['status', 'if_extended']
     fieldsets = (
-        ('Order', {'fields': ('user', 'order_date', 'deadline', 'return_date', 'status', 'total', 'debt', 'payment', 'shipping', 'number_of_extensions', 'if_extended')}),
-        ('Personal info', {'fields': ('first_name', 'last_name', 'phone', 'city', 'zip_code', 'street', 'building_number', 'apartment_number')}),
+        ('Order', {'fields': ('user', 'order_date', 'deadline', 'return_date', 'status',
+                              'total', 'debt', 'payment', 'shipping', 'number_of_extensions', 'if_extended')}),
+        ('Personal info', {'fields': ('first_name', 'last_name', 'phone',
+                                      'city', 'zip_code', 'street', 'building_number', 'apartment_number')}),
     )
 
     readonly_fields = ['order_date', 'deadline', 'return_date', 'payment', 'shipping']
