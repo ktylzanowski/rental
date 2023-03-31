@@ -28,6 +28,7 @@ class FilmAdmin(admin.ModelAdmin):
     list_filter = ['genre', 'is_available']
     search_fields = ['title']
     exclude = ['popularity']
+    inlines = [ItemInline]
     form = FilmForm
 
 
@@ -37,6 +38,7 @@ class CDAdmin(admin.ModelAdmin):
     list_filter = ['genre', 'is_available']
     search_fields = ['title']
     exclude = ['popularity']
+    inlines = [ItemInline]
     form = CDForm
 
 

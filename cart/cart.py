@@ -1,6 +1,6 @@
 from decimal import Decimal
 from django.conf import settings
-from products.models import ProductIndex, Product
+from products.models import ProductIndex, Product, Rental
 
 
 class Cart(object):
@@ -26,14 +26,22 @@ class Cart(object):
 
     def get_total_price(self):
         return sum(Decimal(item['price']) for item in self.cart.values())
-    
+
     def add(self, product):
         product_id = str(product.id)
         if product_id not in self.cart:
+            if not self.cart:
+                index = ProductIndex.objects.filter(product=product, is_available=True).first()
+            else:
+                rental_id = []
+                for ren in self.cart.values():
+                    rental_id.append(int(ren['rental']))
+                rental = Rental.objects.get(pk__in=rental_id)
+                index = ProductIndex.objects.filter(product=product, is_available=True, rental=rental).first()
+                if index is None:
+                    index = ProductIndex.objects.filter(product=product, is_available=True).first()
 
-            index = ProductIndex.objects.filter(product=product, is_available=True).first()
-
-            self.cart[product_id] = {'quantity': 1, 'price': str(product.price), 'index': index.pk}
+            self.cart[product_id] = {'quantity': 1, 'price': str(product.price), 'index': index.pk, 'rental': index.rental.pk}
 
             index.is_available = False
             index.save()
@@ -42,7 +50,6 @@ class Cart(object):
                 product.is_available = False
             product.save()
             self.save()
-            print(self.cart)
             return True
         else:
             return False

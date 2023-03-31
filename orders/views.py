@@ -3,7 +3,7 @@ from django.shortcuts import redirect
 from django.views.generic import View, DetailView, ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages import success
-from products.models import Rental, Product, Genre
+from products.models import Rental, Product, Genre, ProductIndex
 from django.db.models import Prefetch
 import json
 from cart.cart import Cart
@@ -111,14 +111,14 @@ class OrderCreate(View):
         for item in cart:
             item['product'].popularity += 1
             item['product'].save()
+            index = ProductIndex.objects.get(pk=item['index'])
             OrderItem.objects.create(
                 product=item['product'],
-                product_index=item['index'],
+                product_index=index,
                 user=self.request.user,
                 price=item['price'],
                 order=order,
             )
-        print(cart)
         cart.clear()
 
         email_template = render_to_string('cart/email_payment_success.html', {})
