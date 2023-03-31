@@ -113,6 +113,7 @@ class OrderCreate(View):
             item['product'].save()
             OrderItem.objects.create(
                 product=item['product'],
+                product_index=item['index'],
                 user=self.request.user,
                 price=item['price'],
                 order=order,

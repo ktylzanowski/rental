@@ -46,6 +46,7 @@ class ProductIndex(models.Model):
     inventory_number = models.CharField(max_length=255)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     rental = models.ForeignKey(Rental, on_delete=models.CASCADE)
+    is_available = models.BooleanField(default=True)
 
     def __str__(self):
         return str(self.inventory_number)
