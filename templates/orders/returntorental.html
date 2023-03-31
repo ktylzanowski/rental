@@ -14,6 +14,13 @@
 		</p>
 	{% endfor %}
 	</div>
+	<h2>Package address for return </h2>
+	<h4>{{ rental.name }}</h4>
+	<p>{{ rental.city }}, {{rental.zip_code}}, {{rental.street}}, {{rental.building_number}},
+			{% if rental.apartment_number %}
+				{{rental.apartment_number}}
+			{% endif %}
+		</p>
 	{% if object.status == "Delivered" %}
 	<form method="POST" action="{% url 'MakeReturn' pk=object.pk %}"> {% csrf_token %}
 		<button class="btn btn-primary">Return</button>

@@ -169,6 +169,16 @@ class ReturnView(DetailView):
         data = super().get_context_data(**kwargs)
         rental = Rental.objects.all()
         data['rental_list'] = rental
+
+        items = OrderItem.objects.filter(order=kwargs['object'])
+        di = {}
+        for item in items:
+            if item.product_index.rental.name not in di:
+                di[item.product_index.rental.name] = 0
+            else:
+                di[item.product_index.rental.name] += 1
+        rental = Rental.objects.get(name=max(di))
+        data['rental'] = rental
         return data
 
 
