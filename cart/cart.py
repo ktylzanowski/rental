@@ -1,6 +1,7 @@
 from decimal import Decimal
 from django.conf import settings
 from products.models import ProductIndex, Product, Rental
+from orders.models import OrderItem
 
 
 class Cart(object):
@@ -22,30 +23,44 @@ class Cart(object):
             yield item
 
     def __len__(self):
-        return sum(item['quantity'] for item in self.cart.values())
+        return len(self.cart)
 
     def get_total_price(self):
         return sum(Decimal(item['price']) for item in self.cart.values())
 
-    def add(self, product):
+    def check_if_in_the_same_rental(self, product):
+        rental_id = []
+        for rental in self.cart.values():
+            rental_id.append(int(rental['rental']))
+
+        rental = Rental.objects.get(pk__in=rental_id)
+        index = ProductIndex.objects.filter(product=product, is_available=True, rental=rental).first()
+        return index
+
+    def add(self, product, user):
+        product_already_ordered = OrderItem.objects.filter(product=product, order__user=user)\
+            .exclude(order__status="Returned")
+        exceeds_max_in_basket = self.__len__() > 4
+
+        if product_already_ordered is None or exceeds_max_in_basket:
+            return False
+
         product_id = str(product.id)
+
         if product_id not in self.cart:
             if not self.cart:
                 index = ProductIndex.objects.filter(product=product, is_available=True).first()
             else:
-                rental_id = []
-                for ren in self.cart.values():
-                    rental_id.append(int(ren['rental']))
-                rental = Rental.objects.get(pk__in=rental_id)
-                index = ProductIndex.objects.filter(product=product, is_available=True, rental=rental).first()
+                index = self.check_if_in_the_same_rental(product)
                 if index is None:
                     index = ProductIndex.objects.filter(product=product, is_available=True).first()
 
-            self.cart[product_id] = {'quantity': 1, 'price': str(product.price), 'index': index.pk, 'rental': index.rental.pk}
+            self.cart[product_id] = {'price': str(product.price), 'index': index.pk, 'rental': index.rental.pk}
 
             index.is_available = False
             index.save()
             product.quantity -= 1
+
             if product.quantity == 0:
                 product.is_available = False
             product.save()

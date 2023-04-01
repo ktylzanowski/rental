@@ -2,6 +2,13 @@
 {% load static %}
 {% block content %}
 
+	<div class="row">
+		{% for item in object.orderitem_set.all %}
+		<div class="aside"><img src="{{ item.product.image.url }}" class="img-sm" style="max-width:40%"></div>
+			<a href="{{ item.product.get_absolute_url }}" class="title text-dark">{{ item.product.title }}</a>
+		{% endfor %}
+	</div>
+
 
 	<div class="row">
         <h2>Return the product in question in person to any of the addresses:</h2>
@@ -22,7 +29,7 @@
 			{% endif %}
 		</p>
 	{% if object.status == "Delivered" %}
-	<form method="POST" action="{% url 'MakeReturn' pk=object.pk %}"> {% csrf_token %}
+	<form method="POST" action="{% url 'MakeReturn' pk=object.pk rental=rental.name %}"> {% csrf_token %}
 		<button class="btn btn-primary">Return</button>
 	</form>
 	{% endif %}

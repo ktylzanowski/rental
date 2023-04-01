@@ -10,5 +10,5 @@ urlpatterns = [
     path('order-create/', OrderCreate.as_view(), name='OrderCreate'),
     path('pay-debt/', PayDebt.as_view(), name='PayDebt'),
     path('return/<int:pk>/', ReturnView.as_view(), name='ReturnView'),
-    path('return/<int:pk>/make-return/', MakeReturn.as_view(), name='MakeReturn'),
+    path('return/<int:pk>/<str:rental>/make-return/', MakeReturn.as_view(), name='MakeReturn'),
 ]

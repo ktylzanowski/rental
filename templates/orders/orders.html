@@ -56,6 +56,8 @@
 												<div class="price"><a href="{% url 'ReturnView' pk=order.pk %}">Click to Return</a></div>
 											{% elif order.shipping.shipping_method.name == "Personal Pickup" %}
 												Personal Pickup
+											{% elif order.status == "Extended" %}
+												You have debt
 											{% else %}
 												Package on the way
 											{% endif %}

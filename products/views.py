@@ -2,6 +2,7 @@ from django.views.generic import ListView, DetailView
 from products.models import Product, Book, CD, Film
 from . import forms
 from .mixin import HomeMixin
+from cart.cart import Cart
 
 
 class Home(HomeMixin, ListView):
@@ -44,8 +45,7 @@ class ProductDetailView(DetailView):
     model = Product
     template_name = "products/detailview.html"
 
-
-
+ 
 
 
 

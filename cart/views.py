@@ -22,11 +22,12 @@ class AddToCart(LoginRequiredMixin, View):
             return redirect('Login')
         cart = Cart(request)
         product = get_object_or_404(Product, id=product_id)
-        if cart.add(product):
+        if cart.add(product, self.request.user):
             messages.success(request, "Add to cart")
             return redirect('home')
         else:
-            messages.success(request, "Already in basket")
+            messages.success(request, "Already in basket or already ordered or the number of items in the cart a"
+                                      "maximum of 5")
             return redirect('home')
 
 

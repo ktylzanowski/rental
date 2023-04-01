@@ -165,6 +165,13 @@ class ReturnView(DetailView):
     model = Order
     template_name = 'orders/returntorental.html'
 
+    def get_queryset(self):
+        qs = super().get_queryset()
+        qs = qs.prefetch_related(
+            Prefetch('orderitem_set', OrderItem.objects.select_related('product'))
+        ).filter(user=self.request.user).exclude(status='Returned')
+        return qs
+
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         rental = Rental.objects.all()
@@ -184,11 +191,24 @@ class ReturnView(DetailView):
 
 class MakeReturn(View):
 
-    def post(self, request, pk):
+    def post(self, request, pk, rental):
         order = Order.objects.get(pk=pk)
+        items_order = OrderItem.objects.filter(order=order)
+        rental_to_return = Rental.objects.get(name=rental)
+
+        for item in items_order:
+            item.product_index.product.quantity += 1
+            if item.product_index.product.is_available is False:
+                item.product_index.product.is_available = True
+            item.product_index.product.save()
+
+            item.product_index.is_available = True
+            item.product_index.rental = rental_to_return
+            item.product_index.save()
         order.status = 'Returned'
         order.return_date = datetime.datetime.now()
         order.save()
+
         success(request, "Order returned")
         return redirect('home')
 
