@@ -41,6 +41,10 @@ class Product(PolymorphicModel):
     def get_absolute_url(self):
         return reverse("ProductDetail", args=[str(self.pk)])
 
+    @property
+    def model_name(self):
+        return self._meta.model_name
+
 
 class ProductIndex(models.Model):
     inventory_number = models.CharField(max_length=255)

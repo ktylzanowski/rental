@@ -45,7 +45,6 @@ class ProductDetailView(DetailView):
     model = Product
     template_name = "products/detailview.html"
 
- 
 
 
 
