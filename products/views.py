@@ -28,7 +28,7 @@ class FilmListView(HomeMixin, ListView):
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
-        data['form'] = forms.MatchForm(category="cd")
+        data['form'] = forms.MatchForm(category="film")
         return data
 
 
@@ -37,7 +37,7 @@ class CDListView(HomeMixin, ListView):
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
-        data['form'] = forms.MatchForm(category="film")
+        data['form'] = forms.MatchForm(category="cd")
         return data
 
 
@@ -45,7 +45,13 @@ class ProductDetailView(DetailView):
     model = Product
     template_name = "products/detailview.html"
 
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        cart = Cart(self.request)
+        car = cart.check_if_in_the_same_rental(kwargs['object'])
+        data['cartobject'] = car
 
+        return data
 
 
 

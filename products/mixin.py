@@ -4,11 +4,12 @@ class HomeMixin(object):
 
     def get_queryset(self):
         qs = super().get_queryset()
-        if self.request.GET and self.request.GET['genre'] == 'alphabetical':
+        genre = self.request.GET.get('genre')
+        if genre == 'alphabetical':
             qs = qs.order_by('-title')
-        elif self.request.GET and self.request.GET['genre'] == 'popularity':
+        elif genre == 'popularity':
             qs = qs.order_by('-popularity')
-        elif self.request.GET:
-            qs = qs.filter(genre=self.request.GET['genre'])
+        elif genre:
+            qs = qs.filter(genre=genre)
         return qs
 
