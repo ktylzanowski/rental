@@ -18,7 +18,7 @@ def debug_task(self):
 
 app.conf.beat_schedule = {
     'check-rent-every-minute': {
-        'task': 'products.tasks.send_mail_func',
+        'task': 'orders.tasks.send_mail_for_over_deadline',
         'schedule': 60.0,
     },
 }
