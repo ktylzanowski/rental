@@ -35,6 +35,7 @@ class BookAdmin(admin.ModelAdmin):
     form = BookForm
 
 
+
 @admin.register(Film)
 class FilmAdmin(admin.ModelAdmin):
     list_display = ['title', 'genre', 'price', 'quantity', 'is_available']

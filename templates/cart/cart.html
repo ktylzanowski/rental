@@ -15,7 +15,7 @@
         document.getElementById("total_price").innerHTML = total+"$";
         }
     else if(document.getElementById('inpost').checked) {
-        shippingMethod = "Inpost";
+        shippingMethod = "Shipping";
         total = total + 10;
         shippingCost = 10;
         document.getElementById("total_price").innerHTML = total+"$";
@@ -86,7 +86,7 @@
                         <input type="radio" id="pickup" value="pickup" name="shipping" onclick="myFunction()" checked/>Personal Pickup 0$
                         </p>
                         <p>
-                        <input type="radio" id="inpost" value="inpost" name="shipping" onclick="myFunction()"/>Inpost 10$
+                        <input type="radio" id="inpost" value="inpost" name="shipping" onclick="myFunction()"/>Shipping 10$
                         </p>
                         <form method="POST">
                             {% csrf_token %}
