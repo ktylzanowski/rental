@@ -7,7 +7,7 @@ class Payment(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     payment_id = models.CharField(max_length=100)
     payment_method = models.CharField(max_length=100)
-    amount_paid = models.CharField(max_length=100)
+    amount_paid = models.DecimalField(max_digits=6, decimal_places=2, max_length=100)
     status = models.CharField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -18,8 +18,8 @@ class Payment(models.Model):
 class Shipping(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     shipping_method = models.CharField(max_length=100)
-    if_paid = models.BooleanField(default=False, null=False)
-    postage = models.IntegerField(null=False)
+    is_paid = models.BooleanField(default=False, null=False)
+    postage = models.DecimalField(max_digits=6, decimal_places=2, null=False)
     quantity_of_items = models.IntegerField(null=False)
 
     def __str__(self):
@@ -39,8 +39,8 @@ class Order(models.Model):
     deadline = models.DateTimeField(null=True)
     return_date = models.DateTimeField(null=True)
     status = models.CharField(choices=status_types, default="Ordered", max_length=100)
-    total = models.IntegerField(null=False)
-    debt = models.IntegerField(null=True, default=0)
+    total = models.DecimalField(max_digits=6, decimal_places=2, null=False)
+    debt = models.DecimalField(max_digits=6, decimal_places=2, null=True, default=0)
     payment = models.OneToOneField(Payment, on_delete=models.CASCADE, null=False, blank=False)
     shipping = models.ForeignKey(Shipping, on_delete=models.CASCADE, null=False, blank=False)
     first_name = models.CharField(max_length=255, null=False, blank=False)
@@ -66,7 +66,7 @@ class OrderItem(models.Model):
     product_index = models.ForeignKey(ProductIndex, on_delete=models.CASCADE)
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
-    price = models.IntegerField(null=False, blank=False, default=15)
+    price = models.DecimalField(max_digits=6, decimal_places=2, null=False, blank=False, default=15)
 
     def __str__(self):
         return str(self.product) + " " + str(self.order)

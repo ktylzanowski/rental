@@ -1,10 +1,10 @@
 from django.urls import path
-from .views import OrdersView, PayDebt, ReturnView, OrdersArchiveView, MakeReturn, OrderCreate, Statistics, PaymentListView
+from .views import OrdersView, PayDebt, ReturnView, OrdersArchiveView, MakeReturn, OrderCreate, StatisticsView, PaymentListView
 
 urlpatterns = [
     path('', OrdersView.as_view(), name='Orders'),
     path('archive/', OrdersArchiveView.as_view(), name='OrdersArchive'),
-    path('statics/', Statistics.as_view(), name='Statistics'),
+    path('statics/', StatisticsView.as_view(), name='Statistics'),
     path('payments/', PaymentListView.as_view(), name='PaymentUserListView'),
 
     path('order-create/', OrderCreate.as_view(), name='OrderCreate'),

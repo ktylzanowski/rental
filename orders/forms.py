@@ -18,10 +18,9 @@ class OrderForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
-        if self.fields['status'].initial != 'Extended' and self.cleaned_data['status'] == 'Extended':
+        if self.instance.status != 'Extended' and self.cleaned_data['status'] == 'Extended':
             self.cleaned_data['debt'] += self.cleaned_data['total']
             self.cleaned_data['number_of_extensions'] += 1
             self.cleaned_data['if_extended'] = True
         return cleaned_data
-
 

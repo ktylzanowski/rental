@@ -1,6 +1,6 @@
 from orders.models import OrderItem, Order, Payment, Shipping
-from django.shortcuts import redirect
-from django.views.generic import View, DetailView, ListView
+from django.shortcuts import redirect, get_object_or_404
+from django.views.generic import View, DetailView, ListView, TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages import success
 from products.models import Rental, Product, Genre, ProductIndex
@@ -12,10 +12,10 @@ from datetime import timedelta
 from django.core.mail import EmailMessage
 from django.conf import settings
 from django.template.loader import render_to_string
-from collections import defaultdict
 from accounts.models import MyUser
 from .forms import TimeSection
 import datetime
+from collections import defaultdict
 
 
 class OrdersView(LoginRequiredMixin, ListView):
@@ -192,9 +192,9 @@ class ReturnView(DetailView):
 class MakeReturn(View):
 
     def post(self, request, pk, rental):
-        order = Order.objects.get(pk=pk)
+        order = get_object_or_404(Order, pk=pk)
         items_order = OrderItem.objects.filter(order=order)
-        rental_to_return = Rental.objects.get(name=rental)
+        rental_to_return = get_object_or_404(Rental, name=rental)
 
         for item in items_order:
             item.product_index.product.quantity += 1
@@ -213,23 +213,19 @@ class MakeReturn(View):
         return redirect('home')
 
 
-class Statistics(ListView):
-    model = Product
+class StatisticsView(TemplateView):
     template_name = 'orders/statistics.html'
-    ordering = ['-popularity']
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         data['form'] = TimeSection
-        if self.request.GET:
-            t1 = self.request.GET['t1']
-            t2 = self.request.GET['t2']
-        else:
-            t1 = datetime.datetime(2023, 3, 22)
-            t2 = timezone.now()
+
+        t1 = self.request.GET.get('t1', timezone.now() - timezone.timedelta(days=7))
+        t2 = self.request.GET.get('t2', timezone.now())
 
         genre = Genre.objects.all()
         dictionary = defaultdict(dict)
+
         for g in genre:
             prod = OrderItem.objects.filter(product__genre=g,
                                             product__genre__category=g.category,
