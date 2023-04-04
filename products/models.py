@@ -35,6 +35,10 @@ class Product(PolymorphicModel):
     price = models.IntegerField(null=False, blank=False, default=15)
     popularity = models.IntegerField(default=0)
 
+    def save(self, *args, **kwargs):
+        self.quantity = self.productindex_set.count()
+        super(Product, self).save(*args, **kwargs)
+
     def __str__(self):
         return str(self.title)
 
@@ -56,11 +60,6 @@ class ProductIndex(models.Model):
         return str(self.inventory_number)
 
 
-class CD(Product):
-    band = models.CharField(max_length=100, null=False, blank=False)
-    tracklist = models.TextField(max_length=500, null=False, blank=False)
-
-
 class Book(Product):
     author = models.CharField(max_length=100, null=False, blank=False)
     isbn = models.CharField(max_length=100, null=False, blank=False, unique=True)
@@ -70,3 +69,7 @@ class Film(Product):
     director = models.CharField(max_length=100, null=False, blank=False)
     duration = models.IntegerField(null=False, blank=False)
 
+
+class CD(Product):
+    band = models.CharField(max_length=100, null=False, blank=False)
+    tracklist = models.TextField(max_length=500, null=False, blank=False)
