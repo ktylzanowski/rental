@@ -40,7 +40,6 @@ class BookForm(forms.ModelForm):
                                                          title=self.cleaned_data['title'],
                                                          genre=self.cleaned_data['genre']).exists():
             raise ValueError("Author, title and genre must not be repeated")
-        print(self.cleaned_data)
         return self.cleaned_data
 
 

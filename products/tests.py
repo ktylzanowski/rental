@@ -3,23 +3,24 @@ from .models import Rental, Product, Genre, Book, Film, CD, ProductIndex
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.urls import reverse
 from .admin import BookForm, FilmForm, CDForm
+from django.core.exceptions import ValidationError
 
 
 class ProductModelTestCase(TestCase):
     def setUp(self):
-        file = SimpleUploadedFile(name='test_image.jpg', content=b'', content_type='image/jpeg')
-        rental = Rental.objects.create(name="TestName", city="TestCity", zip_code="TestZipCode", street="TestStreet",
-                                       building_number="TestBuildingNumber")
+        self.file = SimpleUploadedFile(name='test_image.jpg', content=b'', content_type='image/jpeg')
+        self.rental = Rental.objects.create(name="TestName", city="TestCity", zip_code="TestZipCode", street="TestStreet",
+                                            building_number="TestBuildingNumber")
 
-        genre_book = Genre.objects.create(name="TestGenreBook", category="book")
-        genre_film = Genre.objects.create(name="TestGenreFilm", category="film")
-        genre_cd = Genre.objects.create(name="TestGenreCD", category="cd")
+        self.genre_book = Genre.objects.create(name="TestGenreBook", category="book")
+        self.genre_film = Genre.objects.create(name="TestGenreFilm", category="film")
+        self.genre_cd = Genre.objects.create(name="TestGenreCD", category="cd")
 
-        Book.objects.create(pk=1, title="TestTitleBook", image=file, genre=genre_book, author="TestAuthorBook", isbn=123)
-        Film.objects.create(pk=2, title="TestTitleFilm", image=file, genre=genre_film, director="TestDirector",
-                            duration=233)
-        CD.objects.create(pk=3, title="TestTitleCD", image=file, genre=genre_cd, band="TestBand",
-                          tracklist="track1, track2")
+        self.book = Book.objects.create(pk=1, title="TestTitleBook", image=self.file, genre=self.genre_book, author="TestAuthorBook", isbn=123)
+        self.film = Film.objects.create(pk=2, title="TestTitleFilm", image=self.file, genre=self.genre_film, director="TestDirector",
+                                        duration=233)
+        self.cd = CD.objects.create(pk=3, title="TestTitleCD", image=self.file, genre=self.genre_cd, band="TestBand",
+                                    tracklist="track1, track2")
 
     def create_product_index(self, inventory_number, product):
         return ProductIndex.objects.create(inventory_number=inventory_number, product=product,
@@ -27,33 +28,28 @@ class ProductModelTestCase(TestCase):
 
     # Checking that objects are created according to PolymorphicModel
     def test_polymorphism_model(self):
-        book_obj = Product.objects.get(title="TestTitleBook")
-        self.assertEqual(book_obj.title, "TestTitleBook")
-        film_obj = Film.objects.get(director="TestDirector")
-        self.assertEqual(film_obj.director, "TestDirector")
-        cd_obj = CD.objects.get(band="TestBand")
-        self.assertEqual(cd_obj.band, "TestBand")
+        self.assertEqual(self.book.title, "TestTitleBook")
+        self.assertEqual(self.film.director, "TestDirector")
+        self.assertEqual(self.cd.band, "TestBand")
 
-        self.assertEqual(book_obj.model_name, "book")
-        self.assertEqual(film_obj.model_name, "film")
-        self.assertEqual(cd_obj.model_name, "cd")
+        self.assertEqual(self.book.model_name, "book")
+        self.assertEqual(self.film.model_name, "film")
+        self.assertEqual(self.cd.model_name, "cd")
 
     # Checking whether the save() method itself saves the quantity of a given product
     def test_automatic_quantity(self):
-        book_obj = Product.objects.get(pk=1)
-        self.create_product_index("test1", book_obj)
-        book_obj.save()
-        self.assertEqual(book_obj.quantity, 1)
+        self.create_product_index("test1", self.book)
+        self.book.save()
+        self.assertEqual(self.book.quantity, 1)
 
-        film_obj = Product.objects.get(pk=2)
-        self.create_product_index("test2", film_obj)
-        self.create_product_index("test3", film_obj)
+        self.create_product_index("test2", self.film)
+        self.create_product_index("test3", self.film)
 
-        film_obj.save()
-        self.assertEqual(film_obj.quantity, 2)
+        self.film.save()
+        self.assertEqual(self.film.quantity, 2)
 
         cd_obj = Product.objects.get(pk=3)
-        self.assertEqual(cd_obj.quantity, 0)
+        self.assertEqual(self.cd.quantity, 0)
 
     # Checking if listviews are working
     def test_listView(self):
@@ -75,16 +71,13 @@ class ProductModelTestCase(TestCase):
 
     # Checks that detailview and get_absolute_url are working properly
     def test_detailView(self):
-        book_obj = Product.objects.get(pk=1)
-        response_book = self.client.get(book_obj.get_absolute_url())
+        response_book = self.client.get(self.book.get_absolute_url())
         self.assertEqual(response_book.status_code, 200)
 
-        film_obj = Product.objects.get(pk=2)
-        response_film = self.client.get(film_obj.get_absolute_url())
+        response_film = self.client.get(self.film.get_absolute_url())
         self.assertEqual(response_film.status_code, 200)
 
-        cd_obj = Product.objects.get(pk=3)
-        response_cd = self.client.get(cd_obj.get_absolute_url())
+        response_cd = self.client.get(self.cd.get_absolute_url())
         self.assertEqual(response_cd.status_code, 200)
 
     # testing whether filtering by genre, alphabetically and by popularity works
@@ -103,20 +96,18 @@ class ProductModelTestCase(TestCase):
         self.assertContains(response, 'TestTitleFilm')
         self.assertContains(response, 'TestTitleCD')
 
-        genre = Genre.objects.get(category='book')
-        url = reverse('BookListView') + f'?genre={genre.pk}'
+        url = reverse('BookListView') + f'?genre={self.genre_book.pk}'
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'TestTitleBook')
 
-        genre = Genre.objects.get(category='film')
-        url = reverse('FilmListView') + f'?genre={genre.pk}'
+        url = reverse('FilmListView') + f'?genre={self.genre_film.pk}'
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'TestTitleFilm')
 
-        genre = Genre.objects.get(category='cd')
-        url = reverse('CDListView') + f'?genre={genre.pk}'
+        url = reverse('CDListView') + f'?genre={self.genre_cd.pk}'
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'TestTitleCD')
+
