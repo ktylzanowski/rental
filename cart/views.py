@@ -26,15 +26,15 @@ class AddToCart(LoginRequiredMixin, View):
             product = Product.objects.get(id=product_id)
         except Product.DoesNotExist:
             messages.error(request, "Invalid product ID")
-            return redirect('home')
+            return redirect('Home')
 
         if cart.add(product, request.user):
             messages.success(request, "Add to cart")
         else:
             messages.error(request, "Already in basket or already ordered or the number of items in the cart a"
-                                      "maximum of 5")
+                                    "maximum of 5")
 
-        return redirect('home')
+        return redirect('Home')
 
 
 class RemoveFromCart(LoginRequiredMixin, View):
@@ -46,10 +46,8 @@ class RemoveFromCart(LoginRequiredMixin, View):
             product = Product.objects.get(id=product_id)
         except Product.DoesNotExist:
             messages.error(request, "Invalid product ID")
-            return redirect('home')
+            return redirect('Home')
 
         cart.remove(product)
         messages.success(self.request, "Item Deleted")
         return redirect("Cart")
-
-

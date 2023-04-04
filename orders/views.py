@@ -62,7 +62,7 @@ class PaymentListView(LoginRequiredMixin, ListView):
 class OrderCreate(LoginRequiredMixin, View):
     def get(self, request):
         messages.success(self.request, "Your order was successful!")
-        return redirect('home')
+        return redirect('Home')
 
     def post(self, request):
 
@@ -72,7 +72,7 @@ class OrderCreate(LoginRequiredMixin, View):
 
         if body['status'] != 'COMPLETED':
             messages.warning(request, 'Payment failed. Please try again.')
-            return redirect('home')
+            return redirect('Home')
 
         payment = Payment.objects.create(
             user=request.user,
@@ -133,7 +133,7 @@ class OrderCreate(LoginRequiredMixin, View):
         email.fail_silently = False
         email.send()
 
-        return redirect('home')
+        return redirect('Home')
 
 
 class PayDebt(LoginRequiredMixin, View):
@@ -161,7 +161,7 @@ class PayDebt(LoginRequiredMixin, View):
             order.debt = 0
             order.save()
 
-        return redirect("home")
+        return redirect("Home")
 
 
 class ReturnView(LoginRequiredMixin, DetailView):
@@ -219,7 +219,7 @@ class MakeReturn(LoginRequiredMixin, View):
         order.save()
 
         messages.success(request, "Order returned")
-        return redirect('home')
+        return redirect('Home')
 
 
 class StatisticsView(TemplateView):

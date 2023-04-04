@@ -15,19 +15,19 @@ class RegisterCreateView(CreateView):
 
     def get_success_url(self):
         success(self.request, "Registered")
-        return reverse_lazy('home')
+        return reverse_lazy('Home')
 
 
 class MyLoginView(LoginView):
     def get_success_url(self):
         success(self.request, "Log in")
-        return reverse_lazy('home')
+        return reverse_lazy('Home')
 
 
 class MyLogoutView(LogoutView):
     def get_success_url(self):
         success(self.request, "Log out")
-        return reverse_lazy('home')
+        return reverse_lazy('Home')
 
 
 class AccountView(LoginRequiredMixin, UpdateView):
@@ -38,9 +38,6 @@ class AccountView(LoginRequiredMixin, UpdateView):
     def get_success_url(self):
         success(self.request, "Correctly change personal information")
         return self.request.path
-
-    def form_valid(self, form):
-        return super().form_valid(form)
 
     def get_queryset(self):
         return MyUser.objects.filter(pk=self.request.user.pk)
