@@ -2,7 +2,7 @@ from orders.models import OrderItem, Order, Payment, Shipping
 from django.shortcuts import redirect, get_object_or_404
 from django.views.generic import View, DetailView, ListView, TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.messages import success
+from django.contrib import messages
 from products.models import Rental, Product, Genre, ProductIndex
 from django.db.models import Prefetch
 import json
@@ -16,6 +16,7 @@ from accounts.models import MyUser
 from .forms import TimeSection
 import datetime
 from collections import defaultdict
+from django.http import Http404
 
 
 class OrdersView(LoginRequiredMixin, ListView):
@@ -36,7 +37,7 @@ class OrdersView(LoginRequiredMixin, ListView):
         return data
 
 
-class OrdersArchiveView(ListView):
+class OrdersArchiveView(LoginRequiredMixin, ListView):
     model = Order
     template_name = "orders/ordersarchive.html"
 
@@ -48,7 +49,7 @@ class OrdersArchiveView(ListView):
         return qs
 
 
-class PaymentListView(ListView):
+class PaymentListView(LoginRequiredMixin, ListView):
     model = Payment
     template_name = "orders/paymentListView.html"
 
@@ -58,16 +59,20 @@ class PaymentListView(ListView):
         return qs
 
 
-class OrderCreate(View):
+class OrderCreate(LoginRequiredMixin, View):
     def get(self, request):
-        success(request, "Your order was successful!")
+        messages.success(self.request, "Your order was successful!")
         return redirect('home')
 
     def post(self, request):
-        cart = Cart(request)
 
+        cart = Cart(request)
         body_unicode = request.body.decode('utf-8')
         body = json.loads(body_unicode)
+
+        if body['status'] != 'COMPLETED':
+            messages.warning(request, 'Payment failed. Please try again.')
+            return redirect('home')
 
         payment = Payment.objects.create(
             user=request.user,
@@ -81,7 +86,7 @@ class OrderCreate(View):
         shipping = Shipping.objects.create(
             user=request.user,
             shipping_method=body['shipping'],
-            if_paid=True,
+            is_paid=True,
             postage=body['shippingCost'],
             quantity_of_items=len(cart),
         )
@@ -116,8 +121,8 @@ class OrderCreate(View):
                 price=item['price'],
                 order=order,
             )
-        cart.clear()
 
+        cart.clear()
         email_template = render_to_string('cart/email_payment_success.html', {})
         email = EmailMessage(
             'Payment Success',
@@ -127,12 +132,13 @@ class OrderCreate(View):
         )
         email.fail_silently = False
         email.send()
+
         return redirect('home')
 
 
-class PayDebt(View):
+class PayDebt(LoginRequiredMixin, View):
     def get(self, request):
-        success(request, "Your debt was paid!")
+        messages.success(request, "Your debt was paid!")
         return redirect('Orders')
 
     def post(self, request):
@@ -158,9 +164,15 @@ class PayDebt(View):
         return redirect("home")
 
 
-class ReturnView(DetailView):
+class ReturnView(LoginRequiredMixin, DetailView):
     model = Order
     template_name = 'orders/returntorental.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        order = self.get_object()
+        if order.status != 'Delivered':
+            raise Http404("This order is not delivered yet.")
+        return super().dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
         qs = super().get_queryset()
@@ -186,7 +198,7 @@ class ReturnView(DetailView):
         return data
 
 
-class MakeReturn(View):
+class MakeReturn(LoginRequiredMixin, View):
 
     def post(self, request, pk, rental):
         order = get_object_or_404(Order, pk=pk)
@@ -206,7 +218,7 @@ class MakeReturn(View):
         order.return_date = datetime.datetime.now()
         order.save()
 
-        success(request, "Order returned")
+        messages.success(request, "Order returned")
         return redirect('home')
 
 
