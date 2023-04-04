@@ -44,7 +44,3 @@ class AccountView(LoginRequiredMixin, UpdateView):
 
     def get_queryset(self):
         return MyUser.objects.filter(pk=self.request.user.pk)
-
-
-
-

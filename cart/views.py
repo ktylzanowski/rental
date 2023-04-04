@@ -1,10 +1,9 @@
 from django.views.generic import View
 from django.shortcuts import redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.messages import success
 from cart.cart import Cart
 from django.contrib import messages
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import render
 from products.models import Product
 
 
@@ -18,27 +17,39 @@ class AddToCart(LoginRequiredMixin, View):
 
     def post(self, request, product_id):
         if not request.user.is_authenticated:
-            messages.success(request, "You must be logged in")
+            messages.error(request, "You must be logged in")
             return redirect('Login')
+
         cart = Cart(request)
-        product = get_object_or_404(Product, id=product_id)
-        if cart.add(product, self.request.user):
+
+        try:
+            product = Product.objects.get(id=product_id)
+        except Product.DoesNotExist:
+            messages.error(request, "Invalid product ID")
+            return redirect('home')
+
+        if cart.add(product, request.user):
             messages.success(request, "Add to cart")
-            return redirect('home')
         else:
-            messages.success(request, "Already in basket or already ordered or the number of items in the cart a"
+            messages.error(request, "Already in basket or already ordered or the number of items in the cart a"
                                       "maximum of 5")
-            return redirect('home')
+
+        return redirect('home')
 
 
 class RemoveFromCart(LoginRequiredMixin, View):
 
     def post(self, request, product_id):
         cart = Cart(request)
-        product = get_object_or_404(Product, id=product_id)
+
+        try:
+            product = Product.objects.get(id=product_id)
+        except Product.DoesNotExist:
+            messages.error(request, "Invalid product ID")
+            return redirect('home')
 
         cart.remove(product)
-        success(self.request, "Item Deleted")
+        messages.success(self.request, "Item Deleted")
         return redirect("Cart")
 
 

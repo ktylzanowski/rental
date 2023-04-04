@@ -7,15 +7,19 @@
 		<button class="btn btn-secondary btn-sm">Search</button>
 	</form>
 
-	<div class="row">
-	{% for object in object_list %}
-		<div class="col-md-3 mx-auto">
-			<div class="card card-product-grid">
-				<img src="{{ object.image.url }}">
-				<a href="{{ object.get_absolute_url }}" class="text-center">{{ object.title }}</a>
+	<div class="row mt-4">
+		{% for object in object_list %}
+		<div class="col-md-3 mb-4">
+			<div class="card card-product-grid h-100">
+				<a href="{{ object.get_absolute_url }}">
+					<img src="{{ object.image.url }}" class="card-img-top" alt="{{ object.title }}">
+					<div class="card-body">
+						<h5 class="card-title text-center">{{ object.title }}</h5>
+					</div>
+				</a>
 			</div>
 		</div>
-	{% endfor %}
+		{% endfor %}
 	</div>
 
 {% endblock %}

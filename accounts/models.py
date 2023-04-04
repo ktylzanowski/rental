@@ -43,11 +43,11 @@ class MyUser(AbstractBaseUser):
     first_name = models.CharField(max_length=255, null=True, blank=True)
     last_name = models.CharField(max_length=255, null=True, blank=True)
     phone = models.CharField(max_length=12, null=True, blank=True)
-    city = models.CharField(max_length=255, null=True, blank=True, default=None)
-    zip_code = models.CharField(max_length=10, null=True, blank=True, default=None)
-    street = models.CharField(max_length=255, null=True, blank=True, default=None)
-    building_number = models.CharField(max_length=10, null=True, blank=True, default=None)
-    apartment_number = models.CharField(max_length=10, null=True, blank=True, default=None)
+    city = models.CharField(max_length=255, null=True, blank=True)
+    zip_code = models.CharField(max_length=10, null=True, blank=True)
+    street = models.CharField(max_length=255, null=True, blank=True)
+    building_number = models.CharField(max_length=10, null=True, blank=True)
+    apartment_number = models.CharField(max_length=10, null=True, blank=True)
 
     objects = MyUserManager()
 

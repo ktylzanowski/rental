@@ -1,26 +1,55 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-<div class="col-md-3 mx-auto">
-	<div class="card card-product-grid">
-		<img src="{{ object.image.url }}">
+<div class="row">
+	<div class="col-md-4">
+		<div class="card card-product-grid">
+			<img src="{{ object.image.url }}">
+			{% if object.model_name == 'book' %}
+				<div class="text-center">{{ object.author }}: {{ object.title }}</div>
+				<div class="text-center">ISBN: {{ object.isbn }}</div>
+			{% elif object.model_name == 'film' %}
+				<div class="text-center">{{ object.director }}: {{ object.title }}</div>
+				<div class="text-center">Duration: {{ object.duration }}</div>
+			{% else %}
+				<div class="text-center">{{ object.band }}: {{ object.title }}</div>
+				<div class="text-center">Track list: {{ object.tracklist }}</div>
+			{% endif %}
+			{% if object.is_available == False %}
+				<div class="text-center">The product is unavailable</div>
+			{% else %}
+				<form method="POST" align='center' action="{% url 'AddToCart' object.pk %}">
+					{% csrf_token %}
+					<button class="btn btn-primary">Add to Cart</button>
+				</form>
+			{% endif %}
+		</div>
+	</div>
+	<div class="col-md-8">
 		{% if object.model_name == 'book' %}
-			<div class="text-center">{{ object.author }}: {{ object.title }}</div>
-			<div class="text-center">ISBN: {{ object.isbn }}</div>
+			<h2>{{ object.title }}</h2>
+			<p><strong>Author:</strong> {{ object.author }}</p>
+			<p><strong>ISBN:</strong> {{ object.isbn }}</p>
+			<p><strong>Genre:</strong> {{ object.genre.name }}</p>
+			<p><strong>Quantity:</strong> {{ object.quantity }}</p>
+			<p><strong>Price:</strong> {{ object.price }}</p>
+			<p><strong>Popularity:</strong> {{ object.popularity }}</p>
 		{% elif object.model_name == 'film' %}
-			<div class="text-center">{{ object.director }}: {{ object.title }}</div>
-			<div class="text-center">Duration: {{ object.duration }}</div>
+			<h2>{{ object.title }}</h2>
+			<p><strong>Director:</strong> {{ object.director }}</p>
+			<p><strong>Duration:</strong> {{ object.duration }}</p>
+			<p><strong>Genre:</strong> {{ object.genre.name }}</p>
+			<p><strong>Quantity:</strong> {{ object.quantity }}</p>
+			<p><strong>Price:</strong> {{ object.price }}</p>
+			<p><strong>Popularity:</strong> {{ object.popularity }}</p>
 		{% else %}
-			<div class="text-center">{{ object.band }}: {{ object.title }}</div>
-			<div class="text-center">Track list: {{ object.tracklist }}</div>
-		{% endif %}
-		{% if object.is_available == False %}
-			<div class="text-center">The product is unavailable</div>
-		{% else %}
-			<form method="POST" align='center' action="{% url 'AddToCart' object.pk %}">
-				{% csrf_token %}
-				<button class="btn btn-primary">Add to Cart</button>
-			</form>
+			<h2>{{ object.title }}</h2>
+			<p><strong>Band:</strong> {{ object.band }}</p>
+			<p><strong>Tracklist:</strong> {{ object.tracklist }}</p>
+			<p><strong>Genre:</strong> {{ object.genre.name }}</p>
+			<p><strong>Quantity:</strong> {{ object.quantity }}</p>
+			<p><strong>Price:</strong> {{ object.price }}</p>
+			<p><strong>Popularity:</strong> {{ object.popularity }}</p>
 		{% endif %}
 	</div>
 </div>

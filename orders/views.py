@@ -31,10 +31,7 @@ class OrdersView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         data = super().get_context_data(**kwargs)
-        orders_extended = Order.objects.filter(user=self.request.user, status='Extended')
-        price = 0
-        for order in orders_extended:
-            price += order.debt
+        price = sum(order.debt for order in Order.objects.filter(user=self.request.user, status='Extended'))
         data['price'] = price
         return data
 
