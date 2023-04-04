@@ -11,14 +11,14 @@ class MatchForm(forms.ModelForm):
     def __init__(self, category=False, *args, **kwargs):
         super(MatchForm, self).__init__(*args, **kwargs)
         self.fields['genre'].choices = [('', 'Choose')] + \
-    [('alphabetical', 'Alphabetically'), ('popularity', 'By popularity')]
+                                       [('alphabetical', 'Alphabetically'), ('popularity', 'By popularity')]
         if category:
             self.fields['genre'].choices += [(x.pk, x.name) for x in Genre.objects.filter(category=category)]
 
 
 class BookForm(forms.ModelForm):
     class Meta:
-        model = Product
+        model = Book
         fields = '__all__'
 
     def __init__(self, *args, **kwargs):
@@ -29,9 +29,10 @@ class BookForm(forms.ModelForm):
         def whether_changed():
             try:
                 genre = Genre.objects.get(pk=self.initial['genre'])
+
                 return self.initial['author'] == self.cleaned_data['author'] \
-                       and self.initial['title'] == self.cleaned_data['title'] \
-                       and genre.name == str(self.cleaned_data['genre'])
+                    and self.initial['title'] == self.cleaned_data['title'] \
+                    and genre.name == str(self.cleaned_data['genre'])
             except KeyError:
                 return False
 
@@ -39,7 +40,7 @@ class BookForm(forms.ModelForm):
                                                          title=self.cleaned_data['title'],
                                                          genre=self.cleaned_data['genre']).exists():
             raise ValueError("Author, title and genre must not be repeated")
-
+        print(self.cleaned_data)
         return self.cleaned_data
 
 
