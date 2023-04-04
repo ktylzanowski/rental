@@ -3,7 +3,7 @@ from django.shortcuts import redirect, get_object_or_404
 from django.views.generic import View, DetailView, ListView, TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
-from products.models import Rental, Product, Genre, ProductIndex
+from products.models import Rental, Genre, ProductIndex
 from django.db.models import Prefetch
 import json
 from cart.cart import Cart
@@ -60,7 +60,7 @@ class PaymentListView(LoginRequiredMixin, ListView):
 
 
 class OrderCreate(LoginRequiredMixin, View):
-    def get(self, request):
+    def get(self):
         messages.success(self.request, "Your order was successful!")
         return redirect('home')
 
@@ -240,6 +240,8 @@ class StatisticsView(TemplateView):
                                             product__genre__category=g.category,
                                             order__order_date__range=(t1, t2)).count()
             dictionary[g.category][g.name] = prod
+        dictionary = defaultdict(dict, sorted(dictionary.items(), key=lambda x: sum(x[1].values()), reverse=True))
+
         data["pop"] = dictionary
 
         users_items = {}
@@ -258,6 +260,8 @@ class StatisticsView(TemplateView):
 
             tab = [books, films, cds]
             users_items[user.email] = tab
+
+        users_items = dict(sorted(users_items.items(), key=lambda x: sum(x[1]), reverse=True))
         data['users_items'] = users_items
 
         return data
