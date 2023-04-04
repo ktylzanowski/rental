@@ -60,7 +60,7 @@ class PaymentListView(LoginRequiredMixin, ListView):
 
 
 class OrderCreate(LoginRequiredMixin, View):
-    def get(self):
+    def get(self, request):
         messages.success(self.request, "Your order was successful!")
         return redirect('home')
 

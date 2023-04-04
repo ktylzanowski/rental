@@ -28,9 +28,9 @@ class Genre(models.Model):
 
 class Product(PolymorphicModel):
     title = models.CharField(max_length=100, blank=False, null=False)
-    image = models.ImageField(upload_to='product', default=None)
+    image = models.ImageField(upload_to='product', blank=False, null=False)
     genre = models.ForeignKey(Genre, on_delete=models.CASCADE)
-    quantity = models.IntegerField(null=False)
+    quantity = models.IntegerField(null=False, default=0)
     is_available = models.BooleanField(default=True, null=False)
     price = models.IntegerField(null=False, blank=False, default=15)
     popularity = models.IntegerField(default=0)
@@ -43,7 +43,7 @@ class Product(PolymorphicModel):
         return str(self.title)
 
     def get_absolute_url(self):
-        return reverse("ProductDetail", args=[str(self.pk)])
+        return reverse("ProductDetail", kwargs={"pk": str(self.pk)})
 
     @property
     def model_name(self):
