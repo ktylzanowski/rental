@@ -130,3 +130,5 @@ dmypy.json
 
 rental/confidential_data.py
 media/product
+*.xml
+*.iml

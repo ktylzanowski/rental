@@ -27,42 +27,45 @@
 
         <div class="row">
             <aside class="col-lg-9">
-                <div class="card">
-                    <table class="table table-borderless table-shopping-cart">
-                        <thead class="text-muted">
-                            <tr class="small text-uppercase">
-                                <th scope="col">Product</th>
-                                <th scope="col" width="120">Price</th>
-                                <th scope="col" class="text-right" width="200"> </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for item in cart %}
-                            {% with product=item.product %}
-                            <tr>
-                                <td>
-                                    <div class="aside"><img src="{{ product.image.url }}" class="img-sm" style="max-width:40%"></div>
-                                    <a href="{{ product.get_absolute_url }}" class="title text-dark">{{ item.product.title }}</a>
-                                </td>
-                                <td>
-                                    <div class="price-wrap">
-                                        <div class="price">{{ item.price }}$</div>
-                                        <p><small class="text-muted">per two weeks</small></p>
-                                    </div>
-                                </td>
-                                <td class="text-right">
-                                    <form method="POST" action="{% url 'DeleteItemFromCart' product.pk %}">
-                                        {% csrf_token %}
-                                        <button class="btn btn-danger"> Remove</button>
-                                    </form>
-                                </td>
-                            </tr>
-                            {% endwith %}
-                            {% endfor %}
-
-                        </tbody>
-                    </table>
-                </div>
+        <div class="card">
+    <table class="table table-borderless table-shopping-cart">
+        <thead class="text-muted">
+            <tr class="small text-uppercase">
+                <th scope="col">Product</th>
+                <th scope="col" width="120">Price</th>
+                <th scope="col" class="text-right" width="200">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in cart %}
+            {% with product=item.product %}
+            <tr>
+                <td>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <img src="{{ product.image.url }}" class="img-sm" style="max-width:80%; height:auto;">
+                            <a href="{{ product.get_absolute_url }}" class="title text-dark">{{ item.product.title }}</a>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="price-wrap">
+                        <div class="price">{{ item.price }}$</div>
+                        <small class="text-muted">per weeks</small>
+                    </div>
+                </td>
+                <td class="text-right">
+                    <form method="POST" action="{% url 'DeleteItemFromCart' product.pk %}">
+                        {% csrf_token %}
+                        <button class="btn btn-danger"><i class="fa fa-trash">Remove</i></button>
+                    </form>
+                </td>
+            </tr>
+            {% endwith %}
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
             </aside>
 
             <aside class="col-lg-3">
@@ -83,10 +86,12 @@
                         <p>Address is not complete</p>
                         {% else %}
                         <p>
-                        <input type="radio" id="pickup" value="pickup" name="shipping" onclick="myFunction()" checked/>Personal Pickup 0$
+                            <input type="radio" id="pickup" value="pickup" name="shipping" onclick="myFunction()" checked/>
+                            <i class="fa fa-truck"></i> Personal Pickup (Free)
                         </p>
                         <p>
-                        <input type="radio" id="inpost" value="inpost" name="shipping" onclick="myFunction()"/>Shipping 10$
+                            <input type="radio" id="inpost" value="inpost" name="shipping" onclick="myFunction()"/>
+                            <i class="fa fa-shipping-fast"></i> Shipping (+$10)
                         </p>
                         <form method="POST">
                             {% csrf_token %}

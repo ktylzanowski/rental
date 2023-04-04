@@ -7,3 +7,30 @@ table, th, td {
     border: 1px solid;
     text-align: center;
 }
+.img-sm {
+    max-width: 80px;
+    margin-right: 10px;
+}
+
+.card-body {
+    padding: 1rem;
+}
+
+.table td, .table th {
+    vertical-align: middle;
+}
+
+.title {
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.price {
+    font-weight: bold;
+    font-size: 20px;
+    color: #000;
+}
+
+.text-muted {
+    color: #999;
+}

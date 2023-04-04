@@ -2,36 +2,48 @@
 {% load static %}
 {% block content %}
 
-	<div class="row">
-		{% for item in object.orderitem_set.all %}
-		<div class="aside"><img src="{{ item.product.image.url }}" class="img-sm" style="max-width:40%"></div>
-			<a href="{{ item.product.get_absolute_url }}" class="title text-dark">{{ item.product.title }}</a>
+<div class="row">
+	{% for item in object.orderitem_set.all %}
+		<div class="col-md-3">
+			<div class="card mb-3">
+				<img class="card-img-top" src="{{ item.product.image.url }}" alt="{{ item.product.title }}">
+				<div class="card-body">
+					<h5 class="card-title">{{ item.product.title }}</h5>
+				</div>
+			</div>
+		</div>
+	{% endfor %}
+</div>
+
+<div class="row">
+	<div class="col-md-12">
+		<h2>Return the product in question in person to any of the addresses:</h2>
+		{% for rental in rental_list %}
+			<p>{{ rental.city }}, {{ rental.zip_code }}, {{ rental.street }}, {{ rental.building_number }},
+				{% if rental.apartment_number %}
+					{{ rental.apartment_number }}
+				{% endif %}
+			</p>
 		{% endfor %}
 	</div>
+</div>
 
-
-	<div class="row">
-        <h2>Return the product in question in person to any of the addresses:</h2>
-	{% for rental in rental_list %}
-        <p>{{ rental.city }}, {{rental.zip_code}}, {{rental.street}},
-		{{rental.building_number}},
+<div class="row">
+	<div class="col-md-12">
+		<h2>Package address for return:</h2>
+		<h4>{{ rental.name }}</h4>
+		<p>{{ rental.city }}, {{ rental.zip_code }}, {{ rental.street }}, {{ rental.building_number }},
 			{% if rental.apartment_number %}
-				{{rental.apartment_number}}
+				{{ rental.apartment_number }}
 			{% endif %}
 		</p>
-	{% endfor %}
+		{% if object.status == "Delivered" %}
+			<form method="POST" action="{% url 'MakeReturn' pk=object.pk rental=rental.name %}">
+				{% csrf_token %}
+				<button class="btn btn-primary">Return</button>
+			</form>
+		{% endif %}
 	</div>
-	<h2>Package address for return </h2>
-	<h4>{{ rental.name }}</h4>
-	<p>{{ rental.city }}, {{rental.zip_code}}, {{rental.street}}, {{rental.building_number}},
-			{% if rental.apartment_number %}
-				{{rental.apartment_number}}
-			{% endif %}
-		</p>
-	{% if object.status == "Delivered" %}
-	<form method="POST" action="{% url 'MakeReturn' pk=object.pk rental=rental.name %}"> {% csrf_token %}
-		<button class="btn btn-primary">Return</button>
-	</form>
-	{% endif %}
+</div>
 
 {% endblock %}

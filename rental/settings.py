@@ -135,7 +135,7 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-SECURE_CROSS_ORIGIN_OPENER_POLICY='same-origin-allow-popups'
+SECURE_CROSS_ORIGIN_OPENER_POLICY = 'same-origin-allow-popups'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
@@ -152,3 +152,4 @@ EMAIL_HOST_PASSWORD = confidential_data.password_email
 CELERY_BROKER_URL = 'redis://localhost:6379'
 
 CART_SESSION_ID = 'cart'
+SESSION_COOKIE_AGE = 3600  # 60 minut w sekundach
