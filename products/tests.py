@@ -2,8 +2,6 @@ from django.test import TestCase
 from .models import Rental, Product, Genre, Book, Film, CD, ProductIndex
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.urls import reverse
-from .admin import BookForm, FilmForm, CDForm
-from django.core.exceptions import ValidationError
 
 
 class ProductModelTestCase(TestCase):

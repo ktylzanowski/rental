@@ -72,7 +72,7 @@ class AccountViewTestCase(TestCase):
 
     def test_redirects_if_not_logged_in(self):
         response = self.client.get(self.url)
-        self.assertRedirects(response, '/login/?next=/account/1')
+        self.assertRedirects(response, '/login/?next=/account/1/')
 
     def test_redirects_if_not_authorized_to_edit_user_data(self):
         self.client.force_login(self.other_user)
