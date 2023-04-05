@@ -35,10 +35,6 @@ class Product(PolymorphicModel):
     price = models.IntegerField(null=False, blank=False, default=15)
     popularity = models.IntegerField(default=0)
 
-    def save(self, *args, **kwargs):
-        self.quantity = self.productindex_set.count()
-        super(Product, self).save(*args, **kwargs)
-
     def __str__(self):
         return str(self.title)
 
@@ -58,6 +54,12 @@ class ProductIndex(models.Model):
 
     def __str__(self):
         return str(self.inventory_number)
+
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            self.product.quantity += 1
+            self.product.save()
+        super(ProductIndex, self).save(*args, **kwargs)
 
 
 class Book(Product):
