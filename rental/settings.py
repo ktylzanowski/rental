@@ -85,8 +85,10 @@ WSGI_APPLICATION = 'rental.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'db-rental',
+        'USER': confidential_data.user_db,
+        'PASSWORD': confidential_data.password_db,
     }
 }
 
@@ -152,4 +154,4 @@ EMAIL_HOST_PASSWORD = confidential_data.password_email
 CELERY_BROKER_URL = 'redis://localhost:6379'
 
 CART_SESSION_ID = 'cart'
-SESSION_COOKIE_AGE = 3600  # 60 minut w sekundach
+SESSION_COOKIE_AGE = 3600
