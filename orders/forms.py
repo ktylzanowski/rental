@@ -23,4 +23,3 @@ class OrderForm(forms.ModelForm):
             self.cleaned_data['number_of_extensions'] += 1
             self.cleaned_data['if_extended'] = True
         return cleaned_data
-

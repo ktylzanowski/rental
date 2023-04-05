@@ -12,4 +12,3 @@ def handle_user_logout(sender, request, user, **kwargs):
         product = item['product']
         Product.objects.filter(pk=product.pk).update(quantity=F('quantity') + 1, is_available=True)
         ProductIndex.objects.filter(pk=item['index']).update(is_available=True)
-

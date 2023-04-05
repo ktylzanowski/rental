@@ -19,7 +19,11 @@
 								<tr>
 									<td>{{ payment.payment_id }}</td>
 									<td>{{ payment.amount_paid }}$</td>
+									{% if payment.order.pk %}
 									<td>Order number: {{ payment.order.pk }}</td>
+									{% else %}
+									<td>Debt</td>
+									{% endif %}
 								</tr>
 							{% endfor %}
 						</tbody>

@@ -17,6 +17,8 @@
 			{% endif %}
 			{% if object.is_available == False %}
 				<div class="text-center">The product is unavailable</div>
+			{% elif not user.is_authenticated %}
+				<div class="text-center">You must be logged in to add to cart</div>
 			{% else %}
 				<form method="POST" align='center' action="{% url 'AddToCart' object.pk %}">
 					{% csrf_token %}

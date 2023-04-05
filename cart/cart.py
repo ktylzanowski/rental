@@ -1,6 +1,6 @@
 from decimal import Decimal
 from django.conf import settings
-from products.models import ProductIndex, Product, Rental
+from products.models import ProductIndex, Product
 from orders.models import OrderItem
 from django.db.models import F
 
@@ -52,8 +52,6 @@ class Cart(object):
             ProductIndex.objects.filter(pk=index.pk).update(is_available=False)
 
             product.quantity -= 1
-            if product.quantity == 0:
-                product.is_available = False
             product.save()
 
             self.save()
@@ -64,11 +62,13 @@ class Cart(object):
     def remove(self, product):
         product_id = str(product.id)
         if product_id in self.cart:
+
             product_index = ProductIndex.objects.get(pk=self.cart[product_id]['index'])
             ProductIndex.objects.filter(pk=product_index.pk).update(is_available=True)
-            Product.objects.filter(pk=product.id).update(quantity=F('quantity') + 1, is_available=True)
+            Product.objects.filter(pk=product.id).update(quantity=F('quantity') + 1)
             del self.cart[product_id]
             self.save()
+
             return True
         return False
 

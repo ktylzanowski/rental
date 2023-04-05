@@ -49,5 +49,5 @@ class RemoveFromCart(LoginRequiredMixin, View):
             return redirect('Home')
 
         cart.remove(product)
-        messages.success(self.request, "Item Deleted")
+        messages.success(request, "Item Deleted")
         return redirect("Cart")

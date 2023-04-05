@@ -35,6 +35,14 @@ class Product(PolymorphicModel):
     price = models.IntegerField(null=False, blank=False, default=15)
     popularity = models.IntegerField(default=0)
 
+    def save(self):
+        if self.quantity == 0:
+            self.is_available = False
+        else:
+            self.is_available = True
+
+        super(Product, self).save()
+
     def __str__(self):
         return str(self.title)
 
