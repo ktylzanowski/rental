@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from products.models import Product, ProductIndex
+from django.utils import timezone
 
 
 class Payment(models.Model):
@@ -35,7 +36,7 @@ class Order(models.Model):
         ("Returned", "Returned"),
     ]
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    order_date = models.DateTimeField()
+    order_date = models.DateTimeField(default=timezone.now)
     deadline = models.DateTimeField(null=True)
     return_date = models.DateTimeField(null=True)
     status = models.CharField(choices=status_types, default="Ordered", max_length=100)
