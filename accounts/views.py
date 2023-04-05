@@ -4,9 +4,11 @@ from django.views.generic import (
         )
 from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import reverse_lazy
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import redirect
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
 from .models import MyUser
-from django.contrib.messages import success
+from django.contrib.messages import success, error
 
 
 class RegisterCreateView(CreateView):
@@ -30,18 +32,20 @@ class MyLogoutView(LogoutView):
         return reverse_lazy('Home')
 
 
-class AccountView(LoginRequiredMixin, UpdateView):
+@method_decorator(login_required, name='dispatch')
+class AccountView(UpdateView):
     model = MyUser
     form_class = AddressForm
     template_name = 'registration/account.html'
+    success_url = reverse_lazy('Account')
 
-    def get_success_url(self):
-        success(self.request, "Correctly change personal information")
-        return self.request.path
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.pk != self.get_object().pk:
+            error(request, "You are not authorized to edit this user's data.")
+            return redirect(reverse_lazy('Home'))
+        return super().dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
         form.save()
+        success(self.request, "Personal information updated.")
         return super().form_valid(form)
-
-    def get_queryset(self):
-        return MyUser.objects.filter(pk=self.request.user.pk)
