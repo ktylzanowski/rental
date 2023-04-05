@@ -37,7 +37,6 @@ class AccountView(UpdateView):
     model = MyUser
     form_class = AddressForm
     template_name = 'registration/account.html'
-    success_url = reverse_lazy('Account')
 
     def dispatch(self, request, *args, **kwargs):
         if request.user.pk != self.get_object().pk:
@@ -49,3 +48,6 @@ class AccountView(UpdateView):
         form.save()
         success(self.request, "Personal information updated.")
         return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('Account', kwargs={'pk': self.get_object().pk})
