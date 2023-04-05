@@ -39,5 +39,9 @@ class AccountView(LoginRequiredMixin, UpdateView):
         success(self.request, "Correctly change personal information")
         return self.request.path
 
+    def form_valid(self, form):
+        form.save()
+        return super().form_valid(form)
+
     def get_queryset(self):
         return MyUser.objects.filter(pk=self.request.user.pk)
