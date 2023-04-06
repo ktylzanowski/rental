@@ -16,7 +16,7 @@ class BookAdmin(admin.ModelAdmin):
     search_fields = ['title']
     exclude = ['popularity']
     ordering = ['title']
-    readonly_fields = ['quantity']
+    readonly_fields = ['quantity', 'is_available']
 
     inlines = [ItemInline]
     form = BookForm
@@ -29,7 +29,7 @@ class FilmAdmin(admin.ModelAdmin):
     search_fields = ['title']
     exclude = ['popularity']
     inlines = [ItemInline]
-    readonly_fields = ['quantity']
+    readonly_fields = ['quantity', 'is_available']
 
     form = FilmForm
     ordering = ['title']
@@ -42,7 +42,7 @@ class CDAdmin(admin.ModelAdmin):
     search_fields = ['title']
     exclude = ['popularity']
     ordering = ['title']
-    readonly_fields = ['quantity']
+    readonly_fields = ['quantity', 'is_available']
 
     inlines = [ItemInline]
     form = CDForm

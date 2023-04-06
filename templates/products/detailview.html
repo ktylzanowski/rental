@@ -10,10 +10,9 @@
 				<div class="text-center">ISBN: {{ object.isbn }}</div>
 			{% elif object.model_name == 'film' %}
 				<div class="text-center">{{ object.director }}: {{ object.title }}</div>
-				<div class="text-center">Duration: {{ object.duration }}</div>
+				<div class="text-center">Duration: {{ object.duration }} m</div>
 			{% else %}
 				<div class="text-center">{{ object.band }}: {{ object.title }}</div>
-				<div class="text-center">Track list: {{ object.tracklist }}</div>
 			{% endif %}
 			{% if object.is_available == False %}
 				<div class="text-center">The product is unavailable</div>
@@ -33,25 +32,19 @@
 			<p><strong>Author:</strong> {{ object.author }}</p>
 			<p><strong>ISBN:</strong> {{ object.isbn }}</p>
 			<p><strong>Genre:</strong> {{ object.genre.name }}</p>
-			<p><strong>Quantity:</strong> {{ object.quantity }}</p>
 			<p><strong>Price:</strong> {{ object.price }}</p>
-			<p><strong>Popularity:</strong> {{ object.popularity }}</p>
 		{% elif object.model_name == 'film' %}
 			<h2>{{ object.title }}</h2>
 			<p><strong>Director:</strong> {{ object.director }}</p>
-			<p><strong>Duration:</strong> {{ object.duration }}</p>
+			<p><strong>Duration:</strong> {{ object.duration }}m</p>
 			<p><strong>Genre:</strong> {{ object.genre.name }}</p>
-			<p><strong>Quantity:</strong> {{ object.quantity }}</p>
 			<p><strong>Price:</strong> {{ object.price }}</p>
-			<p><strong>Popularity:</strong> {{ object.popularity }}</p>
 		{% else %}
 			<h2>{{ object.title }}</h2>
 			<p><strong>Band:</strong> {{ object.band }}</p>
 			<p><strong>Tracklist:</strong> {{ object.tracklist }}</p>
 			<p><strong>Genre:</strong> {{ object.genre.name }}</p>
-			<p><strong>Quantity:</strong> {{ object.quantity }}</p>
 			<p><strong>Price:</strong> {{ object.price }}</p>
-			<p><strong>Popularity:</strong> {{ object.popularity }}</p>
 		{% endif %}
 	</div>
 </div>

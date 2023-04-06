@@ -6,7 +6,7 @@ class HomeMixin(object):
         qs = super().get_queryset()
         genre = self.request.GET.get('genre')
         if genre == 'alphabetical':
-            qs = qs.order_by('-title')
+            qs = qs.order_by('title')
         elif genre == 'popularity':
             qs = qs.order_by('-popularity')
         elif genre:
