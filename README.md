@@ -1,6 +1,10 @@
 # Rental
-Rental django-project for University subject.
-An internet application for renting books, movies, and music CDs online. It allows browsing through catalogs, renting available items, making payments, viewing statistics, making returns, and managing user accounts.
+Rental django-project for University subject. An internet application for renting books,
+movies, and music CDs online. It allows browsing through catalogs, renting available
+items, making payments, viewing statistics, making returns, and managing user accounts.
+In addition, the functionality of automatic e-mails and checking return dates using celery
+and redis. It was written based on django class-based-view, postgresql, celery, redis,
+django-polymorphic.
 
 # Requirements
 amqp==5.1.1  
@@ -46,8 +50,16 @@ _source venv/bin/activate_
 **Install the required Python packages**  
 _pip install -r requirements.txt_  
 
+**Connect your email to handle automated emails in the settings.py**  
+
+_Enter Email and password. If it was a different email than gmail you would also need to change the EMAIL_HOST_  
+
+![](readme_images/mail.jpg)  
+
 **Create a PostgreSQL database and set the appropriate parameters in the file rental/settings.py**  
+
 ![postgresql.jpg](readme_images%2Fpostgresql.jpg)  
+
 Enter the name, login and password for the database.  
 
 **Perform database migration**:  
@@ -57,7 +69,7 @@ _python manage.py migrate_
 _python manage.py runserver_  
 
 **Install and fire up Redis, depending on your system the installation may vary.**
-**After firing in the renal directory, type the command**
+**After firing in the renal directory, type the command**  
 _celery -A rental worker -l info_
 
 **Open a web browser and go to the address http://localhost:8000**
@@ -77,7 +89,8 @@ _celery -A rental worker -l info_
 ![statistics.jpg](readme_images%2Fstatistics.jpg)
 9. The django admin-panel was used to administer.
 ![admin.jpg](readme_images%2Fadmin.jpg)
-10. Tests are not fully finished
+10. Automatic e-mails.
+11. Tests are not fully finished.
 # Technologies
 Python 3.9  
 Django 4.1  
